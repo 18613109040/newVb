@@ -1,0 +1,120 @@
+.new-shelves{
+    background: $fill-body;
+    .am-list-content {
+        font-size: $font-size-base !important;
+    }
+    .am-navbar-left-icon {
+        display: none !important;
+    }
+    .back-size {
+        font-size: 50px;
+        color: $color-text-base;
+    }
+    .menu {
+        background: $fill-base;
+        padding: 10px;
+        .select-menu {
+            color: $color-active;
+            width: 33%;
+            text-align: center;
+            display: inline-block;
+        }
+        .base-menu {
+            color: $color-text-secondary;
+            width: 33%;
+            text-align: center;
+            display: inline-block;
+        }
+        .text {
+            margin-left: 10px;
+        }
+    }
+    .fortest{
+        border: none !important;
+        .am-list-body{
+            background-color: #f1f1f6 !important;
+            
+        }
+    }
+    .active-link {
+        width: 50%;
+        display: inline-block;
+    }
+    .iscoll-height{
+      
+    }
+    .active-product-list {
+        margin: 10px;
+        width: 96%;
+        margin: 2%;
+        position: relative;
+        display: inline-block;
+        background: white;
+        .img {
+            text-align: center;
+            .strong {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                z-index: 9;
+                width: 60px;
+                height: 60px;
+                background: transparent url(../../assets/images/xp20161012_1.png) no-repeat center center scroll;
+                background-size: 100% 100%;
+            }
+            img {
+                width: 90%;
+            }
+        }
+        .name {
+      
+    color: #232326;
+  
+        width: 90%;
+    margin-left: 5%;
+        }
+        .buttom-d {
+            padding: 0px 10px 10px 10px;
+            .price {
+                display: block;
+                margin-top: 10px;
+                ._i {
+                    display: inline-block;
+                    width: 28px;
+                    height: 28px;
+                    vertical-align: baseline;
+                    text-indent: -9999px;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    background-size: 100% 100%;
+                    background-image: url(../../assets/images/i-money@3x.png);
+                }
+                .current-price._rmb {
+                    color: #FFA40C;
+                    font-size: 30px;
+                    font-style: initial;
+                    font-weight: normal;
+                    margin-left: 5px;
+                }
+                .marke-price {
+                    color: #848689;
+                    text-decoration: line-through;
+                    font-size: 24px;
+                    margin-left: 5px;
+                }
+                .discount {
+                    float: right;
+                    display: block;
+                    color: #fb6a6e;
+                    border: 1px solid #fb6a6e;
+                    -webkit-border-radius: 2px;
+                    -moz-border-radius: 2px;
+                    border-radius: 2px;
+                    font-size: 26px;
+                    font-weight: normal;
+                    padding: 3px 9px;
+                }
+            }
+        }
+    }
+}

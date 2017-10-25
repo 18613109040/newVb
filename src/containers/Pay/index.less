@@ -1,0 +1,96 @@
+@import "../../assets/style/theme.less";
+.online-payment {
+    .vb-tab-bar-fix{
+        position:fixed;
+        bottom:0;
+        left: 0;
+        width:100%;
+        .btn{
+            display:block;
+            background: @fill-ancillary;
+            width: 100%;
+            text-align: center;
+            height:44*@hd;
+            line-height: 44*@hd;
+        }
+    }
+}
+.order-details{
+    .btn-group{
+        font-size:@font-size-base;
+        .btn{
+            display:block;
+            height:44 *@hd;
+            line-height:44*@hd;
+            text-align:center;
+        }
+        .btn1{
+            border:1*@hd solid @border-color-base;
+            background:@fill-base;
+        }
+        .btn2{
+            background:@fill-ancillary;
+        }
+        .tip{
+            color: @color-text-secondary;
+            font-size:@font-size-caption-sm;
+        }
+    }
+}
+.logistics-top{
+    background:@fill-base;
+    color:@color-text-secondary;
+    display:flex;
+    padding:10*@hd;
+    p{
+        padding:0;
+        margin:0;
+    }
+    .top-left {
+        
+        margin-right:10*@hd;
+        img{
+            width:56*@hd;
+            height:56*@hd;
+        }
+    }
+    .top-right{
+        p{
+            .span1{
+                width:90*@hd;
+            }
+        }
+        .p1{
+            font-size:@font-size-base;
+            flex:1;
+            padding-bottom:10*@hd;
+            .status{
+                color:@fill-ancillary-yellow;
+            }
+        }
+        .p2,.p3{
+            font-size:@font-size-caption-sm;
+            padding-bottom:4*@hd;
+        }
+        
+        
+    }
+    
+}
+.logistics-center{
+    background:@fill-base;
+    padding:10*@hd;
+    
+    .am-steps-item-title{
+        color:@color-text-secondary;
+        font-weight: normal;
+        font-size:@font-size-base;
+    }
+    .am-steps-item-process{
+        .am-steps-item-title,.am-steps-item-description{
+            color:@fill-ancillary-yellow;
+        }
+        
+    }
+    
+}

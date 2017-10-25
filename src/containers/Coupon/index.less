@@ -1,0 +1,84 @@
+@import "../../assets/style/theme.less";
+.vb-coupon {
+    background: @fill-body;
+    .footer-group{
+        display:flex;
+        background:@fill-base;
+        .wbtn{
+            flex:1;
+            font-size:@font-size-base;
+            text-align:center;
+            color:@color-text-base;
+            margin:12*@hd 0;
+            line-height:20*@hd;
+        +.wbtn{
+            border-left: 1px solid @border-color-base;
+        }
+        }
+    }
+    .am-list-content {
+        font-size: @font-size-base !important;
+    }
+    .coupon-activation{
+        font-size: 28px;
+        margin-right: 20px;
+    }
+    .more-pepper {
+        width: 95.375%;
+        margin: 0 auto;
+        background: #fff;
+        height: 80px;
+        text-align: center;
+        color: #686868;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        a {
+            width: 200%;
+            line-height: 160px;
+            font-size: 60px;
+            border: 1px solid #848689;
+            -moz-transform: scale(0.5, .5);
+            -ms-transform: scale(0.5, .5);
+            -webkit-transform: scale(0.5, .5);
+            transform: scale(0.5, .5);
+            -moz-transform-origin: 0;
+            -ms-transform-origin: 0;
+            -webkit-transform-origin: 0;
+            transform-origin: top left;
+            display: block;
+            color: #686868;
+        }
+    }
+}
+.am-modal-wrap {
+    .am-modal-content{
+        .am-modal-input{
+            input{
+                padding: 15px 0;
+            }
+        }
+    }
+}
+.coupon-description {
+    color: @color-text-secondary;
+    padding: 20px;
+    div {
+        margin-top: 20px;
+    }
+}
+
+.bindCoupon-content{
+    background:@fill-base;
+    .tip{
+        font-size:@font-size-base;
+        color:@color-text-secondary;
+    }
+    .input-coupon{
+        width:90%;
+        font-size:@font-size-base;
+        height:44*@hd;
+        line-height:44*@hd;
+        border-radius: 2*@hd;
+        padding:0 10*@hd;
+    }
+}

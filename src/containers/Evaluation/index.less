@@ -1,0 +1,56 @@
+@import "../../assets/style/theme.less";
+.evaluation{
+      background:@fill-body;
+    .nav-content{
+      background: @fill-base;
+    }
+    .tip{
+      color:@color-text-secondary;
+      font-size:@font-size-caption-sm;
+      padding:10*@hd 10*@hd 0;
+      border-top:1px solid @border-color-base;
+    }
+    .list{
+      text-align: center;
+      font-size:@font-size-base;
+      .item{
+        padding:8*@hd;
+        span+span{
+          padding-left:20*@hd;
+        }
+        .icon-rate{
+          margin-right:10*@hd;
+          &:after{
+            font-size:20*@hd;
+          }
+        }
+      }
+    }
+    .list-6{
+      .pingjia{
+          float: right;
+      }
+      .rate-left{
+        margin-left: 20px;
+      }
+    }
+     .am-list-item{
+         img{
+             width: 76 * @hd;
+             height: 76 *@hd;
+         }
+     }
+     .money-footer{
+         display: inline-block;
+         .money{
+             font-size: @font-size-base;
+             margin-left: 6*@hd;
+         }
+     }
+    .step-right{
+        float: right;
+    }
+    .am-list-content{
+        white-space: normal !important;
+    }
+ }

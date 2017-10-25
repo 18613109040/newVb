@@ -1,0 +1,80 @@
+@import "../../assets/style/theme";
+.address-list{
+    .am-checkbox-agree{
+        margin-left: 0px !important;
+    }
+    .list-content{
+        overflow: auto;
+    }
+    .name{
+        font-size: @font-size-base;
+    }
+    .phone{
+        margin-left: 20 *@hd;
+        font-size: @font-size-base;
+    }
+    .address{
+        font-size: @font-size-caption-sm;
+    }
+    .adress-eidt{
+        .am-list-content{
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+        .am-checkbox-agree-label{
+            color: @color-text-secondary;
+            font-size:  @font-size-caption-sm;
+        }
+        .am-checkbox{
+            top:-4 * @hd;
+        }
+        .am-list-extra{
+            flex-basis: initial;
+            .am-flexbox-item{
+                margin-left: 20*@hd;
+            }
+        }
+    }
+    .icon-size{
+        font-size: 20*@hd;
+    }
+
+}
+.save-btn {
+    background: @brand-primary;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    z-index: 10;
+    .am-button {
+        background-color:@brand-primary;
+        color: @color-text-base;
+        width: 60%;
+        margin-left: 20%;
+        font-size: @font-size-base;
+        height: 40 *@hd !important;
+        line-height:40 *@hd !important;
+    }
+    .icon-add-new{
+        font-size: 20px * @hd;
+        margin-right: 10px*@hd;
+    }
+}
+.eidt-address{
+    .am-list-item  {
+        .am-input-label,.am-input-control input,.am-textarea-label,.am-textarea-control textarea{
+            font-size:@font-size-base;
+        }
+        .am-list-line {
+            .am-list-content{
+                font-size:@font-size-base;
+            }
+            .am-list-extra {
+                flex-basis: initial;
+                font-size:@font-size-base;
+            }
+        }
+
+    }
+   
+}

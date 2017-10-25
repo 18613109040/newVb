@@ -1,0 +1,178 @@
+@import "../../assets/style/theme";
+
+.set-tlement {
+    height: 100%;
+    overflow-y: scroll;
+    .cart-group {
+        width: 100%;
+
+        background-color: #f5f5f9;
+        .cart-group-item {
+            width: 100%;
+            text-align: center;
+            .item-addr {
+                overflow: hidden;
+                position: relative;
+                width: 100%;
+                .ia-m {
+
+                    float: left;
+                    .mt_new {
+                        color: #222;
+                        text-align: left;
+                        margin-left: 15px;
+                        text-align: left;
+                        font-size: 32px;
+                        font-weight: bold;
+                        .phone {
+                            margin-left: 20px;
+                        }
+                        .sitem-tip-new {
+                            padding: 0 10px;
+                            -webkit-border-radius: 2px;
+                            -moz-border-radius: 2px;
+                            border-radius: 2px;
+                            color: #f23030;
+                            background-color: #fff;
+                            font-size: 28px;
+                            text-align: center;
+                            border: 1px solid #f23030;
+                            border-radius: 2px;
+                            position: relative;
+                            top: -1px;
+                            margin-left: 10px;
+                        }
+                    }
+                    .mc {
+                        .address-size {
+                            font-size: 40px;
+                            line-height: 80px;
+                        }
+                        p {
+                            float: right;
+                            color: #666;
+                            font-size: 28px;
+                            line-height: 78px;
+                            text-align: left;
+                            width: 87%;
+                            word-break: break-all;
+                        }
+                    }
+                }
+            }
+            .am-list-content {
+                text-align: center;
+            }
+            .text {
+                display: inline-block;
+                padding: 80px 0px 80px 0px;
+                width: 100%;
+                color: #333;
+            }
+            .right-icon {
+                display: inline-block;
+                margin-top: 67px;
+                position: absolute;
+                margin-left: -26px;
+                color: @color-text-secondary;
+            }
+        }
+    }
+    .middle-box {
+        overflow: hidden;
+        position: relative;
+        .products-content + .products-content {
+            margin-top: 10*@hd;
+        }
+
+        .step4 {
+            .sitem-tip {
+                padding: 9px 19px;
+                background: #f23030;
+                color: #fff;
+                font-size: 24px;
+                font-style: normal;
+                margin-left: 20px;
+            }
+            .size {
+                font-size: @font-size-base;
+                margin-left: 20px;
+            }
+        }
+
+
+    }
+
+}
+
+.vb-product-counp {
+    .pop-hight-2 {
+        position: relative;
+        overflow: auto;
+        flex: 1 1 0%;
+        height: 800px;
+    }
+}
+
+.cart-fixed {
+    z-index: 99;
+    position: fixed;
+    height: 44*@hd;
+    line-height: 44*@hd;
+    background: @fill-base;
+    font-size: @font-size-caption-sm;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    border-top: 1*@hd solid @border-color-base;
+    display: flex;
+    .am-box {
+        width: 100%;
+    }
+    .left-money {
+        flex: 1;
+        padding-right: 10*@hd;
+        text-align: right;
+        .span-l {
+            float: left;
+        }
+        .line {
+            color: #E6E0E0;
+            margin: 0 5*@hd;
+            display: inline-block;
+        }
+        .span-c {
+
+            display: inline-block;
+
+        }
+        .span-b {
+            display: inline-block;
+        }
+        .span-m {
+        }
+        .span-m-1 {
+
+        }
+
+    }
+    .btn-right-delete-block {
+        display: inline-block;
+        text-align: center;
+        background: @ghost-button-color;
+        color: #fff;
+        width: 100*@hd;
+        a {
+            color: #fff;
+        }
+    }
+    .btn-right-no-block {
+        display: inline-block;
+        text-align: center;
+        background: @fill-disabled;
+        color: #fff;
+        width: 100*@hd;
+
+    }
+
+}

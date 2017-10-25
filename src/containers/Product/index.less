@@ -1,0 +1,259 @@
+@import "../../assets/style/theme";
+
+.vb-evaluation {
+    width: 100%;
+    overflow-y: auto;
+    .no-evaluate {
+        text-align: center;
+        background: white;
+        padding: 34*@hd;
+    }
+}
+
+.vb-product {
+    background: @fill-body;
+    overflow-y: auto;
+    .my-carousel-sild {
+        height: 375px*@hd !important;
+
+        img {
+            width: 100%;
+            height: 375px*@hd !important;
+        }
+
+    }
+    .am-tabs {
+        .am-tabs-tab {
+            background-color: rgb(240, 242, 245) !important;
+        }
+    }
+    .slider-frame {
+        height: 375px*@hd !important;
+    }
+    .am-tabs {
+        // border-bottom: 1px solid @border-color-base;
+        .am-tabs-tabpane {
+            background: #f0f2f5;
+        }
+    }
+
+    .back-size {
+        box-sizing: border-box;
+        height: 90*@hd;
+        border-top: 1PX solid #ddd;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        display: flex;
+        transition: bottom .2s;
+        z-index: 100;
+        font-size: 50*@hd;
+        padding: 18px;
+        background: #f0f2f5;
+    }
+    .details-style {
+        width: 100%;
+        margin-bottom: 100*@hd;
+        overflow-x: hidden;
+        img {
+            width: 100%;
+        }
+    }
+    .am-tabs-bar {
+        box-sizing: border-box;
+        height: 90*@hd;
+        border-top: 1PX solid #ddd;
+        position: fixed;
+        top: 0;
+        display: flex;
+        transition: bottom .2s;
+        z-index: 100;
+        width: 60%;
+        margin: 0px auto;
+        margin-left: 20%;
+    }
+    .am-tabs-content {
+        background: @fill-body;
+    }
+    .vb-commodity {
+        width: 100%;
+        overflow-x: hidden;
+        .my-list{
+            .am-list-content{
+                font-size: @font-size-base;
+            }
+            .am-list-item{
+                padding: 0px;
+            }
+        }
+    }
+    .price-floor {
+        padding: 10*@hd 10*@hd 0;
+        background-color: @fill-base;
+        position: relative;
+        border-top: 2px solid @border-color-base;
+
+        .prod-title {
+            position: relative;
+            .title-text-wrap {
+                display: inline-block;
+                font-size: 0;
+                color: #232326;
+                margin-right: 10*@hd;
+                line-height: 1.2;
+                text-align: center;
+                .title-text {
+                    font-size: @font-size-caption;
+                    color: #232326;
+                    line-height: 1.2;
+                }
+            }
+        }
+        .money-footer {
+            display: inline-block;
+            .money {
+                font-size: @font-size-caption;
+                margin-left: 6*@hd;
+            }
+        }
+
+        .prod-act {
+            color: @color-text-secondary;
+            font-size: @font-size-base;
+            padding-top: 22*@hd;
+            padding-bottom: 10*@hd;
+            .inline_1{
+                flex:1;
+            }
+             .inline_2{
+                flex:2;
+            }
+            .text-left {
+                text-align: left;
+            }
+            .text-right {
+                text-align: right;
+            }
+            .right {
+                float: right;
+                margin-right: 20px;
+            }
+            &:after {
+                position: absolute;
+                content: '';
+                -webkit-transform: scaleY(.5);
+                transform: scaleY(.5);
+                bottom: -1px;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                border-bottom: 1px solid @color-text-disabled;
+                z-index: 10;
+            }
+        }
+    }
+    .goods-part {
+        background: @fill-base;
+        color: @color-text-base;
+        font-size: @font-size-base;
+        .empty-data {
+            padding: 20*@hd;
+            text-align: center;
+        }
+
+        .spec-desc {
+            padding: 10px;
+        }
+        .comment-title {
+            height: 44*@hd;
+            line-height: 44*@hd;
+            border-bottom: 1px solid @border-color-base;
+            padding-right: 10*@hd;
+            margin-left: 10*@hd;
+        }
+    }
+    .cell-tag-hd {
+        color: @color-text-secondary;
+    }
+    .brand {
+        margin-top: 20px;
+        padding: 20px;
+        color: @color-text-base;
+        font-size: @font-size-base;
+        background: @fill-base;
+
+        .ellipsis {
+            float: right;
+            margin-right: 11px;
+        }
+        .coupon-bg {
+            position: relative;
+            width: 100px;
+            height: 40px;
+            margin-right: 3%;
+            background: @fill-tap;
+            display: inline-block;
+            color: @color-text-base-inverse;
+            font-size: @font-size-base;
+            padding-top: 7px;
+            margin-left: 15px;
+            &:last-child {
+                margin-right: 0;
+            }
+            &:before {
+                content: "";
+                position: absolute;
+                left: 0px;
+                top: 0;
+                width: 10px;
+                height: 100%;
+            }
+            &:before {
+                content: "";
+                position: absolute;
+                top: -20px;
+                display: block;
+                width: 10px;
+                height: 100%;
+                margin-top: 20px;
+                background-size: 20px 10px;
+            }
+            &:after {
+                content: "";
+                position: absolute;
+                top: -20px;
+                display: block;
+                width: 10px;
+                height: 100%;
+                margin-top: 20px;
+                background-size: 20px 10px;
+            }
+            &:before {
+                left: -10px;
+                background-color: #fff;
+                background-position: 100% 35%;
+                background-image: linear-gradient(-45deg, @fill-tap 25%, transparent 25%, transparent), linear-gradient(-135deg, @fill-tap 25%, transparent 25%, transparent), linear-gradient(-45deg, transparent 75%, @fill-tap 75%), linear-gradient(-135deg, transparent 75%, @fill-tap 75%);
+            }
+            &:after {
+                right: -10px;
+                background-color: @fill-tap;
+                background-position: 100% 15%;
+                background-image: linear-gradient(-45deg, #fff 25%, transparent 25%, transparent), linear-gradient(-135deg, #fff 25%, transparent 25%, transparent), linear-gradient(-45deg, transparent 75%, #fff 75%), linear-gradient(-135deg, transparent 75%, #fff 75%);
+            }
+        }
+    }
+    .selected-colortype {
+        .fourth-cells {
+            position: relative;
+            overflow: hidden;
+
+            .cell-primary {
+            }
+            .ellipsis {
+                float: right;
+                margin-right: 11px;
+            }
+        }
+    }
+}
+

@@ -1,0 +1,98 @@
+@import "../../assets/style/theme";
+
+.my-info {
+    background: @fill-body;
+
+    .info-1 {
+        .div-step-1 {
+            background: @fill-ancillary-red;
+            padding: 20px *@hd;
+            position: relative;
+            .img-user {
+                display: inline-block;
+                width: 64*@hd;
+                height: 64*@hd;
+                img {
+                    width: 64*@hd;
+                    height: 64*@hd;
+                    border-radius: 64*@hd;
+                }
+            }
+            .user-info {
+                color: @color-text-base-inverse;
+                .phone {
+                   font-size: @font-size-base;
+                }
+            }
+        }
+    }
+    .info-2 {
+        background: white;
+        border-bottom: 1px solid #ddd;
+        .grid-item {
+            padding: 10px*@hd 0px 10px*@hd 0px;
+            text-align: center;
+
+            .grid-number {
+                font-size: @font-size-heading;
+                color: @color-text-base;
+                font-weight: 300;
+            }
+            .grid-vb{
+                font-size: @font-size-caption-sm;
+                color: @color-text-base;
+            }
+
+        }
+    }
+    .info-3 {
+        .am-list-content{
+            font-size:@font-size-base !important;
+        }
+        .am-list-extra{
+            font-size:@font-size-caption-sm;
+        }
+        .menu-nav {
+            padding: 10 *@hd;
+            position: relative;
+            background: @fill-base;
+            .grid-item {
+                text-align: center;
+                .item-bage {
+                    position: absolute;
+                    margin-left: 15px * @hd;
+                    margin-top: -3px * @hd;
+                }
+                .icon-dzf {
+                    font-size: 30px *@hd;
+                    color: #737373;
+                }
+                .icon-dfh {
+                    font-size: 30px * @hd;
+                    color: #737373;
+                }
+                .icon-dsh {
+                    font-size: 30px *@hd;
+                    color: #737373;
+                }
+                .icon-dpj {
+                    font-size: 30px * @hd;
+                    color: #737373;
+                }
+                .grid-name {
+                    font-size: @font-size-caption-sm;
+                }
+            }
+        }
+    }
+    .info-4 {
+        border-bottom: 1px solid #ddd;
+        .am-list-content{
+            font-size:@font-size-base !important;
+        }
+        .am-grid-icon {
+            margin-top: 0px !important;
+
+        }
+    }
+}

@@ -1,0 +1,83 @@
+.shop-cart-item {
+    .check-wrapper {
+        display: block;
+        position: absolute;
+        margin-top: 60px;
+    }
+    .no-check{
+        margin-left: 0px !important;
+    }
+    .shp-cart-item-core {
+        position: relative;
+        margin: 20px 0;
+        box-sizing: border-box;
+        margin-left: 60px;
+           
+        .cart-product-cell-1 {
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-decoration: none;
+            text-decoration: none;
+            color: #67738A;
+            outline: 0 none;
+            img {
+                width: 176px;
+                height: 176px;
+            }
+        }
+        .cart-product-cell-2 {
+            padding-left: 190px;
+            padding-right: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            min-width: 236px;
+            .cart-product-name {
+                margin-bottom: 6px;
+                height: 60px;
+                line-height: 30px;
+                font-size: 26px;
+                color: #252525;
+                margin-right: 20px;
+                a {
+                    color: black;
+                    display: inline-block;
+                    height: 100%;
+                    position: relative;
+                    text-decoration: none;
+                }
+            }
+            .cart-product-prop{
+                font-size: 24px;
+     color: #252525;
+            }
+        }
+        .cart-product-cell-3 {
+            width: 100%;
+            position: relative;
+            background: #fff;
+            text-align: left;
+            height: 75px;
+            line-height: 75px;
+            margin-top: 40px;
+            .eidt-options{
+                position: absolute;
+                .icon-size{
+                font-size: 36px;
+                margin-left: 30px;    
+            }
+            }
+            
+            .quantity-wrapper {
+                position: absolute;
+                top: 0;
+                right: 0;
+                box-sizing: border-box;
+                white-space: nowrap;
+                height: 100%;
+            }
+        }
+    }
+}

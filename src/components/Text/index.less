@@ -1,0 +1,41 @@
+@import "../../assets/style/theme";
+.components-text{
+    width: 100%;
+    .text-line-clamp-1{
+        display: block;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-break: break-all;
+    }
+    .text-line-clamp-2{
+        //height: 30px;
+        //max-height: 30px;
+        //line-height: 15px;
+        vertical-align: middle;
+        display: -webkit-box;
+        -webkit-box-pack: center;
+        -webkit-box-align: start;
+        word-break: break-all;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        padding: 1px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .text-type-xs{
+        font-size: @font-size-icontext;
+    }
+    .text-type-sm{
+        font-size:@font-size-caption-sm;
+    }
+    .text-type-md{
+        font-size:@font-size-base;
+    }
+    .text-type-lg{
+        font-size:@font-size-caption;
+    }
+
+}
+

@@ -1,0 +1,63 @@
+@import "../../assets/style/theme.less";
+
+.vb-home {
+    overflow-x: hidden;
+    .home-grid-icon {
+        width: @grid-imge-height;
+    }
+    .swiper-div{
+        background: @fill-base;
+    }
+    .swiper-slide{
+        margin: 10px*@hd 10px*@hd;
+        width:90*@hd;
+        text-align:center;
+    }
+    .background-base{
+        background: @fill-base;
+    }
+    .am-carousel-wrap-dot{
+        span{
+            border-radius: 0px;
+            width: 10*@hd;
+            height: 2*@hd;
+
+        }
+    }
+    .my-carousel-sild{
+        img{
+            height: 200 * @hd;
+        }
+    }
+    .menu-nav{
+        .am-flexbox{
+            padding: 10*@hd 0px 10*@hd 0px;
+        }
+    }
+    .am-carousel-wrap-dot-active{
+        span{
+            border-radius: 0px;
+            width: 10*@hd;
+            height: 2*@hd;
+            background: @brand-primary;
+        }
+    }
+    .banner-img{
+        img{
+            width: 100%;
+            max-height: 200*@hd;
+            height: 116*@hd;
+        }
+    }
+    .active{
+        background: @fill-base;
+        img{
+            width: 100%;
+
+        }
+        .money{
+            font-size: @font-size-base;
+            margin-left: 10px;
+        }
+    }
+}

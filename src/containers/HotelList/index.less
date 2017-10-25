@@ -1,0 +1,100 @@
+@import "../../assets/style/theme";
+.hotel-list{
+    margin:10*@hd;
+    i{
+        font-style: normal;
+    }
+    .text-ellipsis {
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-break: break-all;
+    }
+   
+    .item-order{
+        margin-bottom: 10*@hd;
+        border-radius: 5*@hd;
+        background-color: @fill-base;
+        font-size:@font-size-base;
+        color:@color-text-base-inverse;
+        border-radius:5*@hd;
+        .o-title{
+            background-color:@fill-ancillary-yellow;
+            color: #fff;
+            padding:8*@hd;
+            border-top-right-radius: 5*@hd;
+            border-top-left-radius: 5*@hd;
+            .tt{
+                line-height: 32*@hd;
+                height:32*@hd;
+                display:flex;
+                justify-content: space-between;
+                .h-status {
+                   
+                }
+                .h-name {
+                    font-size:@font-size-heading;
+                }
+            }
+            .ti {
+                
+                .la-ti {
+                    margin-left:15*@hd;
+                }
+            }
+        }
+        .o-day-loop {
+            padding:20*@hd 10*@hd;
+            position: relative;
+            &:last-child 
+            {
+                .d-wrap {
+                    border-bottom: 0;
+                }
+            }
+            .d-wrap 
+            {   
+                .o-fx {
+                    color: @fill-ancillary-yellow;
+                    display:flex;
+                    justify-content:space-between;
+                     .fx-name {
+                        flex:1;
+                    }
+                    .fx-time {
+                        padding-left: 10*@hd;
+                        .cancel-order.proc {
+                            background-color: @fill-ancillary-yellow;
+                            border: 0;
+                            color:@color-text-base-inverse;
+                            padding:6*@hd 12*@hd;
+                            border-radius:5*@hd;
+                        }
+                    }
+                }
+                .order-process-look{
+                    padding-top:10*@hd;
+                }
+                .order-code {
+                    padding-top: 5*@hd;
+                    color:@color-text-base;
+                }
+            }
+        }
+        .o-bottom {
+            border-bottom-right-radius: 5*@hd;
+            border-bottom-left-radius: 5*@hd;
+            background-color:@fill-ancillary-yellow;
+            color: #fff;
+            padding:0 10*@hd;
+            .tt {
+                line-height: 44*@hd;
+                height: 44*@hd;
+                .h-name {
+                }
+            }
+        }
+    }
+    
+}

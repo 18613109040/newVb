@@ -1,0 +1,163 @@
+@import "../../assets/style/theme";
+
+.stamp {
+    background: @fill-body;
+    padding: 20px 10px 0px 30px;
+    position: relative;
+
+    .hui {
+        background-color: #bcbcbc !important;
+    }
+    .hui1 {
+        background-color: #e4e3e3 !important;
+    }
+
+    .left {
+        height: 196px;
+        .item {
+            width: 14px;
+            height: 22px;
+            text-align: center;
+            background-color: #5483d7;
+            position: relative;
+            &:after {
+                width: 24px;
+                height: 16px;
+                content: "";
+                right: 5px;
+                top: 3px;
+                position: absolute;
+                display: block;
+                background: #f0f2f5;
+                border-radius: 24px;
+            }
+        }
+    }
+
+    .left-bg {
+        width: 35%;
+        height: 198px;
+        float: left;
+        background: #5483d7;
+        color: @color-text-base-inverse;
+        text-align: center;
+        .content {
+            font-size: 70px;
+            margin-top: 20px;
+            .money {
+                font-size: 40px;
+            }
+
+        }
+        .text {
+            margin-top: 25px;
+            font-size: 28px;
+        }
+
+    }
+    .right-bg {
+        width: 60%;
+        height: 198px;
+        display: inline-block;
+        float: left;
+        background: #fff;
+        .top {
+            padding: 10px;
+            position: relative;
+            height: 60px;
+            max-height: 60px;
+            line-height: 60px;
+            .tip-tag {
+                background: #5483D7;
+                padding: 2px 20px 2px 20px;
+                color: white;
+                font-size: @font-size-caption-sm;
+            }
+            .name {
+
+                margin-left: 10px;
+                color: @color-text-secondary;
+
+                padding: 4px;
+                position: absolute;
+            }
+        }
+        .center {
+            text-align: right;
+            margin-bottom: 10*@hd;
+            min-height: 22*@hd;
+            margin-top: 5px *@hd;
+            .my-radio{
+                padding: 0px 2.5px*@hd 0px 2.5px*@hd;
+                border: 1px solid #ccc;
+                border-radius: 50%;
+                margin-right: 15px * @hd;
+
+            }
+            .status01 {
+                background: url(../../assets/images/yilingqu-icon.png) no-repeat center center;
+
+            }
+            .status02 {
+                background: url(../../assets/images/yishiyong-icon.png) no-repeat center center;
+
+            }
+            .status03 {
+                background: url(../../assets/images/yiguoqi-icon.png) no-repeat center center;
+
+            }
+            .status01, .status02, .status03 {
+                height: 124px;
+                width: 178px;
+                background-size: contain;
+                position: absolute;
+                right: 20*@hd;
+                top: 14*@hd;
+            }
+            .dianji {
+                color: @color-text-base;
+                border: 1px solid @border-color-base;
+                font-size: @font-size-caption-sm;
+                padding: 5px 20px 6px 20px;
+                border-radius: 5px;
+                margin-right: 20px;
+            }
+            .youxiao {
+                font-size: @font-size-base;
+                color: @color-text-secondary;
+            }
+        }
+        .dashed {
+            border-bottom: 1px dashed #bbb;
+            border-width: 3px;
+            width: 93%;
+            margin: 0px auto;
+        }
+        .time {
+            color: @color-text-secondary;
+            font-size: @font-size-caption-sm;
+            padding: 10px;
+        }
+    }
+    .right {
+        height: 196px;
+        .item {
+            width: 14px;
+            height: 22px;
+            text-align: center;
+
+            position: relative;
+            &:after {
+                width: 24px;
+                height: 16px;
+                content: "";
+                right: 0px;
+                top: 3px;
+                position: absolute;
+                display: block;
+                background: #f0f2f5;
+                border-radius: 24px;
+            }
+        }
+    }
+}

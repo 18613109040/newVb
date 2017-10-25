@@ -1,0 +1,133 @@
+@import "../../assets/style/theme";
+
+.address-item {
+    background: @fill-ancillary-red;
+    padding: 20*@hd 10*@hd 20*@hd;
+    color: @fill-base;
+    display: flex;
+    align-items: center;
+    font-size: @font-size-base;
+    .aleft {
+        padding-right: 10*@hd;
+    }
+    .aright {
+        flex: 1;
+        .ap1 {
+            display: flex;
+            justify-content: space-between;
+            line-height: 1.4
+
+        }
+        .ap2 {
+            line-height: 1.4
+        }
+        .as1 {
+            width: 76*@hd;
+            display: inline-block;
+        }
+    }
+    .aarrow {
+        padding-left: 10*@hd;
+    }
+}
+
+.product-type-show {
+    background: @fill-ancillary;
+    font-size: @font-size-caption-sm;
+    display: flex;
+    height: 32*@hd;
+    line-height: 32*@hd;
+    .aleft {
+        flex: 4;
+        padding-left: 10*@hd;
+        text-align: left;
+
+    }
+    .aright {
+        flex: 1;
+        background: @fill-ancillary-yellow;
+        text-align: center;
+    }
+}
+
+.product-title {
+    font-size: @font-size-base;
+    background: @fill-base;
+    display: flex;
+    height: 44*@hd;
+    align-items: center;
+    padding: 0 10*@hd;
+
+    .type {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        padding-left: 8*@hd;
+        .tip {
+            font-size: @font-size-caption-sm;
+            color: @color-text-secondary;
+        }
+    }
+
+}
+
+.middle-box {
+    .step6 {
+        .item{
+            &:first-child{
+                padding-top: 10*@hd;
+            }
+            &:last-child{
+               padding-bottom: 10*@hd;
+            }
+        }
+
+
+    }
+    .step4 {
+        .f14 {
+            font-size: @font-size-base;
+        }
+        .f12 {
+            font-size: @font-size-caption-sm;
+        }
+        .am-list-extra {
+            flex-basis: auto;
+        }
+
+    }
+    .step5 {
+        .am-textarea-label, .am-textarea-control textarea {
+            font-size: @font-size-base;
+        }
+        .am-textarea-label.am-textarea-label-5 {
+            width: auto;
+        }
+
+    }
+
+    .order-footer {
+        padding: 0 10*@hd;
+        text-align: right;
+        height: 44*@hd;
+        line-height: 44*@hd;
+        font-size: @font-size-base;
+        background: @fill-base;
+        border-top: 1*@hd solid @border-color-base;
+        .span {
+            color: @color-text-secondary;
+        }
+        .prod-price {
+            display: inline-block;
+        }
+    }
+}
+
+.vb-product-counp {
+    .title {
+        background: @fill-base;
+    }
+    min-height: 350*@hd;
+    background: #f4f4f4;
+
+}

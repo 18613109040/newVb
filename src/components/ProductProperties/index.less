@@ -1,0 +1,154 @@
+@import "../../assets/style/theme";
+
+.am-modal-content, .am-modal-body {
+    overflow: visible;
+}
+
+.vb-product-properties {
+    position: relative;
+    .colose {
+        position: absolute;
+        color: @color-text-secondary;
+        right: 0;
+        top: 0;
+        z-index: 99;
+        margin: 10*@hd;
+    }
+    .money-footer{
+        display: inline-block;
+        .money{
+            font-size: @font-size-caption;
+            margin-left: 6*@hd;
+        }
+    }
+    .cover-head {
+        position: relative;
+        min-height: 100*@hd;
+        padding-left: 10*@hd;
+        .img-box {
+            position: absolute;
+            width: 100*@hd;
+            height: 100*@hd;
+            top: -15*@hd;
+            left: 15*@hd;
+            border: 1*@hd solid #ddd;
+            border-radius: 5*@hd;
+
+            img {
+                width: 100*@hd;
+                height: 100*@hd;
+                border-radius: 5*@hd;
+            }
+        }
+        .kun-cun {
+
+        }
+        .product {
+            font-size: @font-size-base;
+            padding: 10*@hd 0 0 120*@hd;
+            text-align: left;
+            color: @color-text-base;
+            .productname {
+                color: #6f6f6f;
+                white-space: inherit;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                word-break: break-all;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+            }
+
+            .price {
+
+                .font-style {
+                    font-size: 20*@hd;
+                }
+            }
+            .choose-size {
+                color: @color-text-secondary;
+            }
+        }
+    }
+    .cover-body {
+
+        .slider {
+            h2 {
+                font-size: @font-size-caption-sm;
+                font-weight: 400;
+            }
+            .items {
+                padding-top: 10*@hd;
+                .checked {
+                    border-color: @fill-ancillary;
+                    color: @fill-ancillary;
+                    &:after {
+                        /*  content: '';
+                        width: 0.17rem;
+                        height: 0.17rem;
+                        position: absolute;
+                        right: -1*@hd;
+                        bottom: -1*@hd;
+                        background-position: center center;
+                        background-size: 0.15rem 0.10rem;
+                        background-color: #F5525D;
+                        background-repeat: no-repeat;
+                        z-index: 99; */
+                        //background-image: url(../../assets/images/TisPD_2.png);
+
+                    }
+                }
+                .no-goods {
+                    border-style: dashed;
+                }
+                .goods {
+                    border-style: groove;
+                }
+
+                label {
+                    border: 1*@hd solid @border-color-base;
+                    transform-origin: 0*@hd 0*@hd 0*@hd;
+                    opacity: 1;
+                    transform: scale(1, 1);
+                    display: inline-block;
+                    margin: 0*@hd 15*@hd 15*@hd 0*@hd;
+                    padding: 4*@hd 15*@hd;
+                    text-align: center;
+                    border-radius: 2*@hd;
+                    box-sizing: border-box;
+                    float: left;
+                    font-size: @font-size-caption-sm;
+                }
+            }
+        }
+        .number {
+            font-size: @font-size-base;
+        }
+
+    }
+    .cover-action {
+
+        height: 44*@hd;
+        width: 100%;
+        .am-flexbox-item{
+            margin-left: 0px !important;
+        }
+        .addtocart {
+            background-color: @fill-ancillary;
+            font-size: 14*@hd;
+            text-align: center;
+            display: block;
+            color: @color-text-base;
+            line-height: 44*@hd;
+        }
+        .buy {
+            background-color: @fill-ancillary-yellow;
+            font-size: 14*@hd;
+            text-align: center;
+            color: @color-text-base;
+            display: block;
+            line-height: 44*@hd;
+        }
+    }
+}

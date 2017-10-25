@@ -1,0 +1,58 @@
+@import "../../assets/style/theme.less";
+.login-content{
+	background: @fill-base;
+	.header{
+		text-align: center;
+		margin: 30*@hd 0 50*@hd;
+		img{
+			width: 50*@hd;
+			height:50*@hd;
+			border-radius: 50%;
+		}
+	}
+	.am-list-body{
+			&:before{
+				height:0 !important;
+			}
+	}
+	.login-item{
+		display:flex;
+		height:44*@hd;
+		line-height: 44*@hd;
+		position: relative;
+		
+		+.login-item{
+			border-top: 1px solid #ddd;
+		}
+		input{
+			padding:0 10*@hd;
+			border:0
+		}
+		.code-btn{
+			position:absolute;
+			right: 0;
+			top:0;
+			font-size:@font-size-caption-sm;
+			color:@color-text-base;
+			padding:0 10*@hd;
+			background:@fill-ancillary;
+		}
+
+	}
+	.btn{
+		background:@brand-primary;
+		font-size: @font-size-base;
+		margin-top: 50*@hd;
+	}
+	.bottom{
+		position:fixed;
+		bottom:0;
+		left: 0;
+		width:100%;
+		text-align:center;
+		.span{
+			padding:20*@hd 30*@hd;
+			display:inline-block;
+		}
+	}
+}

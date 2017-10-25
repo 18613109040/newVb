@@ -1,0 +1,254 @@
+@import "../../assets/style/theme";
+.nav-content{
+    overflow:auto;
+}
+.oreder-modal{
+    margin-bottom: -29px;
+    .title{
+            font-size: 32px;
+            display: inline-block;
+            position: absolute;
+            margin-top: 12px;
+            margin-left: 15px;
+        }
+}
+.order-details {
+    background: @fill-body;
+    font-size: @font-size-base;
+
+    .am-list-content {
+        font-size: @font-size-base !important;
+    }
+    .am-navbar-left-icon {
+
+    }
+    .back-size {
+        font-size: 50px;
+        color: @color-text-base;
+    }
+    .list-5{
+        .remark{
+            .am-list-content{
+              white-space:normal;
+            }
+        }
+        
+    }
+    .list-1 {
+        .item-1 {
+            .phone {
+                float: right;
+            }
+        }
+        .am-list-brief{
+            color:@color-text-base;
+        }
+    }
+    .list-2 {
+        .icon-title >i{
+            margin-right:10*@hd;
+        }
+    }
+    .money{
+        font-size: @font-size-base;
+        margin-left: 10px;
+    }
+    .bottom-btn{
+        border-top: 1PX solid @border-color-base;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: @fill-base;
+        z-index: 99;
+
+        .div-11{
+               text-align: right;
+            width: 100%;
+        }
+        .cal-btn,.pay-btn{
+            display: inline-block;
+            line-height: 44*@hd;
+            text-align: center;
+            height: 44*@hd;
+            width: 116*@hd;
+
+        }
+        .cal-btn{
+            background: @fill-ancillary;
+        }
+        .pay-btn{
+            background: @fill-ancillary-yellow;
+
+        }
+    }
+    .list-3 {
+        .am-list-extra {
+            flex-basis: 20% !important;
+            }
+        .a-link {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            .s-item {
+                position: relative;
+                // padding: 14px 0 14px 0;
+                overflow: hidden;
+                display: block;
+                .pdiv {
+                    display: -webkit-box;
+                    display: box;
+                    width: 100%;
+                    height: auto;
+                    .sitem-l {
+                        text-align: center;
+                        width: 140px;
+                        -webkit-box-sizing: border-box;
+                        box-sizing: border-box;
+                        .sl-img-box {
+                            width: 121px;
+                            height: 121px;
+                            float: left;
+                            margin-right: 20px;
+                            border-radius: 6px;
+                            overflow: hidden;
+                            .sl-img {
+                                width: 240px;
+                                height: 240px;
+                                border: 1px solid #e1e1e1;
+                                border-radius: 12px;
+                                overflow: hidden;
+                                transform: scale(.5, .5);
+                                -webkit-transform: scale(.5, .5);
+                                transform-origin: top left;
+                                -webkit-transform-origin: top left;
+                                img {
+                                    max-width: 100%;
+                                    width: 240px;
+                                    height: 240px;
+                                }
+                            }
+                        }
+                    }
+                    .sitem-m {
+                        display: block;
+                        line-height: 32px;
+                        padding-top: 6px;
+                        padding-bottom: 6px;
+                        -webkit-box-sizing: border-box;
+                        box-sizing: border-box;
+                        -webkit-box-flex: 1;
+                        .sitem-m-txt {
+                            overflow: hidden;
+                            height: 64px;
+                            padding-bottom: 6*@hd;
+                            -webkit-line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            text-overflow: ellipsis;
+                        }
+                        .sitem-m-txt2 {
+                           font-size:@font-size-caption-sm;
+                           color:@color-text-secondary;
+                           padding-bottom: 3*@hd;
+                        }
+                        .s3-num {
+                            display:flex;
+                            justify-content: space-between;
+
+                        }
+                    }
+                    .sitem-r {
+                        span {
+                            display: inline-block;
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .list-4{
+        .am-list-extra{
+            -webkit-flex-basis: 100%;
+            font-size: @font-size-base;
+        }
+        .div-4{
+            span{
+               display: inline-block;
+            }
+        }
+        .commodity-price{
+            color:@color-text-base;
+        }
+    }
+    .list-5{
+      .i_t{
+              color: @color-text-secondary;
+              margin-left: 10px;
+      }
+    }
+    .list-6{
+        margin-bottom:44*@hd;
+        background:@fill-base;
+        padding:0 15*@hd;
+        .item{
+            display:flex;
+            justify-content: space-between;
+            height:30*@hd;
+            line-height:30*@hd;
+
+        }
+        .item:last-child{
+            .s2{
+                color:@color-text-base;
+            }
+        }
+
+
+    }
+    .list-0{
+        background:@fill-ancillary-red;
+        padding:10*@hd 0 20*@hd;
+        color:@fill-base;
+        text-align:center;
+        p{
+            margin:0;
+            padding:0;
+        }
+        .p1{
+                font-size:@font-size-caption;
+                padding-top:10*@hd;
+                padding-bottom:10*@hd;
+            }
+        .line{
+
+            span{
+                margin:0 auto;
+                display:block;
+                background:@fill-base;
+                height:1*@hd;
+            }
+            span:first-child{
+                width:20*@hd;
+            }
+            span:nth-child(2){
+                margin-top:5*@hd;
+                width:30*@hd;
+            }
+            span:last-child{
+                margin-top:5*@hd;
+                width:50*@hd;
+
+            }
+        }
+    }
+    .list-wuliu{
+        .am-list-extra{
+            font-size:@font-size-caption-sm;
+            color:@color-text-secondary;
+        }
+    }
+    .s1{
+        display:inline-block;
+        width:80*@hd;
+    }
+}
