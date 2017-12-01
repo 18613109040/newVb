@@ -1,5 +1,4 @@
 import React, {Component,PropTypes} from "react";
-import {  TabBar, Icon } from 'antd-mobile';
 import { Link } from "react-router";
 class ProductList extends Component {
 	static propTypes = {
@@ -67,9 +66,9 @@ export class CommodityIcon extends Component{
 	render(){
 		let {iconType} =this.props;
 		return(
-				iconType==1 ? 
+				iconType==1 ?
 	    	<i className="iconfont icon-qian"></i>:<i className="iconfont icon-vbi"></i>
 		)
-		
+
 	}
 }

@@ -1,13 +1,11 @@
 import fetch from "isomorphic-fetch";
-import { hashHistory } from 'react-router'
-import Cookie from "js-cookie";
+import {hashHistory} from 'react-router'
 import {storage} from "../utils/tools"
 
 /**
  * @desc 格式化一个对象为字符串如 name=pat&city_no=020&old=99;
  * @param data string
  **/
- console.log(storage.get("token"))
 function parseParams(data) {
     if (data == null) {
         return '';
@@ -43,6 +41,7 @@ const jsonoption = {
     }
 
 };
+
 export function get(url = "", data = null, callback = (json) => {
 }, reducersConnect = (json) => {
 }) {
@@ -61,9 +60,9 @@ export function get(url = "", data = null, callback = (json) => {
                 return response.json()
             })
             .then(json => {
-                if(json.code == 1001){
-                   //用户未登录
-                   hashHistory.push("/login")
+                if (json.code == 1001) {
+                    //用户未登录
+                    hashHistory.push("/login")
                 }
                 dispatch(reducersConnect(json));
                 callback(json);
@@ -113,7 +112,10 @@ export function postfrom(url = "", data = null, callback = (json) => {
             method: "POST",
             body: form,
             timeout: 10000,
-            credentials: 'include'
+            credentials: 'include',
+            headers: {
+                "token": storage.get("token")
+            }
         })
             .then((response, onRejected) => {
                 return response.json()
@@ -128,6 +130,7 @@ export function postfrom(url = "", data = null, callback = (json) => {
 export function post(url = "", data = null, callback = (json) => {
 }, reducersConnect = (json) => {
 }) {
+
     const params = parseParams(data)
     return dispatch => {
         return fetch(url, {
@@ -141,7 +144,6 @@ export function post(url = "", data = null, callback = (json) => {
             }
         })
             .then(response => {
-
                 if (response.headers.get("token")) {
                     storage.setObj({
                         token: response.headers.get("token")
@@ -150,13 +152,15 @@ export function post(url = "", data = null, callback = (json) => {
                 return response.json()
             })
             .then(json => {
-                if(json.code == 1001){
+                if (json.code == 1001) {
                     //用户未登录
                     storage.remove("userInfo")
                     hashHistory.push("/login")
                 }
+
                 dispatch(reducersConnect(json));
                 callback(json);
+
             })
     }
 }

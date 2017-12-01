@@ -9,8 +9,6 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {
     getVbExchangeMenu,
-    getVbExchangeHost,
-    getVbList,
     getVbMenuChildren,
     changeVbInficationMenu
 } from '../../actions/newShelves'
@@ -19,7 +17,8 @@ import NavBar from '../../components/NavBar'
 import ClassIficationItem from '../../components/ClassIficationItem'
 import ClassIficationContent from '../../components/ClassIficationContent'
 import './index.less'
-
+import utils from '../../utils'
+import {changeNavbarTitle} from '../../actions/home'
 class VbExchange extends React.Component {
     static propTypes = {};
     static contextTypes = {
@@ -46,6 +45,7 @@ class VbExchange extends React.Component {
     componentWillMount() {
         const {id} = this.props.location.query;
         const {vbexchangemenu} = this.props;
+        this.props.dispatch(changeNavbarTitle("V币热兑"))
         if (vbexchangemenu.code == -1) {
             this.props.dispatch(getVbExchangeMenu(id, {}, (res) => {
                 if (res.code == 0 && res.data.length > 0) {
@@ -64,14 +64,14 @@ class VbExchange extends React.Component {
     }
     //点击左侧分类列表
     clickMenu=(data)=>{
-        console.dir(data)
+
         this.props.dispatch(changeVbInficationMenu(data))
         this.setState({
             imCategoryId:data.imCategoryId
         })
         const {vbexchangemenu} = this.props;
         if(vbexchangemenu.data.filter(item=>item.imCategoryId == data.imCategoryId)[0].children&&vbexchangemenu.data.filter(item=>item.imCategoryId == data.imCategoryId)[0].children.length>0){
-            console.dir("++++++++++")
+
             return ;
         }else{
             this.props.dispatch(getVbMenuChildren(data.imCategoryId))
@@ -85,21 +85,20 @@ class VbExchange extends React.Component {
         const {vbexchangemenu} = this.props;
         return (
             <div className="class-infication">
-                <NavBar title="V币热兑" {...this.props}/>
                 <WhiteSpace/>
                 <WingBlank>
                     <Search type="0"/>
                 </WingBlank>
                 <WhiteSpace/>
                 <Flex className="content">
-                    <div className="left-sider" style={{height: document.documentElement.clientHeight - 200}}>
+                    <div className="left-sider" style={{height: document.documentElement.clientHeight - 110*utils.multiple}}>
                         {
                             vbexchangemenu.data.map((item, index) => (
                                 <ClassIficationItem key={index} silderData={item} clickMenu={this.clickMenu}/>
                             ))
                         }
                     </div>
-                    <div className="right-content" style={{height: document.documentElement.clientHeight - 200}}>
+                    <div className="right-content" style={{height: document.documentElement.clientHeight - 110*utils.multiple}}>
                         {vbexchangemenu.data.length > 0 ? <ClassIficationContent clickGird={this.clickGird}
                                                                                  data={vbexchangemenu.data.filter(item => item.imCategoryId == vbexchangemenu.selectId)[0]}/> : ""}
                     </div>

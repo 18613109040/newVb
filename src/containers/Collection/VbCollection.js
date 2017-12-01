@@ -52,9 +52,10 @@ class VbCollection extends Component {
         this.getData(1)
 
     }
-    // componentWillUnmount() {
-    //     this.props.dispatch(empotyCollection())
-    // }
+
+    componentWillUnmount() {
+        this.props.dispatch(empotyCollection())
+    }
 
     getData(pageNow){
             this.props.dispatch(getVbcollection({
@@ -119,6 +120,7 @@ class VbCollection extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.vbCollection.code}
+                    data={this.props.vbCollection.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}

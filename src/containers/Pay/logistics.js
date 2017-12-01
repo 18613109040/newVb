@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Steps, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Steps, WhiteSpace} from 'antd-mobile';
 import './index.less'
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 const Step = Steps.Step;
 const customIcon = () => (
     <i className="iconfont icon-yuan"></i>
@@ -25,9 +25,9 @@ class OnlinePayment extends Component {
     }
 
     componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("物流信息"))
 
     }
-
     componentDidMount() {
 
     }
@@ -36,7 +36,6 @@ class OnlinePayment extends Component {
     render() {
         return (
             <div className="order-details">
-                <NavBar title="物流信息" {...this.props}/>
                 <div className="logistics-top">
                     <span className="top-left"><img
                         src="http://img.sibumbg.com/G1/M00/00/7B/CixGgVdrVreAVEx2AADzxb95y9A167.jpg"/></span>

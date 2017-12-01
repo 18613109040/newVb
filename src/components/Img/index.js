@@ -14,11 +14,11 @@ export default class Img extends Component{
     className:PropTypes.string,
     style:PropTypes.object,
     src : PropTypes.string,
+    onClick:PropTypes.func
   }
   constructor(props) {
     super(props);
   }
-
   componentDidMount(){
     let img = this.refs.img
     let src = img.getAttribute('data-image')
@@ -26,17 +26,20 @@ export default class Img extends Component{
     Img.addEventListener('load',function(){
    		console.log('image loaded ok')
       img.setAttribute('src',src)
-    }) 
+    })
     Img.addEventListener('error',function(){
       console.log('image loaded fail')
       // img.setAttribute('src',src)
-    }) 
+    })
     Img.src = src
   }
   render(){
     let {className,style,src,base64} = this.props
     return(
-      <img src={`${base64==undefined? this.base64.img1:this.base64[base64]}`} ref="img" style={style} className={className} data-image={src} alt=""/>
+      <img src={`${base64==undefined? this.base64.img1:this.base64[base64]}`} 
+      ref="img" style={style} className={className} data-image={src} alt=""
+      onClick={this.props.onClick}
+      />
     )
   }
 }

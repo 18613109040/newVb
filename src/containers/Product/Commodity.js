@@ -4,16 +4,14 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {Carousel, Icon, List, Toast, Modal, Flex, WhiteSpace} from 'antd-mobile';
 import {
-    getProduct,
+    getProductDetails,
     addTempProduct,
     updateTempProduct,
     getProductCoupons,
-    getProductSpec,
     emptyProduct,
-    emptyProductSpec,
     getEvaluation,
-    emptyEvaluation,
-    changeProductCoupon
+    changeProductCoupon,
+    addBuyProduct
 } from "../../actions/product";
 import {immemberCollect, deleteCollection} from '../../actions/collection'
 import {storage} from "../../utils/tools";
@@ -24,10 +22,7 @@ import Assess from "../../components/Assess"
 import Text from '../../components/Text'
 import Cart from '../../components/Cart';
 import Img from '../../components/Img';
-
 const Item = List.Item;
-const Brief = Item.Brief;
-
 class Commodity extends Component {
     static propTypes = {
         id: PropTypes.string
@@ -59,14 +54,12 @@ class Commodity extends Component {
             platform: 1,
             openId: storage.get("openId")
         }
-        this.props.dispatch(getProduct(this.props.id, params))
+        this.props.dispatch(getProductDetails(this.props.id, params))
         this.props.dispatch(getProductCoupons(this.props.id));
-        this.props.dispatch(getProductSpec(this.props.id));
         const params2 = {
             pageSize: 1,
             pageNow: 1
         }
-        this.props.dispatch(getEvaluation(this.props.id, params2))
 
     }
 
@@ -87,8 +80,6 @@ class Commodity extends Component {
     //组件销毁时清空商品信息
     componentWillUnmount() {
         this.props.dispatch(emptyProduct())
-        this.props.dispatch(emptyProductSpec())
-        this.props.dispatch(emptyEvaluation())
     }
 
     //领取优惠券
@@ -102,87 +93,104 @@ class Commodity extends Component {
 
     //商品收藏
     onCollection = (collection) => {
-        console.dir(collection);
+
+        let {productBean} =this.props.productDetails.data
         if (collection) {
             this.props.dispatch(deleteCollection({
                 openId: storage.get("openId"),
-                productId: this.props.productDetails.data.imProductId
+                productId: productBean.imProductId
             }, (res) => {
                 Toast.success(res.message, 1);
             }))
         } else {
             this.props.dispatch(immemberCollect({
                 openId: storage.get("openId"),
-                productId: this.props.productDetails.data.imProductId
+                productId:productBean.imProductId
             }, (res) => {
                 Toast.success(res.message, 1);
             }))
         }
 
     }
+    //有sku时，加入购物车回调
     addToCart = (data) => {
-
+        let {productBean} =this.props.productDetails.data
         Toast.success("添加购物车成功", 1);
         this.setState({
             modal_productProperties: false,
             chengeName: data.specDetail,
             changeSkuData: data
         })
-        if (this.props.tempProduct.filter(item => item.data.imProductId == this.props.productDetails.data.imProductId && item.skuId == data.skuId).length > 0) {
+        if (this.props.tempProduct.filter(item => item.imProductId ==productBean.imProductId && item.skuId == data.skuId).length > 0) {
             this.props.dispatch(updateTempProduct(
                 {
-                    id: this.props.productDetails.data.imProductId,
+                    id: productBean.imProductId,
                     check: true,
                     skuId: data.skuId,
                     specDetail: data.specDetail,
-                    amount: data.amount //this.props.tempProduct.filter(item => item.data.imProductId == this.props.productDetails.data.imProductId)[0].amount + 1
+                    amount: data.amount + this.props.tempProduct.filter(item => item.imProductId ==productBean.imProductId && item.skuId == data.skuId)[0].amount
+
                 }));
         } else {
             if (this.props.productDetails.code != -1)
-                this.props.dispatch(addTempProduct(Object.assign({}, this.props.productDetails, {
+                this.props.dispatch(addTempProduct(Object.assign({}, productBean, {
                     skuId: data.skuId,
                     specDetail: data.specDetail,
-                    amount: data.amount
+                    amount: data.amount,
+                    retailPrice:data.retailPrice,
+                    exchangeIntegral:data.exchangeIntegral
+
                 })));
         }
     }
 
+    //有sku时的回调 立即购买
     buyNow = (data) => {
+        let {productBean} =this.props.productDetails.data
+        this.props.dispatch(addBuyProduct(Object.assign({}, productBean, {
+            skuId: data.skuId,
+            specDetail: data.specDetail,
+            amount: data.amount,
+            retailPrice:data.retailPrice,
+            exchangeIntegral:data.exchangeIntegral
+        })));
+        this.context.router.push(`/buyNow`)
 
-        this.addToCart(data);
-        this.context.router.push(`/buyNow?id=${this.props.productDetails.data.imProductId}&skuId=${data.skuId}`)
     }
 
+    //加入购物车
     addCartBar = () => {
-        let spec = this.props.productspec.data || [];
+        let {productBean,skus} =this.props.productDetails.data
+        let spec = skus;
         let {tempProduct} = this.props
+        if(!productBean.imProductId) return
         //有sku
         if (spec.length > 0) {
             this.setState({
                 modal_productProperties: true
             })
         } else {
-            tempProduct = tempProduct.filter(item => item.data.imProductId == this.props.productDetails.data.imProductId)
+            tempProduct = tempProduct.filter(item => item.imProductId == productBean.imProductId)
             if (tempProduct.length > 0) {
-                if (tempProduct[0].amount > tempProduct[0].data.stockNum) {
+                if (tempProduct[0].amount > tempProduct[0].stockNum) {
                     Toast.fail("库存不足", 1);
                     return
                 }
                 Toast.success("添加购物车成功", 1);
                 this.props.dispatch(updateTempProduct(
                     {
-                        id: this.props.productDetails.data.imProductId,
+                        id: productBean.imProductId,
                         check: true,
                         skuId: "",
                         amount: tempProduct[0].amount + 1
                     }));
             } else {
-                if (this.props.productDetails.data.stockNum == 0) {
+                if (productBean.stockNum == 0) {
                     Toast.fail("库存不足", 1);
                     return
                 }
                 Toast.success("添加购物车成功", 1);
-                this.props.dispatch(addTempProduct(Object.assign({}, this.props.productDetails, {
+                this.props.dispatch(addTempProduct(Object.assign({}, productBean, {
                     amount: 1,
                     skuId: "",
                     check: true
@@ -191,28 +199,33 @@ class Commodity extends Component {
         }
 
     }
+    //立即购买
     buyShopBar = () => {
-        let spec = this.props.productspec.data || [];
-        //有sku
-        if (spec.length > 0) {
-            if (this.state.changeSkuData.skuId) {
-                this.context.router.push(`/buyNow?id=${this.props.productDetails.data.imProductId}&skuId=${this.state.changeSkuData.skuId}`)
-            } else {
-                this.setState({
-                    modal_productProperties: true
-                })
+        let {productBean,skus} =this.props.productDetails.data
+        if(!productBean.imProductId) return
+       let spec = skus
+       if (spec.length > 0) {
+            this.setState({
+                modal_productProperties: true
+            })
+       }
+        else{
+            if(productBean.stockNum == 0)
+            {
+                Toast.fail("库存不足", 1);
+                return
             }
-        } else {
-            if (this.props.tempProduct.filter(item => item.data.imProductId == this.props.productDetails.data.imProductId).length > 0) {
-                this.context.router.push(`/buyNow?id=${this.props.productDetails.data.imProductId}`)
-            } else {
-                this.addCartBar();
-                this.context.router.push(`/buyNow?id=${this.props.productDetails.data.imProductId}`)
-            }
-
+            this.props.dispatch(addBuyProduct(Object.assign({}, productBean, {
+                amount: 1,
+                skuId: "",
+                check: true
+            })));
+            this.context.router.push(`/buyNow`)
         }
 
+
     }
+
     _showModal = key => (e) => {
         e.preventDefault(); // 修复 Android 上点击穿透
         this.setState({
@@ -226,24 +239,24 @@ class Commodity extends Component {
     }
 
     createMarkup() {
-        const {productDetails} = this.props;
-        return {__html: productDetails.data.details};
+        const {productBean} = this.props.productDetails.data;
+        return {__html: productBean.details};
     }
 
     render() {
-        const {data} = this.props.productDetails;
+        let {productBean,comments,skus} = this.props.productDetails.data;
+
         const hProp = this.state.initialHeight ? {height: this.state.initialHeight} : {};
-        let imgArray = [].concat(data.bannelImg1, data.bannelImg2, data.bannelImg3, data.bannelImg4, data.bannelImg5);
+        let imgArray = [].concat(productBean.bannelImg1, productBean.bannelImg2, productBean.bannelImg3, productBean.bannelImg4, productBean.bannelImg5);
         for (let i = 0; i < imgArray.length; i++) {
-            if (imgArray[i] == "" || typeof(imgArray[i]) == "undefined") {
+            if (imgArray[i] == "" || imgArray[i] == null ||  typeof(imgArray[i]) == "undefined") {
                 imgArray.splice(i, 1);
                 i = i - 1;
             }
         }
-        let spec = this.props.productspec.data || [];
+        let spec = skus;
         let tempProduct = this.props.tempProduct.data || [];
         let number = 0;
-        console.dir(this.props.tempProduct)
         this.props.tempProduct.map((item) => {
             number += item.amount;
         })
@@ -260,7 +273,7 @@ class Commodity extends Component {
                     {imgArray.map((item, id) => (
 
                         <a href={item} key={id} style={hProp}>
-                            <Img
+                            <img
                                 src={item}
                                 style={{width: "100%", height: "750px"}}
                                 alt="icon"
@@ -278,33 +291,48 @@ class Commodity extends Component {
                 <div className='price-floor'>
                     <div className="prod-title">
                         <span className="title-text-wrap">
-                            <Text text={data.name} size="lg" row={2}/>
+                            <Text text={productBean.name} size="lg" row={2}/>
                         </span>
                     </div>
 
                     <WhiteSpace size="sm"/>
-                    {
-                        data.productType == 0 ? (
+                    <div className="prod-money">
+                        {
+                        productBean.productType == 0 ? (
                             <div className="money-footer">
                                 <label className="iconfont icon-vbi"></label>
-                                <span className="money">{data.exchangeIntegral}</span>
+                                <span className="money">{productBean.exchangeIntegral}</span>
                             </div>
                         ) : (
-                            <div className="money-footer">
-                                <label className="iconfont icon-qian"></label>
-                                <span className="money">{new Number(data.retailPrice).toFixed(2)}</span>
+                            <div className="money-line">
+                                <div className="money-footer">
+                                    <label className="iconfont icon-qian"></label>
+                                    <span className="money">{new Number(productBean.retailPrice).toFixed(2)}</span>
+                                </div>
+                                <div className="marke-price">
+                                    ￥{productBean.marketPrice}
+                                </div>
+
+                            </div>
+
+                        )
+                        }
+                        <span className="stock">库存：{productBean.stockNum}</span>
+                    </div>
+
+
+                    {
+                        productBean.productType == 0 ?<WhiteSpace size="md"/>:(
+                            <div className="prod-act">
+                                <Flex>
+                                    <span className="inline_1">7天无理由退货</span>
+                                    {/*<span className="inline">48小时快速退款</span>*/}
+                                    <span className="inline_2">满99元免邮费</span>
+                                </Flex>
                             </div>
                         )
                     }
 
-
-                    <div className="prod-act">
-                        <Flex>
-                            <span className="inline_1">·30天无忧退款</span>
-                            {/*<span className="inline">·48小时快速退款</span>*/}
-                            <span className="inline_2">·满99元免邮费</span>
-                        </Flex>
-                    </div>
                     {
                         this.props.productCoupons.data.length > 0 ?
                             <List className="my-list">
@@ -338,16 +366,16 @@ class Commodity extends Component {
                 </div>
                 <WhiteSpace size="md"/>
                 {
-                    this.props.evaluation.data.datas.length > 0 ? (
+                    comments.length > 0 ? (
                         <div className="goods-part">
                             <Flex justify="between" className="comment-title" onClick={() => {
                                 this.context.router.push(`product/evaluation?id=${this.props.id}`)
                             }}>
-                                <span>评价({this.props.evaluation.data.totalRecord})</span>
+                                <span>评价({this.props.productDetails.data.totalComment})</span>
                                 <span>查看全部</span>
                             </Flex>
 
-                            <Assess data={this.props.evaluation.data.datas[0]}/>
+                            <Assess data={comments[0]}/>
 
                         </div>
                     ) : <div className="goods-part">
@@ -361,8 +389,6 @@ class Commodity extends Component {
 
                     </div>
                 }
-
-
                 <WhiteSpace size="md"/>
                 <div>
                     <List>
@@ -374,6 +400,7 @@ class Commodity extends Component {
                     text={number}
                     collection={false}
                     onCollection={this.onCollection}
+                    disable={productBean.stockNum==0&&skus.length==0}
                     addCart={this.addCartBar}  //加入购物车
                     buyShop={this.buyShopBar}   //立即购买
                     linkto="/shopcart"
@@ -389,6 +416,7 @@ class Commodity extends Component {
     }
 
     renderModal_properties() {
+        let {productBean,skus} =this.props.productDetails.data
         return (
             <Modal
                 popup
@@ -402,7 +430,7 @@ class Commodity extends Component {
                         clickColose={this.onClose('modal_productProperties')}
                         buyNow={this.buyNow}
                         inintdata={this.state.changeSkuData}
-                        data={Object.assign({}, this.props.productDetails.data, {shopAttr: this.props.productspec.data})}
+                        data={Object.assign({}, productBean, {shopAttr: skus})}
                     />
                 </div>
             </Modal>
@@ -475,9 +503,7 @@ function mapStateToProps(state) {
     return {
         productDetails: state.productDetails,
         productCoupons: state.productCoupons,
-        productspec: state.productspec,
         tempProduct: state.tempProduct,
-        evaluation: state.evaluation
     }
 }
 

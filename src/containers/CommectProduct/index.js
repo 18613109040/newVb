@@ -2,13 +2,10 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {Flex,List} from 'antd-mobile';
 import Loading from '../../components/Loading'
-import Rate from '../../components/Rate'
 import Assess from '../../components/Assess'
 import {getImpcommentDetail,emptyImpcommentDetail} from '../../actions/evaluation'
-const Item = List.Item;
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 class CommectProduct extends Component {
 	static propTypes = {
 
@@ -35,12 +32,13 @@ class CommectProduct extends Component {
     componentWillUnmount(){
         this.props.dispatch(emptyImpcommentDetail())
 
+        this.props.dispatch(changeNavbarTitle("评价详情"))
+
     }
 	render() {
 
 		return(
 			<div className="commect-product">
-				<NavBar title="评价详情" {...this.props}/>
 				<div className="nav-content">
 				{
 				this.props.impcommentdetail.code==-1?(<Loading/>):

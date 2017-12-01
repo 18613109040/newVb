@@ -13,6 +13,7 @@ export const EALUATION_ADD = "EALUATION_ADD";
 export const UPLOAD_IMG = "UPLOAD_IMG";
 export const SUBMIT_GOOD_EVAL = "SUBMIT_GOOD_EVAL";
 export const EMPTY_IMPCOMMENT_DETAIL = "EMPTY_IMPCOMMENT_DETAIL";
+export const EMPORTY_MY_COMMENT_LIST = "EMPORTY_MY_COMMENT_LIST";
 
 //获取待评价商品
 export function getComments(urlId,data, callback=(json)=>{}){
@@ -88,6 +89,15 @@ export function getMycommentList(data, callback=(json)=>{}){
     }
   })
 }
+
+//清除评价列表
+export function emptyMycommentList(json){
+    return {
+        type : EMPORTY_MY_COMMENT_LIST,
+        json
+    }
+}
+
 //我的评价(完成)
 export function getCompleted(data, callback=(json)=>{}){
   return get(`${host.test_host}mycomment/list`, data,callback, (json)=>{

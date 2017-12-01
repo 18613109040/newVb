@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
-import {TabBar, Icon} from 'antd-mobile';
 import {Link} from "react-router";
 import Text from "../Text";
 import './index.scss'
@@ -32,7 +31,7 @@ class ProductList extends Component {
                         <div className="per-pro" key={id}>
                             <Link to={`/product?id=${item.imProductId}`}>
                                 <div className="img">
-                                    <img src={item.thumbImg}/ >
+                                    <img src={item.thumbImg} />
                                 </div>
                                 <div className="text">
                                     <div className="name">

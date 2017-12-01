@@ -90,9 +90,7 @@ export function product(state = inintproduct, action) {
 const inintareractive = {
     code: -1,
     data: [
-        {
-            products:[]
-        }
+
     ]
 }
 
@@ -112,7 +110,7 @@ const inintclassicmenu = {
         {
             icon: require('../assets/images/yugou.png'),
             text: "云购",
-            href: `http://testkg.sibumbg.com/${storage.get("userInfo")?storage.get("userInfo").id:1}?token=${storage.get("token")}`,
+            href: `http://kuaigou.sibu.cn/`,
             id: 1
         },
         {
@@ -130,12 +128,13 @@ const inintclassicmenu = {
             text: "热兑",
             href: "/vbexchange?id=ad32d726-8544-45ee-a53b-0d67351752a4",
             id: 3
-        }, {
-            icon: require('../assets/images/kezhang.png'),
-            text: "客栈",
-            href: "/sblodge",
-            id: 4
-        }
+        },
+        // {
+        //     icon: require('../assets/images/kezhang.png'),
+        //     text: "客栈",
+        //     href: "/sblodge",
+        //     id: 4
+        // }
     ]
 }
 
@@ -149,12 +148,12 @@ const inintactive = {
         title: "优惠券",
         description: "狂撒一亿现金券还在等什么",
         image: require("../assets/images/coupon.png"),
-        path:"/coupon"
+        path:"/couponCentre"
     }, {
         title: "全球购",
         description: "全球商品任您挑",
         image: require("../assets/images/quanqiugou.png"),
-        path:`http://testkg.sibumbg.com/activity/happy-list?uid=${storage.get("userInfo")?storage.get("userInfo").id:1}&token=${storage.get("token")}`
+        path:`http://kuaigou.sibu.cn/activity/happy-list`
     }, {
         title: "特价专区",
         description: "价格低至你无法想象",

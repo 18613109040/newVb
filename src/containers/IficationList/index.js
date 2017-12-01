@@ -2,13 +2,11 @@
  * 模块：分类商品右侧商品
  *
  */
-import { ListView, List, SearchBar } from 'antd-mobile';
 import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import ReactPull from '../../components/Scroller/ReactPull';
-//import injectTapEventPlugin from 'react-tap-event-plugin';
 import {getInficationList} from '../../actions/classIfication'
 
 // 初始化 tapEvent 事件, 移动端

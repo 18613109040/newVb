@@ -1,7 +1,7 @@
 //地址管理
 import {GET_COMMENTS,
 	GET_IMPCOMMENT_DETAIL,
-	GET_MY_COMMENT_LIST,GET_COMPLETED,EMPORTY,EMPTY_IMPCOMMENT_DETAIL} from '../actions/evaluation'
+	GET_MY_COMMENT_LIST,GET_COMPLETED,EMPORTY,EMPTY_IMPCOMMENT_DETAIL,EMPORTY_MY_COMMENT_LIST} from '../actions/evaluation'
 
 const inint={
 	code:-1,
@@ -46,6 +46,13 @@ export  function mycommentlist(state = {code:-1,data:{datas:[]}}, action) {
 	        		}
         		}
         	)
+        case EMPORTY_MY_COMMENT_LIST:
+            return Object.assign({},{
+                code:-1,
+                data:{
+                    datas:[]
+                }
+            })
         default:
           return state
     }

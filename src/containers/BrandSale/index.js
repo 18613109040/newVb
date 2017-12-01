@@ -3,8 +3,8 @@ import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {WingBlank, WhiteSpace} from 'antd-mobile';
-import NavBar from '../../components/NavBar'
 import {getbrandSale} from '../../actions/brandSale'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 
 class BrandSale extends Component {
@@ -26,6 +26,7 @@ class BrandSale extends Component {
 
     componentWillMount() {
 
+        this.props.dispatch(changeNavbarTitle("品牌特卖"))
     }
 
     componentDidMount() {
@@ -34,14 +35,13 @@ class BrandSale extends Component {
 
 
     render() {
-        console.dir(this.props.brandsale)
+
         return (
             <div className="brand-sale">
-                <NavBar title="品牌特卖" {...this.props}/>
                 <div style={{height: document.documentElement.clientHeight - 100, overflow: 'auto'}}>
                     {
                         this.props.brandsale.data.map((item, id) => (
-                            <Link to={`/activityProduct?id=${item.imCampaignCategoryId}`} key={id}>
+                            <Link to={`/activityProduct?id=${item.imCampaignCategoryId}&name=${item.name}`} key={id}>
                                 <WingBlank>
                                     <WhiteSpace/>
                                     <img src={item.imageUrl}/>

@@ -5,22 +5,22 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import { List, Switch, InputItem, TextareaItem, Toast, Modal, WhiteSpace, WingBlank} from 'antd-mobile';
+import { List, Switch, TextareaItem, Toast, Modal, WhiteSpace, WingBlank} from 'antd-mobile';
 import CommodityPrice from '../../components/CommodityPrice';
 import {CommodityIcon} from '../../components/Commodity';
 import {
     getMemberProductCoupons,
-    updateTempProduct,
+    updateBuyProduct,
     radioCheckStatus,
     settlement,
-    deleteTempProductById
+    deleteBuyProduct
 } from "../../actions/product";
-import {getListAddress} from '../../actions/address'
+import {getListAddress,clearAddressCheck} from '../../actions/address'
 import {emptyOrder} from '../../actions/orderDetails'
-import NavBar from '../../components/NavBar'
-import {ModalCoupons, SelectedAddress, OrderFooter, OrderPriceInfo, Product} from '../../components/Order'
+import {ModalCoupons, SelectedAddress, OrderFooter, OrderPriceInfo, Product,ModalRule,ModalTip} from '../../components/Order'
 import './index.less'
 import {storage} from "../../utils/tools"
+import {changeNavbarTitle} from '../../actions/home'
 const Item = List.Item;
 const alert = Modal.alert;
 
@@ -34,20 +34,22 @@ class BuyNow extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checked: false,
+            checked: true,  //是否选中优惠券
             express: "",
             remark: "",
             val: 0,
             modal: false,
-            clientHeight:document.documentElement.clientHeight
+            clientHeight:document.documentElement.clientHeight,
+            modal_rule_visible:false, //规则弹框
+            modal_tip_visible:true
 
         }
         this.goToTlement = this._goToTlement.bind(this)
-        this.onChange = this._onChange.bind(this)
 
     }
 
     componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("确认订单"))
         if (storage.get("userInfo")&&storage.get("userInfo").id !== undefined) {
 
         } else {
@@ -64,29 +66,26 @@ class BuyNow extends Component {
             }))
         }
         const {id, skuId} = this.props.location.query;
-        let tempProduct = []
-        if (skuId) {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == id && item.skuId == skuId)
-        } else {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == id)
-        }
-        let obj = [];
-        tempProduct.map((item) => {
-            obj.push({
-                amount: item.amount,
-                productId: item.data.imProductId,
-                productType: item.data.productType,
-                skuId: item.skuId || "",
-                specDetail: item.specDetail || ""
-            })
+        let {buyProduct} = this.props
+
+        let obj=[]
+        obj.push({
+            amount: buyProduct[0].amount,
+            productId: buyProduct[0].imProductId,
+            productType: buyProduct[0].productType,
+            skuId: buyProduct[0].skuId || "",
+            specDetail: buyProduct[0].specDetail || ""
         })
+
         //获取优惠券
         this.props.dispatch(getMemberProductCoupons(obj));
 
     }
 
+    componentWillUnmount(){
+        this.props.dispatch(clearAddressCheck())
+    }
     radioCheck = (id) => {
-        console.dir(id)
         this.props.dispatch(radioCheckStatus({
             id: id
         }));
@@ -109,27 +108,23 @@ class BuyNow extends Component {
         this.goToTlement(0)
     }
 
+    //提交
     _goToTlement(isSubmit) {
         if(this.props.listAddress.data.datas.filter(item => item.check == true).length==0){
             Toast.info("请添加收货地址",1)
             return;
         }
+        Toast.loading('请稍后...', 1, () => {
+        });
         const {id, skuId} = this.props.location.query;
-        let tempProduct = []
-        let products = []
-        if (skuId) {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == id && item.skuId == skuId)
-        } else {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == id)
-        }
-        tempProduct.map(item => {
-            products.push({
-                amount: item.amount,
-                productId: item.data.imProductId,
-                productType: item.data.productType,
-                skuId: item.skuId,
-                specDetail: item.specDetail
-            })
+        let {buyProduct} =this.props
+        let obj=[]
+        obj.push({
+            amount: this.state.val || buyProduct[0].amount,
+            productId: buyProduct[0].imProductId,
+            productType: buyProduct[0].productType,
+            skuId: buyProduct[0].skuId || "",
+            specDetail: buyProduct[0].specDetail || ""
         })
         const {validList} = this.props.memberProductCoupons.data;
         let postData = {
@@ -137,7 +132,7 @@ class BuyNow extends Component {
             express: this.state.express,
             isSubmit: isSubmit,
             orderFrom: 1,
-            products: products,
+            products: obj,
             remark: this.state.remark
         }
         if (this.state.checked) {
@@ -152,13 +147,12 @@ class BuyNow extends Component {
         }
         this.props.dispatch(settlement(postData
             , (res) => {
+                Toast.hide();
                 if (res.code == 0) {
                     Toast.info(res.message, 1);
                     this.props.dispatch(emptyOrder());
                     this.context.router.replace(`/orderdetails?id=${res.data[0].orderId}`)
-                    this.props.dispatch(deleteTempProductById({
-                        id: id
-                    }))
+                    this.props.dispatch(deleteBuyProduct())  //清空立即购买数据
                 } else if (res.code == 9) {
                     alert('温馨提示', <div dangerouslySetInnerHTML={this.createMarkup(res.message)}></div>, [
                         {text: '取消', onPress: () => console.log('cancel')},
@@ -176,25 +170,27 @@ class BuyNow extends Component {
             remark: value
         })
     }
-    _onChange = (proid, val) => {
-        this.setState({val});
-        const {id, skuId} = this.props.location.query;
-        let tempProduct = []
-        if (skuId) {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == proid && item.skuId == skuId)
-        } else {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == proid)
-        }
-        if (tempProduct.length > 0) {
-            this.props.dispatch(updateTempProduct({
+    //商品数量加减
+    onChangeStep(proid,skuId, val){
+        this.setState({
+            val
+        })
+        let {buyProduct} =this.props
+        if (buyProduct.length > 0) {
+            this.props.dispatch(updateBuyProduct({
                 id: proid,
-                check: tempProduct[0].check,
+                check: true,
                 amount: val,
-                skuId: tempProduct[0].skuId,
-                specDetail: tempProduct[0].specDetail
+                skuId: skuId,
+                specDetail: buyProduct[0].specDetail
             }));
 
         }
+    }
+    clickTipModal = (boolen,type) =>{
+        this.setState({
+            [type]:boolen
+        })
     }
 
 
@@ -205,29 +201,25 @@ class BuyNow extends Component {
         let vbdiscount = 0; //可抵扣
         let vbavailable = 0; //可用
         const {id, skuId} = this.props.location.query;
-        let tempProduct = []
-        if (skuId) {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == id && item.skuId == skuId)
-        } else {
-            tempProduct = this.props.tempProduct.filter(item => item.data.imProductId == id)
-        }
+        let {buyProduct} = this.props
         const {validList} = this.props.memberProductCoupons.data;
-        tempProduct.map(item => {
+        let {availableVMoney} =this.props.userInfo
+        buyProduct.map(item => {
             //productType 0 标识V币 1人民币
-            if (item.data.productType == 0) {
-                vbmoney += item.data.exchangeIntegral * item.amount
+            if (item.productType == 0) {
+                vbmoney += item.exchangeIntegral * item.amount
             } else {
 
-                allMoney += item.data.retailPrice * item.amount
+                allMoney += item.retailPrice * item.amount
             }
         })
 
-        if (this.props.userInfo.availableVMoney / 650 >= allMoney * 0.1) {
+        if (availableVMoney / 650 >= allMoney * 0.1) {
             vbdiscount = parseInt(allMoney * 0.1);
             vbavailable = parseInt(allMoney * 0.1) * 650
         } else {
-            vbdiscount = parseInt(this.props.userInfo.availableVMoney / 650);
-            vbavailable = parseInt(this.props.userInfo.availableVMoney / 650) * 650;
+            vbdiscount = parseInt(availableVMoney / 650);
+            vbavailable = parseInt(availableVMoney / 650) * 650;
         }
         let money = allMoney;
         if (this.state.checked) {
@@ -236,26 +228,18 @@ class BuyNow extends Component {
         if (validList.filter(item => item.check == true).length > 0) {
             money = money - validList.filter(item => item.check == true)[0].cutMoney
         }
-        if (tempProduct.length == 0) {
-            return (
-                <div>
-                    <div>改订单不存在</div>
-                    <Link to="/home">返回首页</Link>
-                </div>
-            )
-        }
-
+        this.checkmoney = vbavailable;
+        if(buyProduct.length==0)  return null
         return (
             <div className="set-tlement">
-                <NavBar title="确认订单" {...this.props}/>
                 <div className="cart-group nav-content"
                      style={{height:this.state.clientHeight - 88}}>
                     <SelectedAddress {...this.props}/>
                     <div className="middle-box">
                         <div className="product-title">
-                            <CommodityIcon iconType={tempProduct[0].data.productType}/>
+                            <CommodityIcon iconType={buyProduct[0].productType}/>
                             {
-                                tempProduct[0].data.productType == 0 ?
+                                buyProduct[0].productType == 0 ?
                                     <div className="type"><span>兑换产品</span>{/*<span className="tip">免邮费，查看邮费规则></span>*/}
                                     </div>
                                     :
@@ -263,10 +247,10 @@ class BuyNow extends Component {
                             }
                         </div>
                         {
-                            tempProduct[0].data.productType == 0 && this.props.userInfo.availableVMoney < vbmoney ?
+                            buyProduct[0].productType == 0 && availableVMoney < vbmoney ?
                                 <div className="product-type-show">
                                     <span
-                                        className="aleft">您的V币只有{this.props.userInfo.availableVMoney}不够兑换此商品</span>
+                                        className="aleft">您的V币只有{availableVMoney}不够兑换此商品</span>
                                     <span className="aright" onClick={() => {
                                         this.context.router.push('/shopcart')
                                     }}>去修改></span>
@@ -274,26 +258,26 @@ class BuyNow extends Component {
                         }
 
                         <div className="step3">
-                            <Product key={0} showStepper={true} val={this.state.val || tempProduct[0].amount} item={tempProduct[0]}
-                                     onChange={(id, val) => {
-                                         this.onChange(id, val)
+                            <Product key={0} showStepper={1}  item={buyProduct[0]}
+                                     onChangeStep={(productId,skuId, val) => {
+                                         this.onChangeStep(productId,skuId, val)
                                      }}/>
                         </div>
                         {/*<div className="order-footer">*/}
                         {/*<span className="span">邮费：</span>*/}
                         {/*{*/}
-                        {/*tempProduct[0].data.freight > 0 ?*/}
+                        {/*buyProduct[0].data.freight > 0 ?*/}
                         {/*<span><CommodityIcon*/}
-                        {/*iconType={tempProduct[0].data.productType}/>{tempProduct[0].data.freight}</span>*/}
+                        {/*iconType={buyProduct[0].data.productType}/>{buyProduct[0].data.freight}</span>*/}
                         {/*: "包邮"*/}
                         {/*}*/}
                         {/*</div>*/}
 
                         <div className="order-footer">
-                            <span className="span">共{this.state.val || tempProduct[0].amount}件商品，</span>
+                            <span className="span">共{this.state.val || buyProduct[0].amount}件商品，</span>
                             <span className="span">合计:</span>
                             {
-                                tempProduct[0].data.productType == 1 ? (
+                                buyProduct[0].productType == 1 ? (
                                     <div className="prod-price">
                                         <CommodityPrice
                                             price={new Number(allMoney).toFixed(2)}
@@ -316,7 +300,7 @@ class BuyNow extends Component {
                         <WhiteSpace/>
                         {/*使用优惠券 begin*/}
                         {
-                            tempProduct[0].data.productType == 1 ? (
+                            buyProduct[0].productType == 1 ? (
                                 <div className="step4">
                                     <List>
                                         <Item
@@ -348,7 +332,8 @@ class BuyNow extends Component {
                                             <div className="f12">
                                                 <span>V币:</span>
                                                 <span
-                                                    className="size">共{this.props.userInfo.availableVMoney}币,可用{vbavailable}V币,抵{vbdiscount}</span>
+                                                    className="size">共{availableVMoney}币,可用{vbavailable}V币,抵￥{new Number(vbdiscount).toFixed(2)}</span>
+                                                <i className="iconfont icon-question" onClick={this.clickTipModal.bind(this,true,'modal_rule_visible')}></i>
                                             </div>
                                         </Item>
                                     </List>
@@ -376,11 +361,11 @@ class BuyNow extends Component {
                             </List>
                         </div>
                         <WhiteSpace/>
-                        <OrderPriceInfo type={tempProduct[0].data.productType}
+                        <OrderPriceInfo
                                         money={allMoney}
                                         vbmoney={vbmoney}
                                         vbdiscount={vbdiscount}
-                                        tempProduct={tempProduct}
+                                        buyProduct={buyProduct}
                                         checked={this.state.checked}
                                         validList={validList}
                         />
@@ -390,15 +375,26 @@ class BuyNow extends Component {
 
                 <OrderFooter money={money}
                              vbmoney={vbmoney}
-                             availableVMoney={this.props.userInfo.availableVMoney}
+                             availableVMoney={availableVMoney}
                              goToTlement={(type) => {
                                  this.goToTlement(type)
                              }}/>
+
+                {/*优惠券弹框*/}
                 <ModalCoupons {...this.props} modal={this.state.modal} onClose={() => {
                     this.setState({modal: false})
                 }} radioCheck={(id, e) => {
                     this.radioCheck(id, e)
                 }}/>
+
+               {/* V币使用规则弹框*/}
+                <ModalRule modal={this.state.modal_rule_visible} onClose={(boolen)=>{this.clickTipModal(boolen,'modal_rule_visible')}} />
+
+               {/* 商品金额小于优惠券面额时，增加提示用户：商品金额小于优惠券面额，再去逛逛哦！*/}
+              {/*  {
+                    this.state.modal_tip_visible?<ModalTip modal={ money <0}  onClose={(boolen)=>{this.clickTipModal(boolen,'modal_tip_visible')}}/>:null
+                }*/}
+
             </div>
         )
 
@@ -410,7 +406,7 @@ class BuyNow extends Component {
 
 function mapStateToProps(state) {
     return {
-        tempProduct: state.tempProduct,
+        buyProduct: state.buyProduct,
         userInfo: state.userInfo,
         listAddress: state.listAddress,
         memberProductCoupons: state.memberProductCoupons

@@ -2,10 +2,10 @@ import {combineReducers} from 'redux'
 import {bannerList,newList,product,areaActive,classicMenu,activeMenu,navBartitle} from './home'
 import {activityProduct} from './activityProduct'
 import {infiactionmenu ,infiactionlist} from './classIfication'
-import {productDetails,tempProduct,evaluation,productCoupons,productspec,memberProductCoupons} from "./product"
+import * as Product from './product'
 import {userInfo} from './user'
 import {address,listAddress} from './address'
-import {orderDetails,orderlist,statisicsNumber} from './orderDetails'
+import * as orderDetails from './orderDetails'
 import {comments,impcommentdetail,mycommentlist,mycompletedlist} from './evaluation'
 import {vbCollection,caseCollection} from './collection'
 import {newshelves,vbexchangemenu,vblist,explosionRecom} from './newShelves'
@@ -27,18 +27,9 @@ const rootReducer = combineReducers({
   activityProduct,
   infiactionmenu,
   infiactionlist,
-  productDetails,
-  tempProduct,
-  evaluation,
-  productCoupons,
-  productspec,
-    statisicsNumber,
-  memberProductCoupons,
   userInfo,
   address,
   listAddress,
-  orderDetails,
-  orderlist,
   comments,
   impcommentdetail,
   mycommentlist,
@@ -56,7 +47,9 @@ const rootReducer = combineReducers({
 	hotelorder,
 	ordercase,
     brandsale,
-    ...hotel
+    ...hotel,
+    ...orderDetails,
+    ...Product
 })
 
 export default rootReducer

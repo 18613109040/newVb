@@ -10,16 +10,17 @@ body {
     background-color: white !important;
     width: 100%;
     height: 100%;
-    //overflow: hidden;
+    overflow: hidden;
     margin: 0px auto;
     -webkit-overflow-scrolling: touch;
     margin: 0 auto !important;
     max-width: 640*@hd;
 }
 #root {
-    //overflow: hidden;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
     background: #f0f2f5;
+
 }
 
 #wrapper{
@@ -43,8 +44,18 @@ html, body {
 .app-root {
     height: 100%;
     background: #f0f2f5 !important;
-    //overflow: hidden;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
+}
+
+.vb-content{
+    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+
+
+}
+.div-overflow{
+    overflow-y: scroll;
 }
 .content{
     overflow: auto;
@@ -101,7 +112,7 @@ html, body {
 }
 //pop弹出层
 .vb-product-counp {
-
+    height: 436*@hd;
     .title {
         color: @color-text-secondary;
         padding: 20px;

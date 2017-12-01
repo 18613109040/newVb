@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {List, InputItem, TextareaItem,Switch, Button, Toast, Picker} from 'antd-mobile';
 import {addAddress, editAddress, getListAddress,getAddressDetail} from '../../actions/address'
-import NavBar from '../../components/NavBar'
 import AddrData from './address'
+import {changeNavbarTitle} from '../../actions/home'
 const Item = List.Item;
 class EditAddress extends Component {
     static propTypes = {};
@@ -26,6 +26,11 @@ class EditAddress extends Component {
             errorDetail: false,
             visible:false
         }
+    }
+    componentWillMount() {
+        const {id} = this.props.location.query;
+        let title= id ? "编辑收货地址" : "新建收货地址"
+        this.props.dispatch(changeNavbarTitle(title))
     }
     componentDidMount() {
         const {id} = this.props.location.query;
@@ -48,7 +53,7 @@ class EditAddress extends Component {
 
     //保存 修改
     saveAddress=() =>{
-        console.dir(this.state.address)
+
         const {id} = this.props.location.query;
         if (id) {
             this.props.dispatch(editAddress({
@@ -162,14 +167,13 @@ class EditAddress extends Component {
     }
     render() {
 
-        const {id} = this.props.location.query;
+
         const disable_save = this.state.errorName || this.state.errorPhone || this.state.errorDetail || this.state.address == ""
         this.getChildren(AddrData)
         const district = AddrData
         return (
             <div className="eidt-address nav-content">
-                <NavBar title={id ? "编辑收货地址" : "新建收货地址"} {...this.props}/>
-                <div>
+                <div style={{height: document.documentElement.clientHeight - 100}}>
                     <List>
                         <InputItem
                             value={this.state.contact}
@@ -221,6 +225,7 @@ class EditAddress extends Component {
 
                         </Item>
                     </List>
+                    <div style={{marginBottom:'100px'}}></div>
                 </div>
                 <div className="save-btn">
                     <Button className="btn" disabled={disable_save}

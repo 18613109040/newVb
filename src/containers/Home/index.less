@@ -2,6 +2,7 @@
 
 .vb-home {
     overflow-x: hidden;
+    margin-bottom: 100px;
     .home-grid-icon {
         width: @grid-imge-height;
     }
@@ -16,8 +17,15 @@
     .background-base{
         background: @fill-base;
     }
+    .bg-active{
+        background: url("../../assets/images/10.png") no-repeat;
+        background-size: 100% 100%;
+        height: 180px;
+
+    }
     .am-carousel-wrap-dot{
         span{
+
             border-radius: 0px;
             width: 10*@hd;
             height: 2*@hd;
@@ -25,13 +33,15 @@
         }
     }
     .my-carousel-sild{
+        width: 100%;
+        height:201*@hd;
         img{
             height: 200 * @hd;
         }
     }
     .menu-nav{
         .am-flexbox{
-            padding: 10*@hd 0px 10*@hd 0px;
+            padding: 0px;
         }
     }
     .am-carousel-wrap-dot-active{
@@ -46,14 +56,46 @@
         img{
             width: 100%;
             max-height: 200*@hd;
-            height: 116*@hd;
+
         }
     }
-    .active{
+    .list-ul{
         background: @fill-base;
-        img{
-            width: 100%;
+        .goods-item{
+            width: 46%;
+            display: inline-block;
+            margin-left: 2.67%;
+            .innerContent{
+                padding:8*@hd 0;
+            }
+        }
+        @media screen and (min-width: 640px) and (max-width:750px ){
+            img{
+                width: 126*@hd;
+                height:126*@hd;
 
+            }
+        }
+        @media screen and (min-width:750px) and (max-width:818px ){
+            img{
+                width: 174*@hd;
+                height:174*@hd;
+
+            }
+        }
+        @media screen and (min-width:818px) {
+            img{
+                width: 188*@hd;
+                height:188*@hd;
+
+            }
+        }
+        @media screen and (min-width:818px) and (max-width: 1200px) {
+            img{
+                width: 140*@hd;
+                height:140*@hd;
+
+            }
         }
         .money{
             font-size: @font-size-base;

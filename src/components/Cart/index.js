@@ -3,7 +3,7 @@
  *
  */
 import React, {Component} from "react";
-import {  Badge,Toast,Button } from 'antd-mobile';
+import {  Badge } from 'antd-mobile';
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import  './index.less'
@@ -69,7 +69,7 @@ class Cart extends Component {
 						<Link to={this.props.linkto} className="cart-car-icn">
 							<div>
 								<span  className="icon-size iconfont icon-cart-1"></span>
-								<Badge className="cart-number" text={this.props.text} overflowCount={100} />
+								<Badge className="cart-number" text={this.props.text} overflowCount={99} />
 							</div>
 							{/*<span className="focus-info">购物车</span>*/}
 						</Link>
@@ -82,8 +82,8 @@ class Cart extends Component {
 					{
 						this.props.disable?(
 							<div className="action-list">
-							 	<a className="yellow-color add_cart disaple"  >加入购物车</a>
-								<a className="red-color directorder disaple" >立即购买</a>
+							 	<a className="disable"  >加入购物车</a>
+								<a className="disable" >立即购买</a>
 							</div>
 						):(
 							<div className="action-list">

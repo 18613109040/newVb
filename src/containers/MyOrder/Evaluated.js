@@ -3,12 +3,12 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, ListView, Icon,Toast,Modal} from 'antd-mobile';
-import {getToBeEvaluated} from '../../actions/orderDetails'
+import { ListView} from 'antd-mobile';
+import {getToBeEvaluated,emptyOrder} from '../../actions/orderDetails'
 import OrderItem from './OrderItem'
 import ListViewProduct from '../../components/ListViewProduct'
-const alert = Modal.alert;
-const Item = List.Item;
+import utils from '../../utils'
+
 
 class Evaluated extends Component {
     static propTypes = {};
@@ -46,19 +46,25 @@ class Evaluated extends Component {
                         isLoading: false,
                         hasMore: false
                     })
+                   
                 }
             }));
 
         } else {
+            let {data} = this.props.orderDetails.evaluated
             this.setState({
                 isLoading: false,
-                hasMore: true
-            });
+                hasMore: data.pageOffset< data.totalPage
+            })
         }
+    }
+    componentWillUnmount(){
+         
     }
     //去评价
     appraise=(data)=>{
         this.context.router.push(`/evaluation?id=${data.orderId}`)
+        this.props.dispatch(emptyOrder())
     }
     getData(pageNow){
 
@@ -82,7 +88,7 @@ class Evaluated extends Component {
 
     }
     onEndReached = () => {
-        if (!this.state.hasMore ) {
+        if (!this.state.hasMore || this.state.isLoading) {
             return;
         }
         this.setState({isLoading: true});
@@ -91,9 +97,12 @@ class Evaluated extends Component {
         },100)
 
     }
-    //点击评价
-    evaluation = (data) => {
-        this.context.router.push(`/evaluation?id=${data.orderId}`)
+    onRefresh=()=>{
+        this.props.dispatch(emptyOrder())
+        setTimeout(()=>{
+            this.getData(1)
+        },50)
+
     }
     //退款
     gotoRefunds=(rowData)=>{
@@ -110,21 +119,25 @@ class Evaluated extends Component {
                 </div>
             )
         };
+
         let dataSource = this.dataSource.cloneWithRows(this.props.orderDetails.evaluated.data.datas)
         return (
             <div style={{width: "100%",}}>
-                <ListViewProduct
+                 <ListViewProduct
                     row={row}
                     dataSource={dataSource}
                     status={this.props.orderDetails.evaluated.code}
+                    data={this.props.orderDetails.evaluated.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}
+                    onRefresh={this.onRefresh}
                     type={2}
-                    height={document.documentElement.clientHeight - 100}
+                    height={document.documentElement.clientHeight - 60*utils.multiple}
                     empty_type={3}
                     empty_text={'小主，你还没有待评价的订单'}
                 />
+               
             </div>
 
         )

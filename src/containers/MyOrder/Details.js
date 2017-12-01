@@ -3,10 +3,12 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Modal, ListView, Icon, WhiteSpace, Toast} from 'antd-mobile';
+import {Modal, ListView, Toast} from 'antd-mobile';
 import {cancalOrder, emptyOrder, received, getorderDetails} from '../../actions/orderDetails'
 import OrderItem from './OrderItem'
 import ListViewProduct from '../../components/ListViewProduct'
+import utils from '../../utils'
+
 const alert = Modal.alert;
 class Details extends Component {
     static propTypes = {};
@@ -24,7 +26,7 @@ class Details extends Component {
         })
         this.state = {
             isLoading: false,
-            hasMore: false,
+            hasMore: false
         }
 
     }
@@ -39,23 +41,28 @@ class Details extends Component {
                 if (res.data.pageOffset < res.data.totalPage) {
                     this.setState({
                         isLoading: false,
-                        hasMore: true
+                        hasMore: true,
+
                     })
                 } else {
                     this.setState({
                         isLoading: false,
-                        hasMore: false
+                        hasMore: false,
+
                     })
                 }
             }));
         } else {
+            let {data} = this.props.orderDetails.all
             this.setState({
                 isLoading: false,
-                hasMore: true
-            });
+                hasMore: data.pageOffset< data.totalPage
+            })
         }
     }
-
+    componentWillUnmount(){
+        
+    }
     getData(pageNow) {
         this.props.dispatch(getorderDetails({
             pageNow: pageNow,
@@ -65,12 +72,14 @@ class Details extends Component {
             if (res.data.pageOffset < res.data.totalPage) {
                 this.setState({
                     isLoading: false,
-                    hasMore: true
+                    hasMore: true,
+
                 })
             } else {
                 this.setState({
                     isLoading: false,
-                    hasMore: false
+                    hasMore: false,
+
                 })
             }
         }));
@@ -78,7 +87,7 @@ class Details extends Component {
     }
 
     onEndReached = () => {
-        if (!this.state.hasMore ) {
+        if (!this.state.hasMore || this.state.isLoading) {
             return;
         }
         this.setState({isLoading: true});
@@ -87,7 +96,13 @@ class Details extends Component {
         },100)
 
     }
+    onRefresh=()=>{
+        this.props.dispatch(emptyOrder())
+        setTimeout(()=>{
+            this.getData(1)
+        },50)
 
+    }
     cancelOrder = (rowData) => {
 
         alert('取消订单', '确定要取消该订单吗?', [
@@ -116,10 +131,12 @@ class Details extends Component {
 
     //去评价
     appraise = (data) => {
+        this.props.dispatch(emptyOrder())
         this.context.router.push(`/evaluation?id=${data.orderId}`)
     }
     //兑换
     gotoExchange = (rowData) => {
+        this.props.dispatch(emptyOrder())
         this.context.router.push(`/sendSms?id=${rowData.orderId}&money=${rowData.totalIntegral}`)
 
     }
@@ -173,11 +190,13 @@ class Details extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.orderDetails.all.code}
+                    data={this.props.orderDetails.all.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}
                     type={2}
-                    height={document.documentElement.clientHeight - 100}
+                    onRefresh={this.onRefresh}
+                    height={document.documentElement.clientHeight - 60*utils.multiple}
                     empty_type={3}
                     empty_text={'小主，你还没有订单'}
                 />

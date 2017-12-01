@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {List,Cardm,Button,ListView} from 'antd-mobile';
+import {List,Cardm,Button} from 'antd-mobile';
 const Item = List.Item;
 import Text from "../../components/Text";
 import CommodityPrice from "../../components/CommodityPrice";
@@ -22,7 +22,7 @@ class ItemEva extends Component {
         this.state = {
 
         }
-        
+
     }
     clickOrder(order1Id){
         this.context.router.push(`/evaluation?id=${order1Id}`);
@@ -35,7 +35,7 @@ class ItemEva extends Component {
         return(
                 <div className="div-item">
                         <List>
-                            <Item 
+                            <Item
                                 arrow="horizontal"
                                 platform="android"
                                 onClick={this.itemClick.bind(this,item.orderId)}
@@ -50,8 +50,8 @@ class ItemEva extends Component {
                                     </div>
                                     <div className="imco-r-content">
                                         <div >
-                                            <Text 
-                                                text={item.name} 
+                                            <Text
+                                                text={item.name}
                                                 row={2}
                                                 textType="base"
                                             />
@@ -59,7 +59,7 @@ class ItemEva extends Component {
                                         <div className="ping">
                                     {item.price==0&&item.integral!=0?
                                                 <CommodityPrice
-                                                    price={item.integral} 
+                                                    price={item.integral}
                                                     unit="V币"
                                                     icon="icon-vbi"
                                                     priceStyle="small-price"
@@ -80,7 +80,7 @@ class ItemEva extends Component {
                                                 <span>+</span>
                                                 <span>
                                                     <CommodityPrice
-                                                        price={item.integral} 
+                                                        price={item.integral}
                                                         unit="V币"
                                                         icon="icon-vbi"
                                                         priceStyle="small-price"
@@ -92,25 +92,25 @@ class ItemEva extends Component {
                                 </div>
                                     </div>
                                 </div>
-                                
+
                             </Item>
                         </List>
                         <List>
                             <Item extra={
                                     <Button
-                                        type="ghost" 
-                                        inline 
-                                        size="small" 
+                                        type="ghost"
+                                        inline
+                                        size="small"
                                         onClick={this.clickOrder.bind(this,item.orderId)}>
                                         {item.isEvaluate==0?"评价晒单":"查看评价"}
                                     </Button>
-                                
+
                             }>
-                             <div></div> 
+                             <div></div>
                   </Item>
                         </List>
                     </div>
-        )   
+        )
     }
 }
 

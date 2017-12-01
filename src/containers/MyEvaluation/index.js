@@ -2,13 +2,11 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {List,Tabs} from 'antd-mobile';
-import NavBar from '../../components/NavBar'
+import {Tabs} from 'antd-mobile';
 import BeEvaluation from './BeEvaluation'
 import Completed from './Completed'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
-const TabPane = Tabs.TabPane;
-
 const tabs = [
   { title: '待评价' },
   { title: '已完成' },
@@ -29,14 +27,16 @@ class MyEvaluation extends Component {
         this.state = {
 
         }
-        
+
+    }
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("我的评价"))
     }
     render() {
-        
+
         return(
             <div className="my-evaluation">
-                <NavBar title={'我的评价'} {...this.props}></NavBar>
-                <div className="nav-content">
+                <div className="nav-content"  style={{height:document.documentElement.clientHeight - 50}}>
                     <Tabs tabs={tabs}
                       initialPage={0}
                       swipeable={false}
@@ -51,14 +51,14 @@ class MyEvaluation extends Component {
                     </Tabs>
                 </div>
             </div>
-        )   
+        )
     }
 }
 
 
 function mapStateToProps(state) {
     return {
-        
+
     }
 }
 export default connect(mapStateToProps)(MyEvaluation)

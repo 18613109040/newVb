@@ -3,12 +3,10 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, Tabs, ListView, Icon, Popover} from 'antd-mobile';
-import NavBar from '../../components/NavBar'
+import {Tabs} from 'antd-mobile';
 import {getHotelList} from '../../actions/hotel'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
-
-const Item = List.Item;
 const tabs = [
   { title: '全部', sub: '1' },
   { title: '待付款', sub: '2' },
@@ -29,10 +27,12 @@ class HotelList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-           
+
         }
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("思埠之家"))
+    }
     componentDidMount() {
         if (this.props.hotelList.code == -1) {
             this.props.dispatch(getHotelList({
@@ -41,11 +41,11 @@ class HotelList extends Component {
                 orderStatus:0
             }))
         }
-        
+
     }
     TabClick =(tab, index)=>{
 
-        console.log(tab)
+
     }
 
 
@@ -92,7 +92,6 @@ class HotelList extends Component {
         }
         return (
             <div className="my-order ">
-                <NavBar title="思埠之家" {...this.props}/>
                 <div className="nav-content">
                 <Tabs tabs={tabs}
                   initialPage={1}
@@ -112,8 +111,8 @@ class HotelList extends Component {
                      {this.renderItem()}
                  </div>
 
-                </Tabs> 
-                    
+                </Tabs>
+
                 </div>
 
             </div>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {ListView } from 'antd-mobile';
 import {getEvaluation,emptyEvaluation} from "../../actions/product";
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import Assess from "../../components/Assess"
 import ListViewProduct from '../../components/ListViewProduct'
 import './index.less'
@@ -29,7 +29,10 @@ class Evaluation extends Component {
         }
 
     }
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("评论"))
 
+    }
     componentDidMount() {
         if (this.props.evaluation.data.datas.length > 0) {
             return
@@ -70,11 +73,11 @@ class Evaluation extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.evaluation.data.datas !== this.props.evaluation.data.datas) {
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(nextProps.evaluation.data.datas),
-            });
-        }
+        // if (nextProps.evaluation.data.datas !== this.props.evaluation.data.datas) {
+        //     this.setState({
+        //         dataSource: this.state.dataSource.cloneWithRows(nextProps.evaluation.data.datas),
+        //     });
+        // }
     }
     render() {
         const {evaluation} = this.props;
@@ -87,13 +90,14 @@ class Evaluation extends Component {
                 </div>
             )
         };
+        let dataSource =  this.dataSource.cloneWithRows(this.props.evaluation.data.datas)
         return (
             <div>
-                <NavBar title="评论" {...this.props}/>
                 <ListViewProduct
                     row={row}
-                    dataSource={this.state.dataSource}
+                    dataSource={dataSource}
                     status={evaluation.code}
+                    data={evaluation.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}

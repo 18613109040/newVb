@@ -28,32 +28,38 @@ const postcssOpts = {
     cssnano
 };
 module.exports = {
-    devtool: 'source-map', // or 'inline-source-map
+    //devtool: 'source-map', // or 'inline-source-map
     entry: {"index": path.resolve(__dirname, 'src/index')},
     output: {
         path: path.join(__dirname, '/dist'),
-        filename: '[name].js',
-        chunkFilename: '[name].check.js',
+        filename: '[name].[chunkhash].js',
+        chunkFilename: '[name].[chunkhash].js',
         publicPath: ''
     },
-    devServer: {
-        historyApiFallback: true,
-        hot: true,
-        disableHostCheck:true,
-        inline: true,
-        contentBase: "./public",
-        host: process.env.HOST,
-        progress: true,
-        port: 8003,
-        stats: {colors: true},
-        proxy: {
-            '/api/*': {
-                target: 'http://testxws.sibumbg.com',
-                secure: false,
-                changeOrigin: true
-            }
-        }
-    },
+    // devServer: {
+    //     historyApiFallback: true,
+    //     hot: true,
+    //     disableHostCheck:true,
+    //     inline: true,
+    //     contentBase: "./public",
+    //     host: process.env.HOST,
+    //     progress: true,
+    //     port: 8003,
+    //     stats: {colors: true},
+    //     proxy: {
+    //         '/api/*': {
+    //             target: 'http://testxws.sibumbg.com',
+    //             secure: false,
+    //             changeOrigin: true
+    //         },
+    //         '/hd/*': {
+    //             target: 'http://testxws.sibumbg.com',
+    //             secure: false,
+    //             changeOrigin: true,
+    //             pathRewrite: {'^/hd': '/hd/'}
+    //         }
+    //     }
+    // },
     resolve: {
         modules: [path.resolve(__dirname, 'node_modules'), path.join(__dirname, 'src')],
         extensions: ['.web.js', '.jsx', '.js', '.json'],
@@ -131,7 +137,7 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             // minChunks: 2,
             name: 'shared', //对应于上面的entry的key  将index 打包命名 shared name 可以是个数组 [a,n,]
-            filename: 'shared.js'
+            filename: 'shared1.js'
         }),
         new ExtractTextPlugin({filename: '[name].css', allChunks: true}),
         new HtmlWebpackPlugin({

@@ -3,11 +3,13 @@
  *
  */
 import React, {Component} from "react";
-import {Flex, Toast, Button, List, Stepper, Icon} from 'antd-mobile';
+import {Flex, Toast, List, Stepper, Icon} from 'antd-mobile';
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import Img from '../Img'
+import utils from '../../utils'
+
 import './index.less'
 
 class ProductProperties extends Component {
@@ -42,6 +44,7 @@ class ProductProperties extends Component {
         this.addToCart = this._addToCart.bind(this);
         this.buy = this._buy.bind(this);
     }
+
     componentDidMount() {
 
         if (this.props.inintdata.skuId) {
@@ -58,16 +61,15 @@ class ProductProperties extends Component {
             this.props.clickColose()
         }
     }
-2e1
     onChange = (val) => {
         this.setState({
-            val
+            val:val||1
         })
     }
-
+    //立即购买
     _buy() {
 
-        if (this.state.checklable.length != Object.keys(this.mapData).length) {
+        if (this.state.checklable.filter(item=>item!="").length != Object.keys(this.mapData).length) {
             Toast.info('请选择规格', 2);
             return;
         } else {
@@ -81,12 +83,13 @@ class ProductProperties extends Component {
         }
     }
 
+    //加入购物车
     _addToCart() {
-        if (this.state.checklable.length != Object.keys(this.mapData).length) {
+        if (this.state.checklable.filter(item=>item!="").length != Object.keys(this.mapData).length) {
             Toast.info('请选择规格', 2);
             return;
         } else {
-            if (this.state.changeData.stockNum == 0) {
+            if (this.state.changeData.stockNum == 0 || this.state.changeData.stockNum < this.state.val) {
                 Toast.info('库存不足', 2);
                 return;
             }
@@ -156,7 +159,6 @@ class ProductProperties extends Component {
             })
         }
         this.state.checklable[id] = value;
-        console.dir(this.state.checklable.slice(0, id + 1))
         this.setState({
             checklable: this.state.checklable.slice(0, id + 1)
         })
@@ -164,20 +166,19 @@ class ProductProperties extends Component {
         if (this.state.checklable.length == Object.keys(this.mapData).length) {
             let kk = this.temAray.filter(item => item.name == value)
             if (kk.length > 0) {
-                let number = 1
+                /*let number = 1
                 if (this.props.tempProduct.filter(item => item.skuId == kk[0].skuId && item.data.imProductId == this.props.data.imProductId).length > 0) {
                     number = this.props.tempProduct.filter(item => item.skuId == kk[0].skuId && item.data.imProductId == this.props.data.imProductId)[0].amount
-                }
+                }*/
                 this.setState({
                     changeData: kk[0],
-                    val: number
+                    //val: number
                 })
             }
         }
     }
 
     render() {
-
         //获取sku 属性
         let attrNameArray = [] //保存sku 属性名
         this.props.data.shopAttr[0].values.map(item => {
@@ -209,14 +210,13 @@ class ProductProperties extends Component {
             specArray[item].map(t => temKey[item].push(t.name))
             temKey[item] = Array.from(new Set(temKey[item]))
         })
-        console.dir(this.state.selectA)
         return (
             <div className="vb-product-properties">
                 <span className="colose" onClick={this.onClickColose}><Icon type="cross"/></span>
 
                 <header className="cover-head">
                     <div className="img-box">
-                        <Img src={this.props.data.bannelImg1}/>
+                        <img src={this.props.data.thumbImg}/>
                     </div>
                     <div className="product">
                         <div className="price">
@@ -226,13 +226,13 @@ class ProductProperties extends Component {
                                     this.props.data.productType == 0 ? (
                                         <div className="money-footer">
                                             <label className="iconfont icon-vbi"></label>
-                                            <span className="money">{this.props.data.exchangeIntegral}</span>
+                                            <span className="money">{this.state.changeData.exchangeIntegral}</span>
                                         </div>
                                     ) : (
                                         <div className="money-footer">
                                             <label className="iconfont icon-qian"></label>
                                             <span
-                                                className="money">{new Number(this.props.data.marketPrice).toFixed(2)}</span>
+                                                className="money">{new Number(this.state.changeData.retailPrice).toFixed(2)}</span>
                                         </div>
                                     )
                                 }
@@ -319,10 +319,11 @@ class ProductProperties extends Component {
                             <Stepper
                                 style={{width: '100%', minWidth: '2rem'}}
                                 showNumber
-                                max={this.state.changeData.stockNum}
-                                min={0}
+                                max={9999}
+                                min={1}
                                 value={this.state.val}
                                 useTouch={true}
+                                defaultValue={1}
                                 onChange={this.onChange}
                             />}
                                    wrap>

@@ -2,13 +2,10 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Tabs, Carousel, Toast} from 'antd-mobile';
+import { Tabs} from 'antd-mobile';
 import Commodity from "./Commodity";
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
-
-const TabPane = Tabs.TabPane;
-
 class Product extends Component {
     static propTypes = {};
 
@@ -22,12 +19,14 @@ class Product extends Component {
         this.state = {}
 
     }
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("商品详情"))
 
+    }
     render() {
         const {id} = this.props.location.query;
         return (
             <div className="vb-product">
-                <NavBar title="商品详情" {...this.props}/>
                 <Commodity id={id}/>
             </div>
         )

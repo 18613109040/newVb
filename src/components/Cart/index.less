@@ -25,7 +25,7 @@
         .concern-cart {
             width: 35%;
             float: left;
-            height: 100px;
+            height:44*@hd;
             overflow: hidden;
             color: @color-text-base;
             font-size: @font-size-base;
@@ -59,7 +59,8 @@
 
                 .cart-number{
                     position: absolute;
-                    right: 9%;
+                    right:16%;
+                    top:2*@hd;
                 }
             }
         }
@@ -80,6 +81,14 @@
                 background-color:@fill-ancillary-yellow;
            }
 
+        }
+        .disable{
+            +.disable{
+                border-left: 1px solid #ccc;
+
+            }
+            flex:1;
+            background: @fill-disabled !important;
         }
     }
 }

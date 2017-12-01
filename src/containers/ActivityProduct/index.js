@@ -2,15 +2,15 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Button, Flex, WingBlank,WhiteSpace, Icon, ListView} from 'antd-mobile';
-import {getActiveList, addActiveList,emptyActiveList} from '../../actions/activityProduct'
+import { ListView} from 'antd-mobile';
+import {getActiveList,emptyActiveList} from '../../actions/activityProduct'
 import {getAreaActivity} from '../../actions/home'
 import FilterBar from '../../components/FilterBar'
-import NavBar from "../../components/NavBar";
-import Text from "../../components/Text";
 import ListViewProduct from '../../components/ListViewProduct'
 import ProductItem from '../../components/ProductItem'
 import './index.less'
+import {changeNavbarTitle} from '../../actions/home'
+import utils from '../../utils'
 const ImgHight = document.documentElement.clientWidth * 0.46 - 32
 class ActivityProduct extends Component {
     static propTypes = {};
@@ -30,6 +30,7 @@ class ActivityProduct extends Component {
         this.state = {
             isScrolling: false,
             pageNum: 1,
+            showImg:true,
             sortType: "ascPrice",
             isLoading: false,
             hasMore: true,
@@ -39,10 +40,14 @@ class ActivityProduct extends Component {
     }
 
     componentWillMount() {
-
+        const {id,name} = this.props.location.query;
+        const {areaActive} = this.props;
+        const nav_name = areaActive.data.filter(item => item.imCampaignCategoryId == id).length > 0 ? areaActive.data.filter(item => item.imCampaignCategoryId == id)[0].name : "活动专场"
+        this.props.dispatch(changeNavbarTitle(name||nav_name))
     }
 
     componentDidMount() {
+
         if(this.props.areaActive.code ==0){
 
         }else{
@@ -53,6 +58,7 @@ class ActivityProduct extends Component {
     }
     componentWillUnmount(){
         this.props.dispatch(emptyActiveList());
+
     }
     getData(pageNow,type) {
         const {id} = this.props.location.query
@@ -61,25 +67,26 @@ class ActivityProduct extends Component {
             pageSize: 10,
             sortType: type
         }, (res) => {
-            this.setState({
-                pageNum:res.data.pageOffset
-            })
             if (res.data.pageOffset < res.data.totalPage) {
                 this.setState({
                     isLoading: false,
                     hasMore: true,
+                    pageNum:res.data.pageOffset
                 })
             } else {
                 this.setState({
                     isLoading: false,
-                    hasMore: false
+                    hasMore: false,
+                    pageNum:res.data.pageOffset
                 })
             }
         }))
     }
     onClickBar = (data) => {
         this.setState({
-            pageNum: 1
+            pageNum: 1,
+            hasMore:true,
+            isLoading:false
         })
         this.props.dispatch(emptyActiveList());
         if (data.change) {
@@ -98,7 +105,7 @@ class ActivityProduct extends Component {
 
     }
     onEndReached = () => {
-        if (!this.state.hasMore) {
+        if (!this.state.hasMore || this.state.isLoading) {
             return;
         }
         this.setState({isLoading: true});
@@ -109,9 +116,21 @@ class ActivityProduct extends Component {
     gotoShop(data){
         this.context.router.push(`/product?id=${data.imProductId}`)
     }
+    onScroll=(e)=>{
+        if(e.target.scrollTop > (document.documentElement.clientHeight-430)/2 ){
+            this.setState({
+                showImg:false
+            })
+        }
+        if(e.target.scrollTop < 20){
+            this.setState({
+                showImg:true
+            })
+        }
+    }
     render() {
         const {id} = this.props.location.query;
-        const {areaActive, activityProduct} = this.props;
+        const {areaActive} = this.props;
         const row = (rowData, sectionID, rowID) => {
             return (
                 <ProductItem  {...rowData} clickTab={this.gotoShop.bind(this, rowData)} height={ImgHight}/>
@@ -122,9 +141,8 @@ class ActivityProduct extends Component {
         let dataSource = this.dataSource.cloneWithRows(this.props.activityProduct.data.datas)
         return (
             <div className="activity-product class-shop">
-                <NavBar title={nav_name} {...this.props}/>
                 {
-                    nav_img ? <div className="banner">
+                    nav_img&&this.state.showImg ? <div className="banner">
                         <img src={nav_img}/>
                     </div> : ""
                 }
@@ -155,16 +173,21 @@ class ActivityProduct extends Component {
                     ]}
                     onClickBar={this.onClickBar}
                 />
-                <ListViewProduct
-                    row={row}
-                    dataSource={dataSource}
-                    status={this.props.activityProduct.code}
-                    isLoading={this.state.isLoading}
-                    onEndReached={this.onEndReached}
-                    type={1}
-                    height={nav_img?document.documentElement.clientHeight -430:document.documentElement.clientHeight -100}
-                    empty_text={'小主，敬请期待活动商品上架哦！'}
-                />
+
+                    <ListViewProduct
+                        row={row}
+                        dataSource={dataSource}
+                        status={this.props.activityProduct.code}
+                        data={this.props.activityProduct.data}
+                        isLoading={this.state.isLoading}
+                        onEndReached={this.onEndReached}
+                        type={1}
+                        onScroll={this.onScroll}
+                        height={document.documentElement.clientHeight -60*utils.multiple}
+                        empty_text={'小主，敬请期待活动商品上架哦！'}
+                    />
+
+
             </div>
         )
     }

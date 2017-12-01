@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Toast, Icon, ListView} from 'antd-mobile';
+import {Toast, ListView} from 'antd-mobile';
 import {selectCoupons, addUserCoupon,changeCouponsCentre,emptyCouponsCentre} from '../../actions/coupon'
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import CouponTem from "../../components/CouponTem";
 import ListViewProduct from '../../components/ListViewProduct'
 class TicketCenter extends Component {
@@ -24,11 +24,15 @@ class TicketCenter extends Component {
         }
 
     }
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("领券中心"))
+    }
 
     componentDidMount() {
         this.getData(1);
     }
     componentWillUnmount(){
+
         this.props.dispatch(emptyCouponsCentre())
     }
 
@@ -66,7 +70,7 @@ class TicketCenter extends Component {
         }
         this.setState({isLoading: true});
         setTimeout(()=>{
-            console.dir(this.props.couponCentre)
+
             this.getData(this.props.couponCentre.data.pageOffset + 1)
         },100)
 
@@ -93,37 +97,19 @@ class TicketCenter extends Component {
         let dataSource = this.dataSource.cloneWithRows(this.props.couponCentre.data.datas)
         return (
             <div className="ticket-center">
-                <NavBar title={'领券中心'} {...this.props}></NavBar>
-
                 <div className='nav-content'>
-                    {/*<ListView*/}
-                        {/*dataSource={this.state.dataSource}*/}
-                        {/*renderFooter={() => (<div style={{marginBottom: 50, textAlign: 'center'}}>*/}
-                            {/*{this.state.isLoading == 1 ? <span><Icon*/}
-                                {/*type="loading"/>加载中...</span> : this.state.isLoading == 2 ? "" : '没有数据了。。。。'}*/}
-                        {/*</div>)}*/}
-                        {/*renderRow={row}*/}
-                        {/*className="fortest"*/}
-                        {/*style={{*/}
-                            {/*height: document.documentElement.clientHeight - 90,*/}
-                            {/*overflow: 'auto',*/}
-                        {/*}}*/}
-                        {/*pageSize={15}*/}
-                        {/*initialListSize={0}*/}
-                        {/*onEndReached={this.getData}*/}
-
-                    {/*/>*/}
                     <ListViewProduct
                         row={row}
                         dataSource={dataSource}
                         status={this.props.couponCentre.code}
+                        data={this.props.couponCentre.data}
                         isLoading={this.state.isLoading}
                         reflistview="listrefs"
                         onEndReached={this.onEndReached}
                         type={2}
                         height={document.documentElement.clientHeight - 100}
                         empty_type={3}
-                        empty_text={'你还没订单哟'}
+                        empty_text={'小主，敬请关注优惠券发放哦！'}
                     />
 
                 </div>

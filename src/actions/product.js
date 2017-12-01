@@ -7,6 +7,7 @@ export const GET_EVALUATION = "GET_EVALUATION";
 export const GET_PRODUCT_COUPONS = "GET_PRODUCT_COUPONS";
 export const GET_PRODUCT_SPEC = "GET_PRODUCT_SPEC";
 export const DELETE_TEMPPRODUCT_BY_ID = "DELETE_TEMPPRODUCT_BY_ID";
+export const DELETE_TEMPPRODUCT='DELETE_TEMPPRODUCT';
 export const CHECK_ALL_SHOP = "CHECK_ALL_SHOP";
 export const REPLACE_TEMP_PRODUCT = "REPLACE_TEMP_PRODUCT";
 export const GET_MEMBERPRODUCT_COUPON = "GET_MEMBERPRODUCT_COUPON";
@@ -16,6 +17,9 @@ export const EMPTY_PRODUCT = "EMPTY_PRODUCT";
 export const EMPTY_PRODUCT_SPEC = "EMPTY_PRODUCT_SPEC";
 export const EMPTY_EVALUATION = "EMPTY_EVALUATION";
 export const CHANGE_PRODUCT_COUPONS = "CHANGE_PRODUCT_COUPONS";
+export const ADD_BUY_PRODUCT='ADD_Buy_PRODUCT'
+export const UPDATE_BUY_PRODUCT="UPDATE_Buy_PRODUCT"
+export const DELETE_BUY_PRODUCT="DELETE_BUY_PRODUCT"
 
 //结算
 export function settlement(data, callback=(json)=>{}){
@@ -58,6 +62,16 @@ export function getEvaluation(productId,data, callback=(json)=>{}){
   return get(`${host.test_host}impcomment/list/${productId}`, data,callback, (json)=>{
     return {
       type : GET_EVALUATION,
+      json
+    }
+  })
+}
+
+//获取商品详情信息
+export function getProductDetails(productId,data, callback=(json)=>{}){
+  return get(`${host.test_host}improduct/getProductDetail/${productId}`, data,callback, (json)=>{
+    return {
+      type : GET_PRODUCT,
       json
     }
   })
@@ -151,6 +165,13 @@ export function deleteTempProductById(json){
 		json
 	}
 }
+//批量删除购物车
+export function deleteTempProduct(json){
+  return {
+    type:DELETE_TEMPPRODUCT,
+    json
+  }
+}
 //全选或取消选中
 export function checkAllShop(json){
 	return {
@@ -159,3 +180,24 @@ export function checkAllShop(json){
 	}
 }
 
+//立即购买商品
+export function addBuyProduct(json){
+   return {
+      type : ADD_BUY_PRODUCT,
+      json
+   }
+}
+//更新立即购买
+export function updateBuyProduct(json){
+  return {
+    type:UPDATE_BUY_PRODUCT,
+    json
+  }
+}
+//清除立即购买数据
+export function deleteBuyProduct(){
+  return {
+    type:DELETE_BUY_PRODUCT
+  
+  }
+}

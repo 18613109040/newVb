@@ -77,22 +77,31 @@
 
                 margin-left: 10px;
                 color: @color-text-secondary;
-
-                padding: 4px;
+                padding: 7*@hd;
                 position: absolute;
             }
         }
         .center {
             text-align: right;
-            margin-bottom: 10*@hd;
+            margin-bottom: 5*@hd;
             min-height: 22*@hd;
-            margin-top: 5px *@hd;
+            margin-top: 7px *@hd;
             .my-radio{
-                padding: 0px 2.5px*@hd 0px 2.5px*@hd;
+                padding: 0px ;
                 border: 1px solid #ccc;
                 border-radius: 50%;
                 margin-right: 15px * @hd;
-
+                width: 40px;
+                height: 40px;
+                display: inline-block;
+                position: relative;
+                .am-radio{
+                    width: 40px;
+                    height: 40px;
+                    .am-radio-inner{
+                        right:3px;
+                    }
+                }
             }
             .status01 {
                 background: url(../../assets/images/yilingqu-icon.png) no-repeat center center;

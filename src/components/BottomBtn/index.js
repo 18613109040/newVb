@@ -2,7 +2,6 @@
 import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
-import {connect} from "react-redux";
 import './index.less'
 export default class BottomBtn extends Component {
     static propTypes = {};
@@ -26,7 +25,7 @@ export default class BottomBtn extends Component {
             {
                 disabled?<div className="btn disabled">{text}</div>:<div className="btn" onClick={this.onClick}>{text}</div>
             }
-            
+
          </div>
         )
     }

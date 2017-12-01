@@ -6,12 +6,12 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, ListView, WingBlank, WhiteSpace} from 'antd-mobile';
+import {ListView} from 'antd-mobile';
 import {getExplosionRecom, emptyExplosionRecom} from '../../actions/newShelves'
 import ListViewProduct from '../../components/ListViewProduct'
-import FilterBar from '../../components/FilterBar'
 import NavBar from "../../components/NavBar";
 import ProductItem from '../../components/ProductItem'
+import {changeNavbarTitle} from '../../actions/home'
 const ImgHight = document.documentElement.clientWidth * 0.46 - 32
 class ExplosionRecom extends Component {
     static propTypes = {};
@@ -34,7 +34,9 @@ class ExplosionRecom extends Component {
             pageNum: 1
         }
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("爆款推荐"))
+    }
     componentDidMount() {
         this.getData(1, "ascPrice")
     }
@@ -100,7 +102,7 @@ class ExplosionRecom extends Component {
         }, 100)
     }
     gotoShop = (data) => {
-        console.dir(data)
+
         this.context.router.push(`/product?id=${data.imProductId}`)
     }
 
@@ -113,7 +115,6 @@ class ExplosionRecom extends Component {
         }
         return (
             <div className="new-shelves class-shop">
-                <NavBar title="爆款推荐" {...this.props}/>
                 {/*<FilterBar*/}
                 {/*data={[*/}
                 {/*{*/}
@@ -145,6 +146,7 @@ class ExplosionRecom extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.explosionRecom.code}
+                    data={this.props.explosionRecom.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}

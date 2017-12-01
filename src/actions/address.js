@@ -7,6 +7,8 @@ export const CHECK_ADDRESS = "CHECK_ADDRESS";
 export const EIDT_ADDRESS = "EIDT_ADDRESS";
 export const GET_ADDRESS_DETAIL = "GET_ADDRESS_DETAIL";
 export const DETELETE_ADDRESS_DETAIL = "DETELETE_ADDRESS_DETAIL";
+export const EMPTY_LIST_ADDRESS = "EMPTY_LIST_ADDRESS";
+export const CLEAR_ADDRESS_CHECK ="CLEAR_ADDRESS_CHECK"
 
 //获取地址
 export function getAddress(json){
@@ -45,12 +47,30 @@ export function getListAddress(data, callback=(json)=>{}){
     }
   })
 }
+//清空地址
+export function emptyListAddress(json){
+        return {
+            type : EMPTY_LIST_ADDRESS,
+            json
+        }
+
+}
 
 //获取地址详情
 export function getAddressDetail(id,data, callback=(json)=>{}){
     return get(`${host.test_host}address/detail/${id}`, data,callback, (json)=>{
         return {
             type : GET_ADDRESS_DETAIL,
+            json
+        }
+    })
+}
+
+//获取默认地址 
+export function getDefaultAddress(data, callback=(json)=>{}){
+  return get(`${host.test_host}address/defaultAddress`, data,callback, (json)=>{
+        return {
+            type : GET_ADDRESS,
             json
         }
     })
@@ -74,5 +94,12 @@ export function checkAddress(json){
    }
 }
 
+//下单后把选中地址清掉
+export function clearAddressCheck (){
+  return{
+    type:CLEAR_ADDRESS_CHECK
+
+  }
+}
 
 

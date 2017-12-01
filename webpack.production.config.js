@@ -4,9 +4,19 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const pxtorem = require('postcss-pxtorem');
 const cssnano = require('cssnano');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 //这里我们使用webpack-bundle-analyzer来分析 Webpack 生成的包体组成并且以可视化的方式反馈给开发者
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const otherPlugins = process.argv[1].indexOf('webpack-dev-server') >= 0 ? [] : [
+    new Visualizer(), // remove it in production environment.
+    new BundleAnalyzerPlugin({
+        defaultSizes: 'parsed',
+        // generateStatsFile: true,
+        statsOptions: {source: false}
+    }), // remove it in production environment.
+];
 const postcssOpts = {
     ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
     plugins: () => [
@@ -18,12 +28,12 @@ const postcssOpts = {
     cssnano
 };
 module.exports = {
-    devtool: 'source-map',
+    devtool: 'source-map', // or 'inline-source-map
     entry: {"index": path.resolve(__dirname, 'src/index')},
     output: {
         path: path.join(__dirname, '/dist'),
         filename: '[name].[hash].js',
-        chunkFilename: '[name].[chunkhash].js',
+        chunkFilename: '[name].[hash].check.js',
         publicPath: ''
     },
     resolve: {
@@ -97,31 +107,20 @@ module.exports = {
         ]
     },
     plugins: [
-
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.optimize.ModuleConcatenationPlugin(),
+        // new webpack.optimize.CommonsChunkPlugin('shared.js'),
         new webpack.optimize.CommonsChunkPlugin({
             // minChunks: 2,
             name: 'shared', //对应于上面的entry的key  将index 打包命名 shared name 可以是个数组 [a,n,]
             filename: 'shared.js'
         }),
-        new ExtractTextPlugin({filename: '[name].css', allChunks: true}),
-        new webpack.optimize.UglifyJsPlugin({
-            comments: true,  // 清除备注
-            minimize: true,
-            compress: {
-                warnings: false,
-                drop_console: true
-            }
-        }),
+        new ExtractTextPlugin({filename: '[name].css', allChunks: false}),
         new HtmlWebpackPlugin({
-            // filename: '../views/dev/index.html',
-            //favicon: 'static/favicon.png',
-            // chunks: ['index'],
-            title:"VB商城",
             hash:true,
             template: './views/tpl/index.tpl.html',
             inject: 'body' //单独webpack
         }),
-
+        //...otherPlugins
     ]
 }

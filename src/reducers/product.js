@@ -6,6 +6,7 @@ import {
     GET_PRODUCT_COUPONS,
     GET_PRODUCT_SPEC,
     DELETE_TEMPPRODUCT_BY_ID,
+    DELETE_TEMPPRODUCT,
     CHECK_ALL_SHOP,
     REPLACE_TEMP_PRODUCT,
     GET_MEMBERPRODUCT_COUPON,
@@ -13,21 +14,30 @@ import {
     EMPTY_PRODUCT,
     EMPTY_PRODUCT_SPEC,
     EMPTY_EVALUATION,
-    CHANGE_PRODUCT_COUPONS
+    CHANGE_PRODUCT_COUPONS,
+    ADD_BUY_PRODUCT,
+    UPDATE_BUY_PRODUCT,
+    DELETE_BUY_PRODUCT
+   
+
 } from '../actions/product'
 
 import {storage} from '../utils/tools';
 
 const initialState = {
     code: -1,
-    data: {
-        bannelImg1: "http://120.25.75.47:8090/group1/M00/00/07/eBlLL1gcIwSAdLoiAAH1jllDjtg195.jpg",
-        bannelImg2: "",
-        bannelImg3: "",
-        bannelImg4: "",
-        bannelImg5: "",
-        name: "",
-        details: ""
+    data:{
+        comments:[],
+        productBean: {
+            bannelImg1: "http://120.25.75.47:8090/group1/M00/00/07/eBlLL1gcIwSAdLoiAAH1jllDjtg195.jpg",
+            bannelImg2: "",
+            bannelImg3: "",
+            bannelImg4: "",
+            bannelImg5: "",
+            name: "",
+            details: ""
+        },
+        skus:[]
     },
     message: "初始数据"
 };
@@ -38,20 +48,7 @@ export function productDetails(state = initialState, action) {
         case GET_PRODUCT:
             return Object.assign({}, state, json);
         case EMPTY_PRODUCT:
-            return Object.assign({
-                    code: -1,
-                    data: {
-                        bannelImg1: "http://120.25.75.47:8090/group1/M00/00/07/eBlLL1gcIwSAdLoiAAH1jllDjtg195.jpg",
-                        bannelImg2: "",
-                        bannelImg3: "",
-                        bannelImg4: "",
-                        bannelImg5: "",
-                        name: "",
-                        details: ""
-                    },
-                    message: "初始数据"
-                }
-            );
+            return initialState
         default:
             return state
     }
@@ -75,7 +72,7 @@ export function tempProduct(state = [], action) {
 
         case UPDATE_TEMP_PRODUCT:
             let {id, check, amount, skuId, specDetail} = json;
-            let tem = state.filter(item => item.data.imProductId == id && item.skuId == skuId)
+            let tem = state.filter(item => item.imProductId == id && item.skuId == skuId)
             tem[0].amount = amount;
             tem[0].check = check;
             tem[0].skuId = skuId || '';
@@ -86,25 +83,27 @@ export function tempProduct(state = [], action) {
             return [].concat(state);
 
         case DELETE_TEMPPRODUCT_BY_ID:
-            let ids = json.id;
-            let temData = state;
-            ids.split(',').map((proid) => {
-                if (json.skuId == "" || !json.skuId) {
-                    temData = temData.filter(item => item.data.imProductId != proid)
-                } else {
-                    temData = temData.filter(item => item.data.imProductId != proid && item.skuId !== json.skuId)
-                }
-
-            })
+            let temData;
+            if (json.skuId == '' || !json.skuId) {
+                temData = state.filter(item => item.imProductId != json.id)
+                
+            } else {
+               temData = state.filter(item => (item.imProductId == json.id  && item.skuId !=json.skuId) || item.imProductId != json.id) 
+            }
             storage.setObj({
                 cart: [].concat(temData)
             })
             return [].concat(temData);
+        case DELETE_TEMPPRODUCT:
+            state=state.filter(item => !item.check)
+            storage.setObj({
+                cart: state
+            })
+            return state;
 
         case CHECK_ALL_SHOP:
-            console.dir(json)
             state.map(item => {
-                if (json.type === item.data.productType) {
+                if (json.type === item.productType) {
                     Object.assign(item, {check: json.check})
                 }
             })
@@ -159,7 +158,6 @@ export function productCoupons(state = inintProductCoupons, action) {
         case GET_PRODUCT_COUPONS:
             return Object.assign({}, state, json);
         case CHANGE_PRODUCT_COUPONS:
-            console.dir(json);
             state.data.map(item => {
                 if (item.id == json.id) {
                     item.hasGet = 1
@@ -185,8 +183,6 @@ export function productspec(state = {code: -1, data: []}, action) {
 
 export function memberProductCoupons(state = {code: -1, data: {invalidList: [], validList: []}}, action) {
     let json = action.json;
-    if(!json) return state
-    if(!json.data) return state
     switch (action.type) {
         case GET_MEMBERPRODUCT_COUPON:
             json.data.validList = json.data.validList || [];
@@ -210,7 +206,6 @@ export function memberProductCoupons(state = {code: -1, data: {invalidList: [], 
             );
 
         case RADIO_CHECK_STATUS:
-            console.dir(json)
             state.data.validList.map(item => {
                 if (item.id === json.id) {
                     item.check = !item.check
@@ -224,3 +219,39 @@ export function memberProductCoupons(state = {code: -1, data: {invalidList: [], 
             return state
     }
 }
+
+//立即购买商品
+export function buyProduct(state = [], action) {
+    let json = action.json;
+    switch (action.type) {
+        case ADD_BUY_PRODUCT:
+            storage.setObj({
+                buyCart: [].concat(json)
+            })
+            return [].concat(json);
+            break;
+        case UPDATE_BUY_PRODUCT:
+            let {id, check, amount, skuId, specDetail} = json;
+            let tem = state.filter(item => item.imProductId == id && item.skuId == skuId)
+            tem[0].amount = amount;
+            tem[0].check = check;
+            tem[0].skuId = skuId || '';
+            tem[0].specDetail = specDetail || '';
+            storage.setObj({
+                buyCart: [].concat(state)
+            })
+            return [].concat(state);
+            break;
+        case DELETE_BUY_PRODUCT:
+            storage.setObj({
+                buyCart: []
+            })
+            return []
+            break;
+        default:
+            let buyCart=storage.get('buyCart')||[]
+            state = state.length==0? buyCart:state
+            return state
+    }
+}
+

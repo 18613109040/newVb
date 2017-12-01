@@ -16,7 +16,7 @@ const style = {
 const boxSpec = {
 	//第二步
     beginDrag(props) {
-    	console.dir("beginDrag")
+
         return {
             protype: props.protype,
             type: 'box'
@@ -38,7 +38,7 @@ const boxSpec = {
     		props:props,
     		monitor:monitor
     	}
-    
+
     },
     //第三步
     isDragging(props, monitor){
@@ -51,7 +51,7 @@ const boxSpec = {
 };
 
 function boxCollect(connect,monitor) {
-	
+
     return {
         isDragging: monitor.isDragging(),
         connectDragSource: connect.dragSource()
@@ -68,14 +68,14 @@ class Source extends Component {
     	switch (item.name){
     		case "input": return <input type="text"/>
     			break;
-    		case "select": return <select><option>name</option></select>  
+    		case "select": return <select><option>name</option></select>
     			break;
     		default:
     			break;
     	}
     }
     render() {
-    	
+
         const { isDragging, connectDragSource } = this.props;
         const { protype } = this.props;
         return connectDragSource (

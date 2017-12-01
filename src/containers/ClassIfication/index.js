@@ -12,8 +12,8 @@ import {getInficationMenu,changeInficationMenu,getMenuChildren} from '../../acti
 import Search from '../../components/Search'
 import { WingBlank, WhiteSpace } from 'antd-mobile';
 import ClassIficationContent from '../../components/ClassIficationContent'
-import {storage} from '../../utils/tools';
 import './index.less'
+import utils from '../../utils'
 class ClassIfication extends React.Component {
     static propTypes = {};
     static contextTypes = {
@@ -65,23 +65,22 @@ class ClassIfication extends React.Component {
     }
     render() {
         const {infiactionmenu} = this.props;
-        console.dir(infiactionmenu)
         return (
-            <div className="class-infication" >
+            <div className="class-infication" style={{height:document.documentElement.clientHeight-100}}>
                 <WhiteSpace />
                 <WingBlank>
                     <Search type="1"/>
                 </WingBlank>
                 <WhiteSpace />
                 <Flex className="content">
-                    <div className="left-sider" style={{height: document.documentElement.clientHeight - 200}}>
+                    <div className="left-sider" style={{height: document.documentElement.clientHeight - 110*utils.multiple}}>
                         {
                             infiactionmenu.data.map((item,index)=>(
                                 <ClassIficationItem  key={index} silderData={item} clickMenu={this.clickMenu} />
                             ))
                         }
                     </div>
-                    <div className="right-content" style={{height: document.documentElement.clientHeight - 200}}>
+                    <div className="right-content" style={{height: document.documentElement.clientHeight - 110*utils.multiple}}>
                         {infiactionmenu.data.length>0?<ClassIficationContent clickGird={this.clickGird}  data={infiactionmenu.data.filter(item=>item.imCategoryId == infiactionmenu.selectId)[0]}/>:""}
                     </div>
                 </Flex>

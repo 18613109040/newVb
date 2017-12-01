@@ -25,6 +25,17 @@
                 }
             }
         }
+        .sys{
+            width: 80*@hd;
+            float: right;
+            text-align: center;
+            .exit{
+                padding: 5*@hd 15*@hd 5*@hd 15*@hd;
+                border: 1px solid #ffffff;
+                color: white;
+                font-size: @font-size-caption;
+            }
+        }
     }
     .info-2 {
         background: white;
@@ -58,10 +69,14 @@
             background: @fill-base;
             .grid-item {
                 text-align: center;
+                color: @color-text-base;
+                .top{
+                    position:relative;
+                }
                 .item-bage {
                     position: absolute;
-                    margin-left: 15px * @hd;
-                    margin-top: -3px * @hd;
+                    right:8*@hd;
+                    top:0*@hd;
                 }
                 .icon-dzf {
                     font-size: 30px *@hd;
@@ -79,8 +94,13 @@
                     font-size: 30px * @hd;
                     color: #737373;
                 }
+                .icon-drf {
+                    font-size: 30px * @hd;
+                    color: #737373;
+                }
                 .grid-name {
                     font-size: @font-size-caption-sm;
+                    height:27*@hd;
                 }
             }
         }

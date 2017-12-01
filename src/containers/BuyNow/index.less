@@ -7,6 +7,12 @@
     display: flex;
     align-items: center;
     font-size: @font-size-base;
+    &.empty{
+        height:25*@hd;
+        align-items:end;
+        justify-content:center;
+        padding-bottom:10*@hd;
+    }
     .aleft {
         padding-right: 10*@hd;
     }
@@ -90,6 +96,11 @@
         }
         .f12 {
             font-size: @font-size-caption-sm;
+            .icon-question{
+                vertical-align: sub;
+                margin-left:5*@hd;
+                color:@fill-ancillary-red;
+            }
         }
         .am-list-extra {
             flex-basis: auto;
@@ -130,4 +141,24 @@
     min-height: 350*@hd;
     background: #f4f4f4;
 
+}
+
+.rule-mask{
+    .modal-rule{
+        text-align:left;
+        font-size:@font-size-base;
+        .rule{
+            padding-bottom:10*@hd;
+            .title{
+                color:@color-text-base;
+            }
+        }
+        
+    }
+    .am-modal-title{
+        font-size: @font-size-caption !important;
+    }
+    .am-modal-button{
+        font-size:@font-size-caption !important;
+    }
 }

@@ -3,16 +3,11 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, WhiteSpace, Tabs} from 'antd-mobile';
-import Paid from './Paid'
-import Delivered from './Delivered'
-import Details from './Details'
-import Received from './Received'
-import Evaluated from './Evaluated'
 import './index.less'
-import NavBar from '../../components/NavBar'
+import {Flex} from 'antd-mobile';
 import Text from '../../components/Text'
-import {getToBeDelivered,getorderDetails, getToBePaid,getToBeReceived,getToBeEvaluated} from '../../actions/orderDetails'
+import {changeNavbarTitle} from '../../actions/home'
+const Item = Flex.Item
 class MyOrder extends Component {
     static propTypes = {};
 
@@ -24,114 +19,56 @@ class MyOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: false
+            visible: false,
         }
 
+    }
+
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("我的订单"))
     }
 
     componentDidMount() {
 
     }
-    getData(){
 
-    }
-    visibleShow = () => {
-        this.setState({
-            visible: !this.state.visible
-        })
-    }
-    onSelect = (node, index) => {
-        this.setState({
-            visible: false
-        })
-        this.context.router.push(node.key)
-
-    }
-    handleVisibleChange = (visible) => {
-        this.setState({
-            visible
-        })
-    }
-    tabsChange = (key) => {
-        console.dir(key.sub)
-        if(key.sub=='0'){
-            if (this.props.orderDetails.all.code == -1) {
-                this.props.dispatch(getorderDetails({
-                    pageNow: 1,
-                    pageSize: 10,
-                    status: -1
-                }));
-            }
-        }else if(key.sub=='1'){
-            if (this.props.orderDetails.paid.code == -1) {
-                this.props.dispatch(getToBePaid({
-                    pageNow: 1,
-                    pageSize: 10,
-                    status: 1
-                }));
-            }
-        }else if(key.sub=='2'){
-            if (this.props.orderDetails.delivered.code == -1) {
-                this.props.dispatch(getToBeDelivered({
-                    pageNow: 1,
-                    pageSize: 10,
-                    status: 3
-                }));
-            }
-        }else if(key.sub=='3'){
-            if (this.props.orderDetails.received.code == -1) {
-                this.props.dispatch(getToBeReceived({
-                    pageNow: 1,
-                    pageSize: 10,
-                    status: 4
-                }));
-            }
-        }else if(key.sub=='4'){
-            if (this.props.orderDetails.evaluated.code == -1) {
-                this.props.dispatch(getToBeEvaluated({
-                    pageNow: 1,
-                    pageSize: 10,
-                    status: 5
-                }));
-            }
-        }
-    }
     render() {
-        const {key} = this.props.location.query;
         const tabs = [
-            {title: <Text text={"全部"} size="md" row={1}/>, sub: '0'},
-            {title: <Text text={"待支付/兑换"} size="md" row={1}/>, sub: '1'},
-            {title:<Text text={"待发货"} size="md" row={1}/>, sub: '2'},
-            {title:<Text text={"待收货"} size="md" row={1}/>, sub: '3'},
-            {title: <Text text={"待评价"} size="md" row={1}/>, sub: '4'},
-        ];
+            {
+                name: "全部",
+                path: "/myorder/details"
+            }, {
+                name: "待支付/兑换",
+                path: "/myorder/paid"
+            }, {
+                name: "待发货",
+                path: "/myorder/delivered"
+            }, {
+                name: "待收货",
+                path: "/myorder/received"
+            }, {
+                name: "待评价",
+                path: "/myorder/evaluated"
+            }
+        ]
+        const {pathname} = this.props.location;
         return (
             <div className="my-order">
-                <NavBar title="我的订单" {...this.props}/>
                 <div className="nav-content">
-                    <Tabs
-                        tabs={tabs}
-                        initialPage={ parseInt(key) }
-                        swipeable={false}
-                        onChange={this.tabsChange}
-                    >
-                        <div>
-                            <Details/>
-                        </div>
-                        <div>
-                            <Paid/>
-                        </div>
-                        <div>
-                            <Delivered/>
-                        </div>
-                        <div>
-                            <Received/>
-                        </div>
-                        <div>
-                            <Evaluated/>
-                        </div>
-                    </Tabs>
-
+                    <Flex>
+                        {
+                            tabs.map((item, id) => (
+                                <Item
+                                    key={id} onClick={()=>{this.context.router.replace(item.path)}}
+                                    className={item.path == pathname ? "swiper-slide active" : "swiper-slide"}>
+                                    <Text text={item.name} row={1} size="md"/>
+                                </Item>
+                            ))
+                        }
+                    </Flex>
+                    {
+                        this.props.children
+                    }
                 </div>
 
             </div>

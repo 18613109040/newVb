@@ -2,15 +2,12 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Icon, List, Checkbox, Toast, Radio, WhiteSpace} from 'antd-mobile';
-import {getOrderById, wxPay, getOpenId} from '../../actions/orderDetails'
-import {storage} from "../../utils/tools"
-import Cookie from "js-cookie";
+import {List, Radio,Toast} from 'antd-mobile';
+import {getOrderById, wxPay,wechatJssdk,emptyOrder} from '../../actions/orderDetails'
 import './index.less'
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
+import {storage} from "../../utils/tools"
 
-const Item = List.Item;
-const Brief = Item.Brief;
 const RadioItem = Radio.RadioItem;
 
 class OnlinePayment extends Component {
@@ -25,82 +22,104 @@ class OnlinePayment extends Component {
         super(props);
         this.checkInUsers = []
         this.state = {
-            value: 0
+            value: 0,
+            clickPay:false
         }
 
     }
 
     componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("支付方式"))
 
     }
-
-    onBridgeReady(data) {
-        console.dir(data)
-        WeixinJSBridge.invoke(
-            'getBrandWCPayRequest', {
-                "appId": '"'+data.appId.toString()+'"',     //公众号名称，由商户传入
-                "timeStamp": '"'+data.timeStamp.toString()+'"',         //时间戳，自1970年以来的秒数
-                "nonceStr": '"'+data.nonceStr.toString()+'"', //随机串
-                "package": '"'+data.prepayId.toString()+'"',
-                "signType": '"'+data.signType.toString()+'"',         //微信签名方式：
-                "paySign": '"'+data.paySign.toString()+'"' //微信签名
-            },
-            function (res) {
-                alert(res.err_msg)
-                if (res.err_msg == "get_brand_wcpay_request:ok") {
-                    console.dir(res)
-                }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-            }
-        );
-    }
-
     componentDidMount() {
         const {id, openId} = this.props.location.query;
+        this.props.dispatch(getOrderById(id))
         if (openId) {
-            this.props.dispatch(wxPay({
-                orderId: id,
-                openId: openId
-            }, (res) => {
-                if (res.code == 0) {
-
-                    if (typeof WeixinJSBridge == "undefined") {
-                        if (document.addEventListener) {
-                            document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady(res.data), false);
-                        } else if (document.attachEvent) {
-                            document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady(res.data));
-                            document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady(res.data));
-                        }
-                    } else {
-                        this.onBridgeReady(res.data);
-                    }
-                }
-
-            }))
-        } else {
-            this.props.dispatch(getOrderById(id))
+            this.wxpay();
         }
 
     }
+    wxpay=()=>{
+        const {id, openId} = this.props.location.query;
+            this.props.dispatch(wechatJssdk({
+                signUrl:window.location.href
+            },(res)=>{
+                if(res.code == 0){
+                    wx.config({
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: res.data.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+                        timestamp:res.data.timestamp , // 必填，生成签名的时间戳
+                        nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
+                        signature: res.data.signature,// 必填，签名，见附录1
+                        jsApiList: [
+                            'chooseWXPay'
+                        ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    });
 
+                    this.props.dispatch(wxPay({
+                        orderId: id,
+                        openId: openId
+                    }, (res) => {
+                        if (res.code == 0) {
+                            wx.ready(()=>{
+                                wx.chooseWXPay({
+                                    timestamp: parseInt(res.data.timeStamp) , // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                                    nonceStr: res.data.nonceStr, // 支付签名随机串，不长于 32 位
+                                    package: res.data.prepayId, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                                    signType: res.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                                    paySign: res.data.paySign, // 支付签名
+                                    success: (res)=> {
+                                        this.props.dispatch(emptyOrder())
+                                        this.context.router.replace(`/paySuccess?text=支付成功&orderId=${id}`)
+                                    },
+                                    fail:(res)=>{
+
+                                    }
+                                });
+                            })
+                        }else{
+                            Toast.info(res.message, 2);
+                            this.setState({
+                                clickPay:false
+                            })
+                        }
+
+                    }))
+                }else{
+                    Toast.info(res.message, 2);
+                    this.setState({
+                        clickPay:false
+                    })
+                }
+            }))
+
+    }
     pay = () => {
+        this.setState({
+            clickPay:true
+        })
         if (this.state.value == 0)
             this.weixing()
         else
             this.zhifubao()
     }
     zhifubao = () => {
-        const {data} = this.props.orderlist;
-        let token = storage.get('token');
-        let cookie = Cookie.get("__SibuxwsJavaCookie");
-        let openId = storage.get('openId');
-        window.location.href = "/alipay/pay/?orderId=" + data.orderId + "&openId=" + openId + "&token=" + token + "&cookie=" + cookie;
-
+        const {id} = this.props.location.query;
+        const token = storage.get("token")
+        this.props.dispatch(emptyOrder())
+        location.href=`/alipay/pay?orderId=${id}&token=${token}`;
     }
 
     weixing = () => {
         const {data} = this.props.orderlist;
-        console.dir(data)
-        location.href = `http://testxws.sibumbg.com/api/wechat/getOpenId?orderId=${data.orderId}`
+        const { openId} = this.props.location.query;
+        if(openId){
+            this.wxpay();
+        }else{
+            location.href = `/wechat/getOpenId?orderId=${data.orderId}`
+        }
+
     }
 
     onChange = (value) => {
@@ -115,11 +134,11 @@ class OnlinePayment extends Component {
             {value: 0, label: '微信支付'},
             {value: 1, label: '支付宝支付'},
         ];
+        const { openId} = this.props.location.query;
         return (
 
             <div className="online-payment">
-                <NavBar title="支付方式" {...this.props}/>
-                <div className="nav-content" style={{height: document.documentElement.clientHeight - 190}}>
+                <div className="nav-content" style={{height: document.documentElement.clientHeight - 100}}>
 
                     <List renderHeader={() => '选择支付方式'}>
                         {checkData.map(i => (
@@ -131,11 +150,11 @@ class OnlinePayment extends Component {
                         ))}
                     </List>
                 </div>
-                {
 
-                }
                 <div className="vb-tab-bar-fix">
-                    <a className="btn" onClick={this.pay.bind(this)}>确认支付：￥{data.totalMoney}</a>
+                    {
+                       this.state.clickPay?<a className="btn">支付中....</a>:<a className="btn" onClick={this.pay.bind(this)}>确认支付：￥{data.totalMoney}</a>
+                    }
                 </div>
 
 

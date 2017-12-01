@@ -3,12 +3,12 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, ListView, WingBlank, WhiteSpace} from 'antd-mobile';
+import { ListView} from 'antd-mobile';
 import {getNewShelves, emptyNewShelves} from '../../actions/newShelves'
 import ListViewProduct from '../../components/ListViewProduct'
 import FilterBar from '../../components/FilterBar'
-import NavBar from "../../components/NavBar";
 import ProductItem from '../../components/ProductItem'
+import {changeNavbarTitle} from '../../actions/home'
 const ImgHight=document.documentElement.clientWidth*0.46-32
 class NewShelves extends Component {
     static propTypes = {};
@@ -30,7 +30,9 @@ class NewShelves extends Component {
             pageNum: 1
         }
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("新品上市"))
+    }
     componentDidMount() {
         this.getData(1, "ascPrice")
     }
@@ -69,7 +71,7 @@ class NewShelves extends Component {
         this.props.dispatch(emptyNewShelves());
     }
     onClickBar = (data) => {
-        console.dir(data)
+
         this.setState({
             pageNum: 1
         })
@@ -90,7 +92,7 @@ class NewShelves extends Component {
 
     }
     onEndReached = () => {
-        if (!this.state.hasMore&&this.state.isLoading) {
+        if (!this.state.hasMore) {
             return;
         }
         this.setState({isLoading: true});
@@ -111,7 +113,6 @@ class NewShelves extends Component {
         }
         return (
             <div className="new-shelves class-shop">
-                <NavBar title="新品上市" {...this.props}/>
                 <FilterBar
                     data={[
                         {
@@ -143,6 +144,7 @@ class NewShelves extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.newshelves.code}
+                    data={this.props.newshelves.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}

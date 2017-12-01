@@ -2,36 +2,13 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Tabs, Carousel, Toast, Icon, Modal} from 'antd-mobile';
+import {Tabs, Icon, Modal} from 'antd-mobile';
 import CouponTem from "../../components/CouponTem";
-import {getUserCoupons, activateCoupon} from "../../actions/coupon";
-import NavBar from '../../components/NavBar'
+import {getUserCoupons} from "../../actions/coupon";
+import {changeNavbarTitle} from '../../actions/home'
+import utils from '../../utils'
 import './index.less'
-const prompt = Modal.prompt;
-class PopupContent extends React.Component {
-    render() {
-        return (
-            <div>
-                <NavBar title={"优惠券"} {...this.props}  rightContent={
-                    [
-                       <Icon key="0" onClick={this.props.onClose} type="ellipsis" />
-                    ]
-                    }/>
-                <div className="coupon-description nav-content">
-                    <div>1.V券不可叠加使用，每张订单限用一张;</div>
-                    <div>2.V券金额大于订单应付金额时，差额不予退回;</div>
-                    <div>3.运费券按券面值仅可抵减订单运费，不可叠加使用，每张订单
-                        限用一张，不设找零（运费券金额大于订单运费时，差额不予退
-                        回）。运费券可与V券同时使用;
-                    </div>
-                    <div>4.V券与运费券仅可在有效期期内使用。</div>
-                </div>
-            </div>
 
-        );
-    }
-
-}
 
 class Coupon extends Component {
     static propTypes = {};
@@ -48,7 +25,9 @@ class Coupon extends Component {
         }
 
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("优惠券"))
+    }
     componentDidMount() {
 
         this.props.dispatch(getUserCoupons({}))
@@ -56,20 +35,10 @@ class Coupon extends Component {
     handleTabClick = () => {
 
     }
-    showModal = key => (e) => {
-        e.preventDefault(); // 修复 Android 上点击穿透
-        this.setState({
-          [key]: true,
-        });
-    }
-    onClose = key => () => {
-        this.setState({
-          [key]: false,
-        });
-    }
+
     //couponRange : 0 全场  1专场  其他满减
     onClickEvent = (data) => {
-        console.dir(this.context)
+
         if (data.couponRange == 0) {
             this.context.router.push(`/classification`);
         } else if (data.couponRange == 1) {
@@ -82,27 +51,25 @@ class Coupon extends Component {
 
 
     render() {
-        const {expiredList, hasUsedList, notUsedList} = this.props.userCoupon.data;
+        let  {expiredList, hasUsedList, notUsedList} = this.props.userCoupon.data;
+        expiredList = expiredList || [];
+        hasUsedList = hasUsedList || [];
+        notUsedList = notUsedList || [];
         const tabs = [
-            { title: `未使用${notUsedList !== "" ? `(${notUsedList.length})` : ""}`},
-            { title: `使用记录${hasUsedList !== "" ? `(${hasUsedList.length})` : ""}`},
-            { title: `已过期${expiredList !== "" ? `(${expiredList.length})` : ""}`}
+            { title: `未使用(${notUsedList.length})`},
+            { title: `使用记录(${hasUsedList.length})`},
+            { title: `已过期(${expiredList.length})`}
         ];
         return (
-            <div className="vb-coupon" style={{height: document.documentElement.clientHeight}} >
-                <NavBar title={"优惠券"} {...this.props}  rightContent={
-                    [
-                       <Icon key="0" onClick={this.showModal('modal')} type="ellipsis" />
-                    ]
-                    }/>
+            <div className="vb-coupon"  >
                 <Tabs tabs={tabs}
-                  initialPage={1}
+                  initialPage={0}
                   onChange={(tab, index) => { console.log('onChange', index, tab); }}
                   onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
                 >
-                  <div style={{height: (218*notUsedList.length+200)+'px'}}>
+                  <div style={{height: document.documentElement.clientHeight - 140*utils.multiple}}>
                      {
-                        notUsedList !== "" ? notUsedList.map((item, id) => (
+                        notUsedList.map((item, id) => (
                             <CouponTem
                                 data={Object.assign({},
                                     item, {status: 1}, {
@@ -113,12 +80,12 @@ class Coupon extends Component {
                                 key={id}
                                 onClickEvent={this.onClickEvent}
                             />
-                        )) : ""
+                        ))
                     }
                   </div>
-                  <div style={{height: (218*hasUsedList.length+200)+'px'}}>
+                  <div style={{height: document.documentElement.clientHeight - 140*utils.multiple}}>
                     {
-                        hasUsedList !== "" ? hasUsedList.map((item, id) => (
+                         hasUsedList.map((item, id) => (
                             <CouponTem
                                 data={Object.assign({},
                                     item, {status: 2}, {useEndDate: item.useEndDt, useStartDate: item.useStartDt}
@@ -126,12 +93,12 @@ class Coupon extends Component {
                                 key={id}
 
                             />
-                        )) : ""
+                        ))
                     }
                   </div>
-                  <div style={{height: (218*expiredList.length+200)+'px'}}>
+                  <div style={{height: document.documentElement.clientHeight - 140*utils.multiple}}>
                     {
-                        expiredList !== "" ? expiredList.map((item, id) => (
+                         expiredList.map((item, id) => (
                             <CouponTem
                                 data={Object.assign({},
                                     item, {status: 3}, {
@@ -142,7 +109,7 @@ class Coupon extends Component {
                                 key={id}
 
                             />
-                        )) : ""
+                        ))
                     }
                   </div>
                 </Tabs>
@@ -152,20 +119,6 @@ class Coupon extends Component {
                         <Link  className="wbtn"  to="/bindCoupon" >去绑定优惠券</Link>
                     </div>
                 </div>
-
-
-
-                <Modal
-                  popup
-                  visible={this.state.modal}
-                  maskClosable={false}
-                  onClose={this.onClose('modal')}
-                  animationType="slide-down"
-                  footer={[{ text: '关闭', onPress: () => {  this.onClose('modal')(); } }]}
-                >
-                  <PopupContent {...this.props} onClose={this.onClose('modal')}/>
-                </Modal>
-
             </div>
         )
     }

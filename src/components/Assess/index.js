@@ -3,7 +3,7 @@
  *
  */
 import React, {Component} from "react";
-import {  Flex ,WingBlank,WhiteSpace} from 'antd-mobile';
+import {  Flex ,WingBlank} from 'antd-mobile';
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import Rate from '../Rate'
@@ -40,7 +40,7 @@ class Assess extends Component {
 			data.commentImg1,
 			data.commentImg2,
 		]
-		imagelist = imagelist.filter(x=>x!="")
+		imagelist = imagelist.filter(x=>x!==null)
 	 	SingleImgView.show({
           imagelist,
           disableRotate:true,
@@ -51,18 +51,22 @@ class Assess extends Component {
 	}
 	render() {
 		const {data} = this.props;
+
         let imagelist = [
             data.commentImg,
             data.commentImg1,
             data.commentImg2,
         ]
-        imagelist = imagelist.filter(x=>x!=null)
+
+        imagelist = imagelist.filter(x=>x !== null)
 		return(
 			<div className="assess-flat">
 				<div className="assess-wrapper">
 					<div className="assess-top">
 						<span className="user-portrait">
-							<img src={data.commentHead}/>
+							{
+								!data.commentHead ? <img src={require("../../assets/images/header.jpg")} />:<img src={data.commentHead }/>
+							}
 						</span>
 						<div className="user-info">
 							<p className="user-p">

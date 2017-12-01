@@ -3,7 +3,7 @@
  */
 import React, {Component} from "react";
 import { Link } from "react-router";
-import { Flex,WingBlank, WhiteSpace,Grid } from 'antd-mobile';
+import { WingBlank, WhiteSpace,Grid } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import Img from '../Img'
 import './index.less'
@@ -39,12 +39,13 @@ class ClassIficationContent extends Component {
             item.text = item.name;
             item.icon = item.imageUrl;
         })
+        console.dir(data)
         return(
             <div className="class-ification-content">
                <WingBlank>
                     <WhiteSpace/>
                     <div>
-                        <Img base64={1} src={data.imageUrl} className="banner-image"/>
+                        <img  src={data.imageUrl} className="banner-image"/>
                     </div>
                    <WhiteSpace/>
                    <div className="title">
@@ -56,9 +57,9 @@ class ClassIficationContent extends Component {
                              columnNum={3}
                              hasLine={false}
                              renderItem={dataItem => (
-                                 <div className="am-grid-item-inner-content ">
+                                 <div className="am-grid-item-inner-content" >
                                      <div className="imag-div">
-                                         <Img src={dataItem.icon} className="grid-icon" alt="icon" />
+                                         <img src={dataItem.icon} className="grid-icon" alt="icon" />
                                      </div>
                                      <div><WhiteSpace size="sm"/></div>
                                      <div className="text-name">

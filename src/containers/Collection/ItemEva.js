@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {List,Cardm,Button,ListView} from 'antd-mobile';
+import {List,Cardm,Button} from 'antd-mobile';
 const Item = List.Item;
 import Text from "../../components/Text";
 import CommodityPrice from "../../components/CommodityPrice";
@@ -23,15 +23,15 @@ class ItemEva extends Component {
 		this.state = {
 
 		}
-		
+
 	}
 	clickProduct(id){
-		
+
 		if(this.props.deleteCollect  instanceof Function  ){
 			this.props.deleteCollect(id)
 		}
-			
-		
+
+
 	}
 	itemClick(id){
 		this.context.router.push(`/product?id=${id}`)
@@ -41,7 +41,7 @@ class ItemEva extends Component {
 		return(
 				<div className="div-item">
 						<List>
-							<Item 
+							<Item
 								platform="android"
 								>
 								<div className="imc-one" >
@@ -55,8 +55,8 @@ class ItemEva extends Component {
 									</div>
 									<div className="imco-r-content">
 										<div >
-											<Text 
-												text={item.name} 
+											<Text
+												text={item.name}
 												row={2}
 												textType="base"
 											/>
@@ -64,7 +64,7 @@ class ItemEva extends Component {
 										<div className="ping">
 				        			{this.props.type==0?
 												<CommodityPrice
-													price={item.exchangeIntegral} 
+													price={item.exchangeIntegral}
 													unit="V币"
 													icon="icon-vbi"
 													priceStyle="small-price"
@@ -80,19 +80,19 @@ class ItemEva extends Component {
 										</div>
 										</div>
 										<div className="delete-buttom">
-											<Button 
-												type="ghost" 
+											<Button
+												type="ghost"
 												inline size="small"
 												onClick={this.clickProduct.bind(this,item.imProductId)} >
 			                 		删除收藏
 			                </Button>
 										</div>
 									</div>
-									
+
 							</Item>
 						</List>
 					</div>
-		)	
+		)
 	}
 }
 

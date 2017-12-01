@@ -3,7 +3,8 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {Flex,NavBar,Button} from 'antd-mobile';
+import {Button} from 'antd-mobile';
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 class SucessExchange extends Component {
 	static propTypes = {
@@ -31,18 +32,15 @@ class SucessExchange extends Component {
 	backList =()=>{
 		this.context.router.push(`/myorder?key=1`);
 	}
-	componentDidMount (){
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("兑换成功"))
 
-	}
+    }
 	render() {
 		const {totalIntegral,ex} = this.props.location.query;
 		return(
 			<div className="send-sms">
-				<NavBar
-		      mode="light"
-		    >兑换成功</NavBar>
 				<div className="sucess-exchange nav-content">
-
 					<div className="sucess-bg"></div>
 					<div className="sucess-text">兑换成功</div>
 					<div className="sucess-msg">

@@ -3,10 +3,35 @@ import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import TabBar from './components/TabBar'
+import {Tabs, Icon, Modal} from 'antd-mobile';
 import {storage} from "./utils/tools"
 import {updataUserInfo} from './actions/user'
 import {repalceTempProduct} from "./actions/product";
 import NavBar from './components/NavBar'
+class PopupContent extends React.Component {
+    render() {
+        return (
+            <div>
+                <NavBar title={"优惠券使用说明"} {...this.props}  rightContent={
+                    [
+                        <Icon key="0" onClick={this.props.onClose} type="ellipsis" />
+                    ]
+                }/>
+                <div className="coupon-description nav-content">
+                    <div>1.V券不可叠加使用，每张订单限用一张;</div>
+                    <div>2.V券金额大于订单应付金额时，差额不予退回;</div>
+                    <div>3.运费券按券面值仅可抵减订单运费，不可叠加使用，每张订单
+                        限用一张，不设找零（运费券金额大于订单运费时，差额不予退
+                        回）。运费券可与V券同时使用;
+                    </div>
+                    <div>4.V券与运费券仅可在有效期期内使用。</div>
+                </div>
+            </div>
+
+        );
+    }
+
+}
 class App extends Component {
 	static propTypes = {
 
@@ -28,33 +53,55 @@ class App extends Component {
         if(storage.get("userInfo")){
             this.props.dispatch(updataUserInfo(storage.get("userInfo")))
         }
-		//let {openid,wxtoken} = this.props.location.query;
-		//获取用户信息 写入token
-		/*this.props.dispatch(getUserInfo({
-			openId:"oT70Ks3YOC61FPkcFeqzzNgL_lN8",//openid
-			platform:'1',
-			xwsToken: "DgMKVux3pgci:JZbrR7y1FBX2PVF07PC5Wut1ND::Q2TAuHfa3UCsE4IRL9OCs8K7zk6QX4igJw9FTf3E*r69jwNuOwLNWKY" //wxtoken
-		}))*/
-
 
 	}
 	componentDidMount (){
 
-
 	}
+    showModal = key => (e) => {
+        e.preventDefault(); // 修复 Android 上点击穿透
+        this.setState({
+            [key]: true,
+        });
+    }
+    onClose = key => () => {
+        this.setState({
+            [key]: false,
+        });
+    }
+
 	render() {
 		const {pathname} = this.props.location;
-		if(pathname == "/"   || pathname == "/home" ||  pathname == "/myinfo" || pathname=="/classification"  || pathname=="/shopcart"){
+		if(pathname == "/" || pathname == "/home" ||  pathname == "/myinfo" || pathname=="/classification"  || pathname=="/shopcart"){
 			return(
 				<div className="app-root">
-                    <div >{this.props.children}</div>
+                    <div className="vb-content">{this.props.children}</div>
 					<TabBar {...this.props}/>
 				</div>
 			)
 		}else{
 			return(
-				<div>
-                   {this.props.children}
+
+				<div className="app-root"  style={{height: document.documentElement.clientHeight}}>
+                    <NavBar title={this.props.navBartitle.title} {...this.props}  rightContent={pathname=="/coupon"?
+                        [
+                            <Icon key="0" onClick={this.showModal('modal')} type="ellipsis" />
+                        ]:[]
+                    }/>
+                    <div className="vb-content" >{this.props.children}</div>
+                    {
+                        pathname=="/coupon"? <Modal
+                            popup
+                            visible={this.state.modal}
+                            maskClosable={false}
+                            onClose={this.onClose('modal')}
+                            animationType="slide-down"
+                            footer={[{ text: '关闭', onPress: () => {  this.onClose('modal')(); } }]}
+                        >
+                            <PopupContent {...this.props} onClose={this.onClose('modal')}/>
+                        </Modal>:""
+                    }
+
 				</div>
 			)
 		}

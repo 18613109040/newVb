@@ -1,5 +1,6 @@
 @import "../../assets/style/theme";
 .class-infication{
+    overflow: hidden;
     .content{
         border-top:1px solid @border-color-base ;
     }
@@ -7,10 +8,12 @@
         width: 100*@hd;
         text-align: center;
         overflow-y: scroll;
+
     }
     .right-content{
         background: @fill-base;
         flex: 1;
+        overflow:auto;
     }
     .am-grid-item-content{
         top:40% !important;

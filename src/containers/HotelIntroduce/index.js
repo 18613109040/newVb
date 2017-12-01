@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Accordion} from 'antd-mobile';
+import { Accordion} from 'antd-mobile';
 import {getHoteDetails} from "../../actions/sblodge"
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 
 class HotelIntroduce extends Component {
@@ -20,7 +20,9 @@ class HotelIntroduce extends Component {
         this.state = {}
 
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("酒店介绍"))
+    }
     componentDidMount() {
         const {id} = this.props.location.query;
         if (this.props.hostdetails.code !== 0) {
@@ -32,7 +34,6 @@ class HotelIntroduce extends Component {
         const {data} = this.props.hostdetails
         return (
             <div className="hotel-introduce">
-                <NavBar title="酒店介绍" {...this.props}/>
                 <div className="lodge-content nav-content">
                     <Accordion defaultActiveKey="0">
                         <Accordion.Panel header="酒店信息">

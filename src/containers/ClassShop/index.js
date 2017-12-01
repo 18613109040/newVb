@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, Button, ListView, WingBlank, WhiteSpace} from 'antd-mobile';
+import { ListView} from 'antd-mobile';
 import './index.less'
 import NavBar from '../../components/NavBar'
 import {getInficationList, getMenuChildren, getInficationMenu} from '../../actions/classIfication'
@@ -11,11 +11,10 @@ import {
     getVbMenuChildren
 } from '../../actions/newShelves'
 import ListViewProduct from '../../components/ListViewProduct'
-import {improductSearch} from "../../actions/search";
 import Text from '../../components/Text'
 import Swipers from '../../components/Swipers'
 import ProductItem from '../../components/ProductItem'
-
+import {changeNavbarTitle} from '../../actions/home'
 const ImgHight=document.documentElement.clientWidth*0.46-32
 class ClassShop extends Component {
     static propTypes = {};
@@ -37,8 +36,9 @@ class ClassShop extends Component {
     }
 
     componentWillMount() {
-        const {parentId,type} = this.props.location.query;
-        const {infiactionmenu,vbexchangemenu} = this.props;
+        const {parentId,type,name} = this.props.location.query;
+        const {infiactionmenu} = this.props;
+        this.props.dispatch(changeNavbarTitle(name))
         if(type ==0){
             if (infiactionmenu.code == -1) {
                 this.props.dispatch(getVbExchangeMenu("ad32d726-8544-45ee-a53b-0d67351752a4", {}, (res) => {
@@ -63,7 +63,7 @@ class ClassShop extends Component {
     }
 
     componentDidMount() {
-        const {type} = this.props.location.query;
+
         const {id} = this.props.params;
         if (Object.keys(this.props.infiactionlist).includes(id)) {
             // this.setState({
@@ -139,7 +139,6 @@ class ClassShop extends Component {
         if (filterBar && filterBar.length > 0 && filterBar[0].children && filterBar[0].children.length > 0) {
             tabs = filterBar[0].children;
         }
-
         const row=(rowData, sectionID, rowID) => {
             return (
                 <ProductItem  {...rowData} clickTab={this.gotoShop.bind(this,rowData)} height={ImgHight} />
@@ -151,10 +150,9 @@ class ClassShop extends Component {
         }else{
             dataSource = this.dataSource.cloneWithRows([])
         }
-        return (
 
+        return (
             <div className="class-shop">
-                <NavBar title={name} {...this.props}/>
                 <div className="swiper-div">
                     {
                         tabs.length > 1 ? (
@@ -174,22 +172,24 @@ class ClassShop extends Component {
                             </Swipers>) : ""
                     }
                 </div>
+
                 <ListViewProduct
                     row={row}
                     dataSource={dataSource}
                     status={this.props.infiactionlist[id]?this.props.infiactionlist[id].code:-1}
+                    data={this.props.infiactionlist[id]?this.props.infiactionlist[id].data:[]}
                     isLoading={this.state.isLoading}
                     ref="list"
                     onEndReached={this.onEndReached}
                     type={1}
                     height={document.documentElement.clientHeight-100}
+                    empty_text={'小主，该分类产品稍后上架，过一会再来逛逛哦~'}
                 />
 
             </div>
         )
     }
 }
-
 
 function mapStateToProps(state) {
     return {

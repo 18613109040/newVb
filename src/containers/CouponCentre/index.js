@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {Flex ,Toast,Icon,ListView} from 'antd-mobile';
+import {ListView} from 'antd-mobile';
 import {selectCoupons} from '../../actions/coupon'
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import ListViewProduct from '../../components/ListViewProduct'
 class CouponCentre extends Component {
     static propTypes = {
@@ -25,6 +25,9 @@ class CouponCentre extends Component {
             hasMore: false,
         }
 
+    }
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("领券中心"))
     }
     componentDidMount (){
         this.getData();
@@ -70,13 +73,12 @@ class CouponCentre extends Component {
         let dataSource = this.dataSource.cloneWithRows(this.props.orderDetails.all.data.datas)
         return(
             <div className="ticket-center">
-                <NavBar title={'领券中心'} {...this.props}></NavBar>
-
                 <div className='nav-content'>
                     <ListViewProduct
                         row={row}
                         dataSource={dataSource}
                         status={this.props.orderDetails.evaluated.code}
+                        data={this.props.orderDetails.evaluated.data}
                         isLoading={this.state.isLoading}
                         reflistview="listrefs"
                         onEndReached={this.onEndReached}

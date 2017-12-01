@@ -2,13 +2,17 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Carousel, List, Grid, Badge, WingBlank, WhiteSpace} from 'antd-mobile';
+import {Flex, List, Grid, Badge, WingBlank, WhiteSpace,Modal} from 'antd-mobile';
 import {getStatistics} from '../../actions/orderDetails'
 import {getUserInfo} from '../../actions/user'
 import Text from '../../components/Text'
+import {emptyOrder} from '../../actions/orderDetails'
+import {emptyMycommentList} from '../../actions/evaluation'
+import {emptyListAddress} from '../../actions/address'
+import {storage} from "../../utils/tools"
 import './index.less'
 const Item = List.Item;
-
+const alert = Modal.alert;
 class MyInfo extends Component {
     static propTypes = {};
 
@@ -25,11 +29,7 @@ class MyInfo extends Component {
         this.clickAll = this._clickAll.bind(this);
     }
     componentWillMount() {
-        // if(this.props.userInfo.id !== undefined){
-        //
-        // }else{
-        //     this.context.router.push(`/login`)
-        // }
+
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo({}))
@@ -37,25 +37,34 @@ class MyInfo extends Component {
 
 
     }
-
     _clickAll() {
-        this.context.router.push("/myorder?key=0")
+        this.context.router.push("/myorder/details")
     }
-
     gridItemClick = (obj, index) => {
-        console.dir(obj)
         if (obj.text == '我的小二') {
             location.href = obj.href
         } else {
             this.context.router.push(obj.href);
         }
-
     }
 
-    tobePaid=(index)=> {
-        this.context.router.push(`/myorder?key=${index}`);
-    }
+    exitSys=()=>{
+        alert('退出登录', '是否退出该账号', [
+            { text: '取消', onPress: () => console.log('cancel') },
+            {
+                text: '确定',
+                onPress: () => {
+                    storage.remove("token");
+                    storage.remove("userInfo");
+                    this.props.dispatch(emptyOrder());
+                    this.props.dispatch(emptyMycommentList());
+                    this.props.dispatch(emptyListAddress());
+                    this.context.router.push(`/login`);
+                }
+            },
+        ])
 
+    }
     render() {
 
         const {userInfo} = this.props;
@@ -73,11 +82,13 @@ class MyInfo extends Component {
                 icon: require("../../assets/images/myorder-icon1-02.png"),
                 text: "收货地址",
                 href: "/addresslist"
-            }, {
-                icon: require("../../assets/images/myorder-icon1-06.png"),
-                text: "思埠之家",
-                href: "/hotelList?key=0"
-            }, {
+            },
+            // {
+            //     icon: require("../../assets/images/myorder-icon1-06.png"),
+            //     text: "思埠之家",
+            //     href: "/hotelList?key=0"
+            // },
+            {
                 icon: require("../../assets/images/youhuiquan.png"),
                 text: "优惠券",
                 href: "/coupon"
@@ -87,26 +98,29 @@ class MyInfo extends Component {
                 href: "/collection"
             }, {
                 icon: require("../../assets/images/myorder-icon1-04.png"),
-                text: "关于V币商城",
+                text: "关于V商城",
                 href: "/about"
             }
         ]
         return (
-            <div className="my-info" style={{height: document.documentElement.clientHeight - 100}}>
+            <div className="my-info" style={{height:document.documentElement.clientHeight-100}}>
                 <div className="info-1">
                     <Flex className="div-step-1">
 						<span className="img-user">
 							<img src={userInfo.head || require('../../assets/images/header.jpg')}/>
 						</span>
 
-                        <WingBlank>
+                        <WingBlank style={{flex:1}}>
                             <span className="user-info">
                                 <Text row={1} text={userInfo.nickName||userInfo.phone} size="lg"/>
                                  <WhiteSpace  size="lg"/>
                                 <div className="phone">{userInfo.phone}</div>
                             </span>
                         </WingBlank>
-
+                        <span className="sys">
+                           <label className="exit" onClick={this.exitSys}>退出</label>
+                            {/*<label className="iconfont  icon-sys"></label>*/}
+                        </span>
                     </Flex>
                 </div>
                 <div className='info-2'>
@@ -147,36 +161,49 @@ class MyInfo extends Component {
                     <div className="menu-nav">
                         <Flex>
                             <Flex.Item>
-                                <div className="grid-item" onClick={this.tobePaid.bind(this, 1)}>
-                                    <div className="iconfont icon-dzf">
+                                <Link className="grid-item" to="/myorder/details">
+                                    <div className="top">
+                                        <i className="iconfont icon-dzf"></i>
                                         <Badge text={statisicsNumber.data.waitPayNum}  className="item-bage"/>
                                     </div>
                                     <div className="grid-name">待支付/兑换</div>
-                                </div>
+                                </Link>
                             </Flex.Item>
                             <Flex.Item>
-                                <div className="grid-item" onClick={this.tobePaid.bind(this, 2)}>
-                                    <div className="iconfont icon-dfh">
+                                <Link className="grid-item" to="/myorder/delivered">
+                                    <div className="top">
+                                        <i className="iconfont icon-dfh"></i>
                                         <Badge text={statisicsNumber.data.waitShipNum}  className="item-bage"/>
                                     </div>
                                     <div className="grid-name">待发货</div>
-                                </div>
+                                </Link>
                             </Flex.Item>
                             <Flex.Item>
-                                <div className="grid-item" onClick={this.tobePaid.bind(this, 3)}>
-                                    <div className="iconfont icon-dsh">
+                                <Link className="grid-item" to="/myorder/received">
+                                    <div className="top">
+                                        <i className="iconfont icon-dsh"></i>
                                         <Badge text={statisicsNumber.data.hasReceivedNum}  className="item-bage"/>
                                     </div>
                                     <div className="grid-name">待收货</div>
-                                </div>
+                                </Link>
                             </Flex.Item>
                             <Flex.Item>
-                                <div className="grid-item" onClick={this.tobePaid.bind(this, 4)}>
-                                    <div className="iconfont icon-dpj">
+                                <Link className="grid-item" to="/myorder/evaluated">
+                                    <div className="top">
+                                        <i className="iconfont icon-dpj"></i>
                                         <Badge text={statisicsNumber.data.waitEvaluateNum}  className="item-bage"/>
                                     </div>
                                     <div className="grid-name">待评价</div>
-                                </div>
+                                </Link>
+                            </Flex.Item>
+                            <Flex.Item>
+                                <Link className="grid-item" to="/afterSale/list">
+                                    <div className="top">
+                                        <i className="iconfont icon-drf"></i>
+                                        <Badge text={statisicsNumber.data.refundingNum}  className="item-bage"/>
+                                    </div>
+                                    <div className="grid-name">退款/售后</div>
+                                </Link>
                             </Flex.Item>
                         </Flex>
                     </div>
@@ -197,6 +224,7 @@ class MyInfo extends Component {
                         />
                     </div>
                 </div>
+
             </div>
         )
     }

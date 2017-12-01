@@ -2,15 +2,14 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, WingBlank, Button, Toast,WhiteSpace} from 'antd-mobile';
+import {  Toast,Button} from 'antd-mobile';
 import {getComments, getRate, emporty, ealuationAdd} from '../../actions/evaluation'
 import {Product} from '../../components/ProductItem'
 import Rate from '../../components/Rate'
 import './index.less'
-import NavBar from '../../components/NavBar'
 import BottomBtn from '../../components/BottomBtn'
 import { emptyOrder} from '../../actions/orderDetails'
-const Item = List.Item;
+import {changeNavbarTitle} from '../../actions/home'
 class Evaluation extends Component {
     static propTypes = {};
 
@@ -30,12 +29,15 @@ class Evaluation extends Component {
         }
 
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("评价晒单"))
+    }
     componentDidMount() {
         const {id} = this.props.location.query;
         this.props.dispatch(getComments(id))
         this.props.dispatch(getRate(id, {}, (res) => {
             if (res.code == 0 && res.data) {
+
                 this.setState({
                     distributionGrade: res.data.distributionGrade,
                     speedGrade: res.data.speedGrade,
@@ -133,13 +135,10 @@ class Evaluation extends Component {
     }
 
     render() {
-        const {data} = this.props.comments;
-        console.log(data)
-        return (
-            <div className="evaluation" style={{height: document.documentElement.clientHeight - 88}}>
-                <NavBar title="评价晒单" {...this.props}/>
 
-                <div className="nav-content" >
+        return (
+            <div className="evaluation" >
+                <div className="nav-content" style={{height: document.documentElement.clientHeight - 88}} >
                     {this.renderProducts()}
                     <div className="tip">订单评分</div>
                     <div className="list">
@@ -177,13 +176,8 @@ class Evaluation extends Component {
                             </span>
                         </div>
                     </div>
-                    
-                    <BottomBtn text={'发布'} onClick={this.makeEaluation} disabled={this.state.distributionGrade>0?true:false} />
-                    
-                  
-                    
+                    <BottomBtn text={'保存'} onClick={this.makeEaluation} disabled={!this.state.disabled} />
                 </div>
-
             </div>
         )
     }

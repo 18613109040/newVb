@@ -3,14 +3,14 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import { NavBar, List, Modal, Toast, WhiteSpace} from 'antd-mobile';
-import {getOrderById, cancalOrder, emptyOrder, emptyOrderDetails, received} from '../../actions/orderDetails'
+import { List, Modal, Toast, WhiteSpace} from 'antd-mobile';
+import {getOrderById, cancalOrder, emptyOrder, emptyOrderDetails, received,setAfterSaleProducts} from '../../actions/orderDetails'
 import './index.less'
-
+import {changeNavbarTitle} from '../../actions/home'
+import utils from '../../utils'
 const Item = List.Item;
 const Brief = Item.Brief;
 const alert = Modal.alert;
-const operation = Modal.operation;
 
 class OrderDetails extends Component {
     static propTypes = {};
@@ -24,37 +24,21 @@ class OrderDetails extends Component {
         super(props);
         this.state = {
             modal: false,
-            jsonMoney: {totalMoney: 0, totalIntegral: 0, num: 0}
+
         }
         this.back = this._back.bind(this)
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("订单详情"))
+    }
     componentDidMount() {
         const {id} = this.props.location.query;
         this.props.dispatch(getOrderById(id))
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        let {data} = this.props.orderlist
-        if (prevProps.orderlist.data == data)
-            return
-        let init = {totalMoney: 0, totalIntegral: 0, num: 0}
-        let jsonMoney = data.order1s.reduce((initJson = {totalMoney: 0, totalIntegral: 0, num: 0}, next) => {
-            initJson.num = +next.purchaseQuantity
-            if (next.price > 0) {
-                let totalMoney = +(next.purchaseQuantity * next.price)
-                initJson.totalMoney = +(initJson.totalMoney + totalMoney)
-            }
-            else {
-                let totalIntegral = +(next.purchaseQuantity * (next.integral || 0))
-                initJson.totalIntegral = +(initJson.totalIntegral + totalIntegral)
-            }
 
-            return initJson
-        }, init)
-        this.setState({
-            jsonMoney
-        })
+    componentDidUpdate(prevProps, prevState) {
+
     }
 
     _back() {
@@ -130,59 +114,138 @@ class OrderDetails extends Component {
         let totalIntegral = this.props.orderlist.data.totalIntegral;
         this.context.router.push(`/sendSms?money=${totalIntegral}&id=${id}`)
     }
+    appraise = () =>{
+        const {id} = this.props.location.query;
+        this.context.router.push(`evaluation?id=${id}`)
+    }
+    //单个商品申请退单
+    applyRefund =(item,orderId,e) =>{
+        e.stopPropagation()
+        let order1s=[]
+        order1s.push(Object.assign(item,{checked:true,amount:item.purchaseQuantity-item.refundedQuantity||0}))
+        let obj=Object.assign({orderId,allChecked:true,orderStatus:item.orderStatus,erpImport:item.erpImport,order1s:order1s})
+        this.props.dispatch(setAfterSaleProducts(obj))
+        this.context.router.push('/afterSale/products')
+    }
+    //批量退单
+    applyRefundAll=(type) =>{
+        const {data} = this.props.orderlist;
+        let refundProducts=[],allChecked
+        if(type==3){
+            refundProducts=data.order1s
+            refundProducts.map((item,i) =>{
+                item.checked=true
+                item.amount=item.purchaseQuantity-item.refundedQuantity||0
+            })
+            allChecked=true
+        }else{
+            refundProducts=data.order1s.filter(item => item.refundOperateTypeCode ==1 || item.refundOperateTypeCode==2)
+            refundProducts.map((item,i) =>{
+                item.checked=false
+                item.amount=item.purchaseQuantity-item.refundedQuantity||0
+            })
+            allChecked=false
+        }
 
-    renderStatus(status) {
-        switch (status) {
-            case '待支付':
-                return (
+        let obj =Object.assign({},{orderId:data.orderId,orderStatus:data.orderStatus,erpImport:data.erpImport,order1s:refundProducts,allChecked:allChecked})
+        this.props.dispatch(setAfterSaleProducts(obj))
+        if(type==3){
+            this.context.router.push('/afterSale/apply?type=3')
+        }else{
+            this.context.router.push('/afterSale/products')
+        }
+
+    }
+    renderStatus() {
+        const {data} = this.props.orderlist;
+        //能申请退单的商品
+        let refundProducts=data.order1s.filter(item => item.refundOperateTypeCode ==1 || item.refundOperateTypeCode==2)
+
+        switch (data.orderStatus) {
+            case 1:
+                if(data.totalMoney>0){
+                    return (
                     <div className="div-11">
                         <span className="cal-btn" onClick={this.cancelOrder}>取消订单</span>
                         <span className="pay-btn" onClick={this.payNow}>去支付</span>
                     </div>
-                )
-            case '待兑换':
-                return (
+                    )
+                }
+                else{
+                    return (
                     <div className="div-11">
                         <span className="cal-btn" onClick={this.cancelOrder}>取消订单</span>
                         <span className="pay-btn" onClick={this.gotoExchange}>去兑换</span>
                     </div>)
-
-            case '待发货':
-                return null
-                /*return (
-                    <div className="div-11">
-                        <span className="cal-btn" onClick={this.gotoRefunds}>申请退款</span>
-                    </div>)*/
-            case '待收货':
+                }
+            case 2: //V币订单待审核
                 return (
                     <div className="div-11">
-                        {/*<span className="cal-btn" onClick={this.gotoRefunds}>申请退款</span>*/}
+                        <span className="cal-btn" onClick={this.applyRefundAll.bind(this,3)}>申请退款</span>
+                    </div>
+                    )
+            case 3: //待发货
+                return (
+                    data.erpImport==0?
+                    <div className="div-11">
+                        <span className="cal-btn" onClick={this.applyRefundAll.bind(this,3)}>申请退款</span>
+                    </div>:
+                    refundProducts.length>0?
+                    <div className="div-11">
+                        <span className="cal-btn" onClick={this.applyRefundAll.bind(this)}>批量退单</span>
+                    </div>:null
+                    )
+            case 4:   //待收货
+                return (
+                    <div className="div-11">
+                        {
+                            refundProducts.length>0?<span className="cal-btn" onClick={this.applyRefundAll.bind(this)}>批量退单</span>:null
+                        }
                         <span className="pay-btn" onClick={this.deliveryGoods}>确认收货</span>
                     </div>)
-            case "待评价":
+            case 5:   //已收货
                 return (
                     <div className="div-11">
-                        <span className="pay-btn" onClick={this.appraise}>去评价</span>
+                        {
+                            refundProducts.length>0?<span className="cal-btn" onClick={this.applyRefundAll.bind(this)}>批量退单</span>:null
+                        }
+                        <span className="pay-btn" onClick={this.appraise}>{data.ifEvaluate==1?'查看评价':'去评价'}</span>
                     </div>)
+            default :
+                return(
+                    refundProducts.length>0?
+                    <div className="div-11">
+                        <span className="cal-btn" onClick={this.applyRefundAll.bind(this)}>批量退单</span>
+                    </div>:null
+                )
 
         }
 
     }
 
     render() {
-        const {data} = this.props.orderlist;
+        let {data} = this.props.orderlist
+        let jsonMoney ={totalMoney: 0, totalIntegral: 0, num: 0}
+        let init = {totalMoney: 0, totalIntegral: 0, num: 0}
+        jsonMoney = data.order1s.reduce((initJson = {totalMoney: 0, totalIntegral: 0, num: 0}, next) => {
+            initJson.num = initJson.num+next.purchaseQuantity
+            if (next.price > 0) {
+                let totalMoney = +(next.purchaseQuantity * next.price)
+                initJson.totalMoney = +(initJson.totalMoney + totalMoney)
+            }
+            else {
+                let totalIntegral = +(next.purchaseQuantity * (next.integral || 0))
+                initJson.totalIntegral = +(initJson.totalIntegral + totalIntegral)
+            }
+
+            return initJson
+        }, init)
+
         return (
             <div className="order-details">
-                <NavBar leftContent="返回"
-                        mode="light"
-                        onLeftClick={this.back}
-
-                >订单详情</NavBar>
-
-
-                <div className="nav-content" style={{height: document.documentElement.clientHeight - 88}}>
+                <div className="nav-content" style={{height: document.documentElement.clientHeight - 44*utils.multiple}}>
                     {
-                        this.props.orderlist.code == -1 ? <div>jiaaa</div> :
+                        this.props.orderlist.code == -1 ? <div style={{padding: '10px 0px 60px 0px', textAlign: 'center'}}>加载中...</div> :
                             <div>
                                 {/*<div className="list-0">
                                     <p className="line">
@@ -209,7 +272,9 @@ class OrderDetails extends Component {
                                 </List>
                                 <WhiteSpace size="sm"/>
                                 <List className="list-2">
-                                    <Item>
+                                    <Item className="item-order-status"
+                                    extra={data.erpImport==1 && data.orderStatus==3 ?'备货中': (data.orderStatus==2 && data.totalMoney<=0 ?'审核中':'')}
+                                    >
                                         <div className="icon-title">
                                             {data.orderFrom == 1 ?
                                                 <i className="iconfont icon-qian"></i> :
@@ -219,65 +284,13 @@ class OrderDetails extends Component {
                                     </Item>
                                 </List>
                                 <List className="list-3">
-                                    {
-                                        data.order1s.map((item, id) => (
-                                            <Item
-                                                key={id}
-                                                onClick={this.linkProduct.bind(this, item.productId)}
-                                            >
-                                                <Link className="a-link">
-                                                    <div className="s-item">
-                                                        <div className="pdiv">
-                                                            <div className="sitem-l">
-                                                                <div className="sl-img-box">
-                                                                    <div className="sl-img">
-                                                                        <img src={item.thumbImg}/>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="sitem-m">
-                                                                <div className="sitem-m-txt">
-                                                                    {item.name}
-                                                                </div>
-                                                                <div className="sitem-m-txt2">
-                                                                    <span>{item.specDetail || ''}</span></div>
-                                                                <div className="s3-num">
-                                                                    <div className="sitem-r">
-                                                                        {
-                                                                            item.price == 0 && item.integral != 0 ?
-                                                                                (
-                                                                                    <div className="money-footer">
-                                                                                        <label
-                                                                                            className="iconfont icon-vbi"></label>
-                                                                                        <span
-                                                                                            className="money">{item.integral}</span>
-                                                                                    </div>
-                                                                                ) : (
-                                                                                    <div className="money-footer">
-                                                                                        <label
-                                                                                            className="iconfont icon-qian"></label>
-                                                                                        <span
-                                                                                            className="money">{item.price}</span>
-                                                                                    </div>
-                                                                                )
-                                                                        }
-                                                                    </div>
-                                                                    <span>x{item.purchaseQuantity}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                            </Item>
-                                        ))
-                                    }
-
+                                    {this.renderProducts()}
                                 </List>
                                 <List className="list-4">
                                     <Item
                                         extra={
                                             <div className="div-4">
-                                                <span>共{this.state.jsonMoney.num}件商品，</span>
+                                                <span>共{jsonMoney.num}件商品，</span>
                                                 <span>合计:</span>
                                                 <span className="s2"> {data.orderFrom == 0 ? <span><label
                                                         className="iconfont icon-vbi"></label>{data.totalIntegral}</span> :
@@ -286,6 +299,7 @@ class OrderDetails extends Component {
                                             </div>
                                         }
                                     >
+
                                     </Item>
                                 </List>
                                 <WhiteSpace size="sm"/>
@@ -295,8 +309,8 @@ class OrderDetails extends Component {
                                     <div className="item">
                                         <span className="s1">商品的金额</span>
                                         <span className="s2"> {data.orderFrom == 0 ? <span><label
-                                                className="iconfont icon-vbi"></label>{this.state.jsonMoney.totalIntegral}</span> :
-                                            <label>¥{this.state.jsonMoney.totalMoney}</label>}</span>
+                                                className="iconfont icon-vbi"></label>{jsonMoney.totalIntegral}</span> :
+                                            <label>¥{ jsonMoney.totalMoney.toFixed(2)}</label>}</span>
                                     </div>
                                     {
                                         data.deductionMoney > 0 ?
@@ -314,7 +328,7 @@ class OrderDetails extends Component {
                                         data.userCouponMoney > 0 ?
                                             <div className="item">
                                                 <span className="s1">立减</span>
-                                                <span className="s2">{data.userCouponMoney}</span>
+                                                <span className="s2">-¥{data.userCouponMoney}</span>
                                             </div> : null
                                     }
 
@@ -348,7 +362,7 @@ class OrderDetails extends Component {
                                                     className="s2"> <label className="iconfont icon-vbi"></label>
                                                     {data.totalIntegral}</span>
                                                 : <span
-                                                    className="s2"><label>¥</label> {data.totalMoney}</span>
+                                                    className="s2"><label>¥</label> {data.totalMoney.toFixed(2)}</span>
                                         }
 
                                     </div>
@@ -358,7 +372,7 @@ class OrderDetails extends Component {
                     }
 
                     <div className="bottom-btn">
-                        {this.renderStatus(data.status)}
+                        {this.renderStatus()}
                     </div>
                 </div>
 
@@ -366,6 +380,80 @@ class OrderDetails extends Component {
         )
     }
 
+    renderProducts(){
+        const {data} = this.props.orderlist;
+        return(
+            data.order1s.map((item, id) => (
+                <Item
+                    key={id}
+                    onClick={this.linkProduct.bind(this, item.productId)}
+                >
+                    <Link className="a-link">
+                        <div className="s-item">
+                            <div className="pdiv">
+                                <div className="sitem-l">
+                                    <div className="sl-img-box">
+                                        <img src={item.thumbImg}/>
+                                    </div>
+                                </div>
+                                <div className="sitem-m">
+                                    <div className="sitem-m-txt">
+                                        {item.name}
+                                    </div>
+                                    <div className="sitem-m-txt2">
+                                        <span>{item.specDetail || ''}</span></div>
+                                    <div className="s3-num">
+                                        <div className="sitem-r">
+                                            {
+                                                item.price == 0 && item.integral != 0 ?
+                                                    (
+                                                        <div className="money-footer">
+                                                            <label
+                                                                className="iconfont icon-vbi"></label>
+                                                            <span
+                                                                className="money">{item.integral}</span>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="money-footer">
+                                                            <label
+                                                                className="iconfont icon-qian"></label>
+                                                            <span
+                                                                className="money">{item.price}</span>
+                                                        </div>
+                                                    )
+                                            }
+                                        </div>
+                                        <span>x{item.purchaseQuantity}</span>
+                                    </div>
+
+                                    {
+                                        data.orderStatus>3 && item.refundOperateTypeCode==1||item.refundOperateTypeCode==2 ?
+                                        <div className="s3-btn">
+                                            <span className="btn" onClick={this.applyRefund.bind(this,item,data.orderId)}>{item.refundOperateTypeText}</span>
+                                        </div>:null
+                                    }
+
+                                    {
+                                        item.refundOperateTypeCode ==3 ?
+                                        <div className="s3-btn">
+                                            <span className="btn" onClick={(e)=>{this.context.router.push(`/afterSale/details?id=${item.refundId}`);e.stopPropagation()}}>{item.refundOperateTypeText}</span>
+                                        </div>:null
+                                    }
+                                    {
+                                        item.refundOperateTypeCode==100?
+                                        <div className="s3-btn">
+                                            <span className="">{item.refundOperateTypeText}</span>
+                                        </div>:null
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
+                </Item>
+            ))
+
+        )
+    }
     renderPart1(data) {
         return (
             <List className="list-5">
@@ -375,9 +463,25 @@ class OrderDetails extends Component {
                 <Item>
                     <div>下单时间:<span className="i_t">{data.createDt}</span></div>
                 </Item>
-                <Item>
-                    <div>货运方式:<span className="i_t">{data.expressName}</span></div>
-                </Item>
+                {
+                    data.orderStatus>=4 && data.expressName!='' && data.expressName!=null?
+                    <Item>
+                        <div>货运方式:<span className="i_t">{data.expressName}</span></div>
+                    </Item>:null
+                }
+                {
+                    data.orderStatus>=4 && data.expressName!='' && data.expressName!=null?
+                    <Item>
+                            <div>起始货运单号:<span className="i_t">{data.expressCode}</span></div>
+                    </Item>:null
+                }
+                {
+                    data.orderStatus>=4 && data.expressName!='' && data.expressName!=null?
+                    <Item>
+                        <div>结束货运单号:<span className="i_t">{data.expressCode2}</span></div>
+                    </Item>:null
+                }
+
                 <Item>
                     <div>运 费:
                         {

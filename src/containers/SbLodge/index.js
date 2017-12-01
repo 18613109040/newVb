@@ -2,12 +2,11 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {Flex ,Icon,WingBlank, WhiteSpace,List} from 'antd-mobile';
+import {WingBlank, WhiteSpace,List} from 'antd-mobile';
 import {getHoteList} from "../../actions/sblodge"
-import Text from "../../components/Text";
 const Item = List.Item;
 const Brief = Item.Brief;
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 class SbLodge extends Component {
 	static propTypes = {
@@ -27,6 +26,10 @@ class SbLodge extends Component {
 		}
 
 	}
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("思埠客栈"))
+
+    }
 	componentDidMount (){
 		if(this.props.hostlist.code !== 0){
 			this.props.dispatch(getHoteList())
@@ -39,7 +42,6 @@ class SbLodge extends Component {
 		const {data} = this.props.hostlist;
 		return(
 			<div className="sb-lodge">
-                <NavBar title="思埠客栈" {...this.props}/>
 		    <div className="lodge-content" style={{
                 height: document.documentElement.clientHeight - 100,
                 overflow: 'auto',

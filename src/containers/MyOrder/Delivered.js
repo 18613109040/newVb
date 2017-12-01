@@ -3,10 +3,12 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Modal, ListView, Icon, Toast} from 'antd-mobile';
-import {getToBeDelivered, cancalOrder, emptyOrder,} from '../../actions/orderDetails'
+import {Modal, ListView, Toast} from 'antd-mobile';
+import {getToBeDelivered, cancalOrder, emptyOrder} from '../../actions/orderDetails'
 import OrderItem from './OrderItem'
 import ListViewProduct from '../../components/ListViewProduct'
+import utils from '../../utils'
+
 
 const alert = Modal.alert;
 
@@ -31,31 +33,36 @@ class Delivered extends Component {
     }
 
     componentDidMount() {
-        if (this.props.orderDetails.delivered.code == -1) {
-            this.props.dispatch(getToBeDelivered({
-                pageNow: 1,
-                pageSize: 10,
-                status: 3
-            }, (res) => {
-                if (res.data.pageOffset < res.data.totalPage) {
-                    this.setState({
-                        isLoading: false,
-                        hasMore: true
-                    })
-                } else {
-                    this.setState({
-                        isLoading: false,
-                        hasMore: false
-                    })
-                }
-            }));
+            if(this.props.orderDetails.delivered.code == -1) {
+                this.props.dispatch(getToBeDelivered({
+                    pageNow: 1,
+                    pageSize: 10,
+                    status: 3
+                }, (res) => {
+                    if (res.data.pageOffset < res.data.totalPage) {
+                        this.setState({
+                            isLoading: false,
+                            hasMore: true
+                        })
+                    } else {
+                        this.setState({
+                            isLoading: false,
+                            hasMore: false
+                        })
+                    }
+                }));
 
-        } else {
-            this.setState({
-                isLoading: false,
-                hasMore: true
-            });
-        }
+            } else {
+                let {data} = this.props.orderDetails.delivered
+                this.setState({
+                    isLoading: false,
+                    hasMore: data.pageOffset< data.totalPage
+                })
+            }
+
+    }
+    componentWillUnmount(){
+       
     }
 
     getData(pageNow) {
@@ -77,16 +84,22 @@ class Delivered extends Component {
             }
         }));
     }
+    onRefresh=()=>{
+        this.props.dispatch(emptyOrder())
+        setTimeout(()=>{
+            this.getData(1)
+        },50)
 
+    }
     onEndReached = () => {
-        if (!this.state.hasMore ) {
+        if (!this.state.hasMore || this.state.isLoading) {
             return;
         }
         this.setState({isLoading: true});
+        let {data} = this.props.orderDetails.delivered
         setTimeout(()=>{
-            this.getData(this.props.orderDetails.delivered.data.pageOffset + 1)
+            this.getData(data.pageOffset + 1)
         },100)
-
     }
 //取消订单
     cancelOrder = (rowData) => {
@@ -130,16 +143,18 @@ class Delivered extends Component {
         };
         let dataSource = this.dataSource.cloneWithRows(this.props.orderDetails.delivered.data.datas)
         return (
-            <div style={{width: "100%",}}>
+            <div style={{width: "100%"}}>
                 <ListViewProduct
                     row={row}
                     dataSource={dataSource}
+                    data={this.props.orderDetails.delivered.data}
                     status={this.props.orderDetails.delivered.code}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}
+                    onRefresh={this.onRefresh}
                     type={2}
-                    height={document.documentElement.clientHeight - 100}
+                    height={document.documentElement.clientHeight - 60*utils.multiple}
                     empty_type={3}
                     empty_text={'小主，你还没有待发货的订单'}
                 />

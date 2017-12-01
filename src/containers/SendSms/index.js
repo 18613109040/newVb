@@ -3,13 +3,11 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, Modal, Toast, InputItem, Button} from 'antd-mobile';
-import {getExchangeSms, confirmation, payVbHotelOrder,emptyOrder} from '../../actions/orderDetails'
+import { Modal, Toast, InputItem, Button} from 'antd-mobile';
+import {getExchangeSms, confirmation, payVbHotelOrder,emptyOrderDetails} from '../../actions/orderDetails'
 import {storage} from "../../utils/tools"
-import NavBar from '../../components/NavBar'
-const Item = List.Item;
+import {changeNavbarTitle} from '../../actions/home'
 const alert = Modal.alert;
-const operation = Modal.operation;
 import './index.less'
 class SendSms extends Component {
     static propTypes = {};
@@ -30,7 +28,10 @@ class SendSms extends Component {
         }
         this.back = this._back.bind(this)
     }
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("短信验证"))
 
+    }
     componentDidMount() {
         this.sendMsm();
     }
@@ -94,8 +95,8 @@ class SendSms extends Component {
                                 openId: storage.get("openId")
                             }, (res) => {
                                 if (res.code == 0) {
-                                    this.props.dispatch(emptyOrder())
-                                    this.context.router.push(`/sucessexchange?totalIntegral=${res.data.totalIntegral}&ex=${res.ex}`)
+                                    this.props.dispatch(emptyOrderDetails())
+                                    this.context.router.replace(`/paySuccess?text=支付成功&orderId=${res.data.orderId}`)
                                 } else {
                                     Toast.info(res.message, 2, null, false);
                                 }
@@ -128,7 +129,7 @@ class SendSms extends Component {
         let lphone = userInfo.phone.replace(myphone, "****");
         return (
             <div className="send-sms">
-                <NavBar title="短信验证" {...this.props}/>
+
                 <div>
                     <div className="content-tip">
                         为了保障您的资金安全，该笔交易需要短信确认，验证码已发送至手机：{lphone}

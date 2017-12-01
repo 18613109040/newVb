@@ -5,9 +5,10 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {NavBar,Icon,List,Card} from 'antd-mobile';
+import {List} from 'antd-mobile';
 import CommodityPrice from "../../components/CommodityPrice";
 import Text from "../../components/Text";
+import {changeNavbarTitle} from '../../actions/home'
 const Item = List.Item;
 const Brief = Item.Brief;
 class CommodityList extends Component {
@@ -24,24 +25,24 @@ class CommodityList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		
+
 
 		}
-		
+
 	}
+    componentWillUnmount(){
+        this.props.dispatch(changeNavbarTitle("商品清单"))
+
+    }
 	componentDidMount (){
 
 	}
 
 	render() {
 		const tempProduct = this.props.tempProduct.filter(item=>item.check == true);
-		console.dir(tempProduct)
+
 		return(
 			<div className="commodity-list">
-				<NavBar
-					leftContent={<div className='iconfont icon-back back-size' onClick={()=>{this.props.router.goBack()}}></div>}
-		      mode="light"
-		    >商品清单</NavBar>
 		    <div className="nav-content">
 		    	<List>
 		    	  {
@@ -55,8 +56,8 @@ class CommodityList extends Component {
 		    	  		</div>
 				    		<div className="name">
 					    		<div className="title">
-						    		<Text 
-											text={item.data.name} 
+						    		<Text
+											text={item.data.name}
 											row={2}
 											 textType="base"
 										/>
@@ -65,30 +66,30 @@ class CommodityList extends Component {
 					    			{
 					        		item.data.productType==1?(
 													<CommodityPrice
-														price={item.data.retailPrice.toFixed(2)} 
+														price={item.data.retailPrice.toFixed(2)}
 														priceStyle="lg-price"
 														iconStyle="lg-icon"
 													/>
 					        			):(
-					        				<CommodityPrice 
+					        				<CommodityPrice
 						        				price={item.data.exchangeIntegral}
 						        				unit="V币"
 														icon="icon-vbi"
 					        				/>
 					        			)
 					        	}
-					    			
+
 					    		</Brief>
 					    	</div>
 				    	</Item>
 		    	  	))
 		    		}
-		    	  
-		        
+
+
 		    	</List>
 		    </div>
 			</div>
-		)	
+		)
 	}
 }
 

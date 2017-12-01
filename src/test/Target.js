@@ -13,16 +13,16 @@ const style = {
 const tustbinSpec = {
 	 //第三步
     drop(props, monitor, component) {
-    	console.dir("drop")
+
       const item = monitor.getItem();
       return { item: item };
     },
     //第二步
     hover(props, monitor, component){
-    	console.dir("hover")
+
     	return {
-    		props, 
-    		monitor, 
+    		props,
+    		monitor,
     		component
     	}
     },
@@ -54,11 +54,11 @@ class Target extends Component {
         canDrop: PropTypes.bool.isRequired
     };
     renderCompent(item){
-   
+
     	switch (item.name){
     		case "input": return <input type="text"/>
     			break;
-    		case "select": return <select><option>name</option></select>  
+    		case "select": return <select><option>name</option></select>
     			break;
     		default:
     			break;
@@ -66,9 +66,9 @@ class Target extends Component {
     }
     render() {
        const { canDrop, isOver, connectDropTarget,monitor } = this.props;
-        console.dir(monitor.getItem())
+
         const item  =  monitor.getItem();
-       
+
         return connectDropTarget(
             <div　style={{ ...style}}>
               {

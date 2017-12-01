@@ -8,7 +8,8 @@ import { getListAddress, checkAddress,deleteAddressDetail} from '../../actions/a
 import NavBar from '../../components/NavBar'
 import EmptyData from '../../components/EmptyData'
 import './index.less'
-
+import {changeNavbarTitle} from '../../actions/home'
+import utils from '../../utils'
 const Item = List.Item;
 const AgreeItem = Checkbox.AgreeItem;
 const alert = Modal.alert;
@@ -27,7 +28,9 @@ class AddressList extends Component {
         }
         this.saveAddress = this._saveAddress.bind(this);
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("我的地址"))
+    }
     componentDidMount() {
         if (this.props.listAddress.code == -1) {
             this.props.dispatch(getListAddress({
@@ -52,7 +55,7 @@ class AddressList extends Component {
     }
 
     gotoEidt = (id) => {
-        console.dir(id)
+
         this.context.router.push(`/eidtaddress?id=${id}`);
     }
     //
@@ -82,16 +85,15 @@ class AddressList extends Component {
         const {data} = this.props.listAddress;
         return (
             <div className="address-list">
-                <NavBar title={"我的地址"} {...this.props}/>
-                <div className="list-content" style={{height: document.documentElement.clientHeight - 170}}>
+                <div className="list-content" style={{height: document.documentElement.clientHeight - 50*utils.multiple}}>
                     {
-                        data.datas.length==0?<EmptyData type={1} text={'你还没有收货地址'} />
+                        data.datas.length==0?<EmptyData type={1} text={'小主，您还没有添加收货地址哦'} />
                         :
                          data.datas.map((item, id) => (
                             <div key={id}>
                                 <WhiteSpace/>
-                                <List onClick={this.clickItem.bind(this, item.addressId)}>
-                                    <Item>
+                                <List >
+                                    <Item onClick={this.clickItem.bind(this, item.addressId)}>
                                         <div>
                                             <span className="name">{item.contact}</span>
                                             <span className="phone">{item.phone}</span>
@@ -123,9 +125,11 @@ class AddressList extends Component {
 
                                     </Item>
                                 </List>
+
                             </div>
                         ))
                     }
+                    <div style={{marginBottom:'100px'}}></div>
                 </div>
                 <div className="save-btn">
                     <Button className="btn" onClick={this.saveAddress}>

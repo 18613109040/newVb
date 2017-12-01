@@ -2,15 +2,15 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Icon, List, Accordion, Checkbox, Tag, InputItem, Toast, Popup} from 'antd-mobile';
-import {getHoteDetails, gethotelOrder, orderSubmit} from "../../actions/sblodge"
+import {Flex, List, Accordion, Checkbox, Tag, InputItem, Toast, Popup} from 'antd-mobile';
+import { gethotelOrder, orderSubmit} from "../../actions/sblodge"
 
 const Item = List.Item;
 const Brief = Item.Brief;
 const AgreeItem = Checkbox.AgreeItem;
-import {storage, getdayByStartToEnd} from '../../utils/tools';
+import {storage} from '../../utils/tools';
 import CommodityPrice from '../../components/CommodityPrice';
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 
 class HotelOrder extends Component {
@@ -36,7 +36,7 @@ class HotelOrder extends Component {
     }
 
     componentWillMount() {
-
+        this.props.dispatch(changeNavbarTitle("订单填写"))
     }
 
     componentDidMount() {
@@ -158,8 +158,6 @@ class HotelOrder extends Component {
         let nameArray = Array(this.state.selected).fill("name");
         return (
             <div className="hotel-order">
-                <NavBar title="订单填写" {...this.props}/>
-
                 <div className="nav-content" style={{height: document.body.scrollHeight - 190}}>
                     <List>
                         <Item

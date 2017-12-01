@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import { Toast,WhiteSpace,WingBlank } from 'antd-mobile';
+import { Toast,WhiteSpace,WingBlank ,InputItem,Button} from 'antd-mobile';
 import { activateCoupon} from "../../actions/coupon";
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import BottomBtn from '../../components/BottomBtn'
 
 
@@ -23,9 +23,10 @@ class Coupon extends Component {
         this.state = {
             value:''
         }
-
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("绑定优惠券"))
+    }
     activation = () => {
         let {value} =this.state
         if(value=='')
@@ -42,8 +43,8 @@ class Coupon extends Component {
             Toast.info(res.message, 1, null, false);
         }))
     }
-    onChange =(e) =>{
-        let value=e.target.value;
+    onChange =(value) =>{
+
         this.setState({
             value
         })
@@ -51,20 +52,19 @@ class Coupon extends Component {
     }
     render(){
         return(
-            <div className="bindCoupon-content">
-                <NavBar title={"绑定优惠券"} {...this.props} />
+            <div className="bindCoupon-content" style={{height:document.documentElement.clientHeight-100}}>
                 <WingBlank>
                     <div>
                         <WhiteSpace />
                         <p className="tip">为了确保您的优惠券码能得到正常的使用，请您先绑定优惠券再进行使用</p>
                         <WhiteSpace />
-                        <input type="text" placeholder='请输入优惠券码' className="input-coupon" value={this.state.value} onChange={this.onChange}/>
-                        
+                        <InputItem  placeholder='请输入优惠券码' className="input-coupon" value={this.state.value} onChange={this.onChange}/>
                     </div>
+                    <WhiteSpace />
+                    <Button type="primary" onClick={this.activation}>确认绑定</Button>
                 </WingBlank>
-                
-                
-                <BottomBtn text="确认绑定" onClick={this.activation} />
+
+                {/*<BottomBtn text="确认绑定" onClick={this.activation} />*/}
             </div>
         )
     }
@@ -73,7 +73,7 @@ class Coupon extends Component {
 
 function mapStateToProps(state) {
     return {
-       
+
     }
 }
 

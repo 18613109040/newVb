@@ -2,7 +2,6 @@
  * 商品价格
  */
 import React, {Component} from "react";
-import {  TabBar, Icon } from 'antd-mobile';
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import './index.less'
@@ -29,19 +28,19 @@ class CommodityPrice extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			
+
 		}
-		
+
 	}
 	render() {
-	
+
 		return(
 			<div className="commodity-price">
        	<i className={`iconfont  ${this.props.icon} ${this.props.iconStyle}` }></i>
        	<span className={`${this.props.priceStyle}`}>{this.props.price}</span>
        	<span className={`${this.props.unitStyle}`}>{this.props.unit}</span>
       </div>
-		)	
+		)
 	}
 }
 export default CommodityPrice

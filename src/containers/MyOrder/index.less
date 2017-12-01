@@ -1,10 +1,28 @@
 @import "../../assets/style/theme";
 .my-order {
+    overflow: hidden;
     .list-view-product{
         background:@fill-body;
         .am-list-body{
             background:@fill-body;
         }
+    }
+
+    .swiper-slide{
+        padding: 15*@hd 0px 10*@hd 0px;
+        text-align:center;
+        height:88px;
+        max-width: 100*@hd;
+        .components-text{
+            color: @color-text-base;
+        }
+    }
+    .active{
+        color: @brand-primary;
+        border-bottom: 2px*@hd solid @brand-primary;
+    }
+    .am-list-content{
+        line-height: 1 !important;
     }
     .no-order {
 
@@ -136,7 +154,7 @@
              align-items: center;
             .count{
                 display:flex;
-               align-items:  flex-end;
+               align-items: center;
             }
 
             .step-tab {
@@ -174,7 +192,9 @@
         }
         .imc-con {
             .imc-one {
-
+                .am-list-item{
+                        padding-left: 0;
+                    }
                 .imco-l {
 
                     .imco-l-img-box {

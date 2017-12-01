@@ -74,12 +74,12 @@ class MallNavBar extends Component {
                                 title={item.title}
                                 key={id}
                                 icon={<div className="tabbar" style={{
-                                    background: `url(${item.icon}) no-repeat`
+                                    background: `url(${item.icon}) no-repeat`,
                                 }}
                                 />}
                                 selectedIcon={<div className="tabbar" style={{
+                                    background: `url(${item.selectIcon}) no-repeat`,
 
-                                    background: `url(${item.selectIcon}) no-repeat`
                                 }}
                                 />}
                                 selected={this.state.selectedTab === item.path}
@@ -92,7 +92,6 @@ class MallNavBar extends Component {
                                     });
                                 }}
                             >
-
                             </TabBar.Item>
 
                         ))

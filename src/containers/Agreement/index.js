@@ -2,10 +2,9 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Checkbox} from 'antd-mobile';
-
+import { Checkbox} from 'antd-mobile';
 const AgreeItem = Checkbox.AgreeItem;
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 
 class Agreement extends Component {
@@ -25,6 +24,7 @@ class Agreement extends Component {
 
     componentWillMount() {
 
+        this.props.dispatch(changeNavbarTitle("思埠客栈服务协议"))
     }
 
     componentDidMount() {
@@ -33,9 +33,9 @@ class Agreement extends Component {
     render() {
         return (
             <div className="vb-agreement">
-                <NavBar title="思埠客栈服务协议" rightContent={[<div key="1" className='back-size' onClick={() => {
-                    this.props.router.goBack()
-                }}>已阅读</div>]} {...this.props}/>
+                {/*<NavBar title="思埠客栈服务协议" rightContent={[<div key="1" className='back-size' onClick={() => {*/}
+                    {/*this.props.router.goBack()*/}
+                {/*}}>已阅读</div>]} {...this.props}/>*/}
                 <div className="nav-content" style={{height: document.body.scrollHeight - 100}}>
                     <p>感谢您选择思埠客栈，为使您体验到更优质的服务，请在下单前仔细阅读本服务协议。</p>
                     <p>1.入住客栈需提前7天预订，单个订单最多入住15晚。</p>

@@ -3,11 +3,9 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {List, Cardm, Button, ListView, Icon} from 'antd-mobile';
+import {ListView} from 'antd-mobile';
 import {getCompleted} from '../../actions/evaluation'
 import ListViewProduct from '../../components/ListViewProduct'
-
-const Item = List.Item;
 import ItemEva from './ItemEva'
 
 class Completed extends Component {
@@ -34,7 +32,7 @@ class Completed extends Component {
         if (this.props.mycompletedlist.code == -1) {
             this.props.dispatch(getCompleted({
                 pageNow: 1,
-                pageSize: 15,
+                pageSize: 10,
                 isEvaluate: 1
             },(res)=>{
                 if (res.data.pageOffset < res.data.totalPage) {
@@ -100,11 +98,12 @@ class Completed extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.mycompletedlist.code}
+                    data={this.props.mycompletedlist.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}
                     type={2}
-                    height={document.documentElement.clientHeight - 120}
+                    height={document.documentElement.clientHeight - 100}
                     empty_type={2}
                 />
 

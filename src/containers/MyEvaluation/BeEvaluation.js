@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Button, ListView} from 'antd-mobile';
+import {ListView} from 'antd-mobile';
 import {getMycommentList} from '../../actions/evaluation'
 import ListViewProduct from '../../components/ListViewProduct'
 import ItemEva from './ItemEva'
@@ -99,11 +99,12 @@ class BeEvaluation extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.mycommentlist.code}
+                    data={this.props.mycommentlist.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}
                     type={2}
-                    height={document.documentElement.clientHeight - 120}
+                    height={document.documentElement.clientHeight - 100}
                     empty_type={2}
                 />
 

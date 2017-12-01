@@ -1,12 +1,16 @@
 @import "../../assets/style/theme";
 .sb-tab-bar{
     overflow: hidden;
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    width: 100%;
     .am-tab-bar-tab-title{
-        font-size: @font-size-base;
+        font-size: @font-size-icontext;
     }
     .tabbar{
         width: 25 * @hd;
         height: 25 * @hd;
-        background-size:   24*@hd 24*@hd ;
+        background-size: cover !important;
     }
 }

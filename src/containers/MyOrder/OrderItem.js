@@ -2,8 +2,9 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, Button, WhiteSpace,Icon} from 'antd-mobile';
+import {Flex, List,Icon} from 'antd-mobile';
 import Text from '../../components/Text'
+import {AllProducts} from '../../components/AllProducts'
 const Item = List.Item;
 class OrderItem extends Component {
     static propTypes = {
@@ -78,8 +79,10 @@ class OrderItem extends Component {
             this.props.appraise(this.props.data)
         }
     }
+
     renderStatus(status) {
         //1 待支付
+        let {data} =this.props
         switch (status) {
             case '待支付':
                 return (
@@ -110,6 +113,20 @@ class OrderItem extends Component {
                         <span className="btn" onClick={this.appraise}>去评价</span>
                     </div>)
 
+            case "已收货":
+              if(data.ifEvaluate==0){
+                  return(
+                      <div className="footer-btn">
+                          <span className="btn" onClick={this.appraise}>去评价</span>
+                      </div>)
+              }else {
+                  return(
+                      <div className="footer-btn">
+                          <span className="btn" onClick={this.appraise}>查看评价</span>
+                      </div>)
+              }
+
+
         }
 
     }
@@ -122,58 +139,11 @@ class OrderItem extends Component {
                 <List>
                     <Item extra={data.status}>
                         <div className="title">{data.status}产品</div>
-                        {
-                           data.status == "已收货" ? <div className="signet icon-sign iconfont"></div> : ""
-                        }
+                        {/*{*/}
+                           {/*data.status == "已收货"&&data.ifEvaluate==0? <div className="signet icon-sign iconfont"></div> : ""*/}
+                        {/*}*/}
                     </Item>
-                    <div className="content-shop">
-                        <Item onClick={this.itemClick.bind(this, data.orderId)}>
-                            <div className="mc">
-                                <Link>
-                                    <div className="imc-con">
-                                        {
-                                            data.order1s.length == 1 ? (
-                                                <Flex className="imc-one">
-                                                    <Item className="imco-l">
-                                                        <div className="imco-l-img-box">
-                                                            <div className="imco-l-img">
-                                                                <img src={data.order1s[0].thumbImg}/>
-                                                            </div>
-                                                        </div>
-                                                    </Item>
-                                                    <Item className="imco-r-content">
-                                                        <Text size="md" row={2} text={data.order1s[0].name}/>
-                                                    </Item>
-                                                </Flex>
-                                            ) : (
-                                                <div className="c-type-wrap">
-                                                    <ul className="step-tab">
-                                                        {
-                                                            data.order1s.filter((item,id)=>id<3).map((item, id) => (
-                                                                <li key={id}>
-                                                                    <div className="liimg">
-                                                                        <img src={item.thumbImg}/>
-                                                                    </div>
-                                                                </li>
-                                                            ))
-                                                        }
-
-                                                    </ul>
-                                                    {
-                                                       data.order1s.length>3?
-                                                       <div className="count">
-                                                        <span>共{data.order1s.length}件</span>
-                                                        <Icon type="right" size="md" color='#999'/>
-                                                       </div> :null
-                                                    }
-                                                </div>
-                                            )
-                                        }
-                                    </div>
-                                </Link>
-                            </div>
-                        </Item>
-                    </div>
+                    <AllProducts data={data} itemClick={(id)=>{this.itemClick(id)}}/>
                     <Item className="item-left-extra content-shop total-content">
                         <span className="all-title">共{this.props.data.order1s.length}件商品，合计:</span>
                         <span className="all-mo">

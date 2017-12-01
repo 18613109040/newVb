@@ -56,6 +56,7 @@
         margin-bottom: 100*@hd;
         overflow-x: hidden;
         img {
+            margin-top: -7px;
             width: 100%;
         }
     }
@@ -109,13 +110,34 @@
                 }
             }
         }
-        .money-footer {
-            display: inline-block;
-            .money {
-                font-size: @font-size-caption;
-                margin-left: 6*@hd;
+        .prod-money{
+            display:flex;
+            justify-content: space-between;
+
+             .money-footer {
+                display: inline-block;
+                .money {
+                    font-size: @font-size-caption;
+                    margin-left: 6*@hd;
+                    vertical-align: middle;
+                }
+            }
+            .money-line{
+                .marke-price{
+                    display:inline-block;
+                    margin-left:10*@hd;
+                    font-size:@font-size-caption-sm;
+                    color:@color-text-secondary;
+                    text-decoration: line-through;
+                    vertical-align:middle;
+                }
+            }
+            .stock{
+                 font-size:@font-size-base;
+                color:@color-text-secondary;
             }
         }
+
 
         .prod-act {
             color: @color-text-secondary;

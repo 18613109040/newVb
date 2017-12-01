@@ -3,12 +3,10 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {List, Button, ListView, Toast} from 'antd-mobile';
+import { ListView, Toast} from 'antd-mobile';
 import {getCasecollection, deleteCollection, empotyCaseCollection} from '../../actions/collection'
 import {ProductCollectionItem} from '../../components/ProductItem'
 import ListViewProduct from '../../components/ListViewProduct'
-
-const Item = List.Item;
 import {storage} from '../../utils/tools'
 
 class CaseCollection extends Component {
@@ -54,9 +52,9 @@ class CaseCollection extends Component {
         this.getData(1)
 
     }
-    // componentWillUnmount() {
-    //     this.props.dispatch(empotyCaseCollection())
-    // }
+    componentWillUnmount() {
+        this.props.dispatch(empotyCaseCollection())
+    }
     getData(pageNow){
             this.props.dispatch(getCasecollection({
                 pageNow:pageNow,
@@ -119,6 +117,7 @@ class CaseCollection extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.caseCollection.code}
+                    data={this.props.caseCollection.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}

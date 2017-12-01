@@ -1,0 +1,168 @@
+@import "../../assets/style/theme";
+.coupon-center{
+	margin:10*@hd;
+	.list-view-product{
+		.am-list-body{
+			background-color: @fill-body;
+		}
+		
+	}
+	.coupon-item{
+		margin-bottom: 6*@hd;
+		background-color:@fill-base;
+		display: flex;
+		padding:8*@hd;
+		.c-left{
+			img{
+				width:72*@hd;
+				height:72*@hd;
+			}
+		}
+		.c-center{
+			flex:1;
+			padding:0 15*@hd 0 5*@hd;
+			.name{
+				font-size: @font-size-caption-sm;
+				padding-top:10*@hd;
+			}
+			.money{
+				padding-top: 15*@hd;
+				display:flex;
+				justify-content: space-between; 
+				color: @fill-ancillary-red;
+				align-items: center;
+				.cutMoney{
+					font-size:25*@hd;
+					
+				}
+				.text{
+					font-size:@font-size-caption-sm;
+				}
+			}
+			
+		}
+		.c-right{
+			.over-img{
+				margin:0 auto;
+				width:50*@hd;
+				height:50*@hd;
+				display:block;
+			}
+			.hasGet-img{
+				margin:0 auto;
+				display:block;
+				width:50*@hd;
+			}
+			.btn{
+				display:inline-block;
+				padding:3*@hd 10*@hd;
+				color:@color-text-base-inverse;
+				background-color:@fill-ancillary-red;
+				font-size:@font-size-caption-sm;
+				border-radius:16*@hd;
+				margin-top: 10*@hd;
+				&.over{
+					background-color:transparent;
+					border:1px solid @fill-ancillary-red;
+					color:@fill-ancillary-red;
+				}
+			}
+		}
+	}
+}
+
+
+.circleProgress_wrapper{
+            width: 50*@hd;
+            height: 50*@hd;
+            position: relative;
+            margin:0 auto;
+        .circleProgress-text{
+        	position:absolute;
+        	display:block;
+        	width:50*@hd;
+        	text-align: center;
+        	font-size:@font-size-icontext;
+        	color: @fill-ancillary-red;
+        	padding-top:12*@hd;
+        	line-height: 1.3;
+        }
+            .wrapper{
+            width: 25*@hd;
+            height: 50*@hd;
+            position: absolute;
+            top:0;
+            overflow: hidden;
+        }
+        .right{
+            right:0;
+        }
+        .left{
+            left:0;
+        }
+        .circleProgress{
+            width: 40*@hd;
+            height: 40*@hd;
+            border:5*@hd solid @fill-ancillary-red;
+            border-radius: 50%;
+            position: absolute;
+            top:0;
+     
+        }
+        .rightcircle{
+            border-top:5*@hd solid #FFB8B8;
+            border-right:5*@hd solid #FFB8B8;
+            right:0;
+      		/* 	transform: rotate(45deg); */
+           /*  -webkit-animation: circleProgressLoad_right 5s linear infinite; */
+        }
+        .leftcircle{
+            border-bottom:5*@hd solid #FFB8B8;
+            border-left:5*@hd solid #FFB8B8;
+            left:0;
+           /* transform: rotate(90deg); */
+          /*   -webkit-animation: circleProgressLoad_left 5s linear infinite; */
+        }
+       /*  @-webkit-keyframes circleProgressLoad_right{
+           0%{
+               border-top:20px solid #ED1A1A;
+               border-right:20px solid #ED1A1A;
+               -webkit-transform: rotate(45deg);
+           }
+           50%{
+               border-top:20px solid rgb(232, 232, 12);
+               border-right:20px solid rgb(232, 232, 12);
+               border-left:20px solid rgb(81, 197, 81);
+               border-bottom:20px solid rgb(81, 197, 81);
+               -webkit-transform: rotate(225deg);
+           }
+           100%{
+               border-left:20px solid green;
+               border-bottom:20px solid green;
+               -webkit-transform: rotate(225deg);
+           }
+       }
+       @-webkit-keyframes circleProgressLoad_left{
+           0%{
+               border-bottom:20px solid #ED1A1A;
+               border-left:20px solid #ED1A1A;
+               -webkit-transform: rotate(45deg);
+           }
+           50%{
+               border-bottom:20px solid rgb(232, 232, 12);
+               border-left:20px solid rgb(232, 232, 12);
+               border-top:20px solid rgb(81, 197, 81);
+               border-right:20px solid rgb(81, 197, 81);
+               -webkit-transform: rotate(45deg);
+           }
+           100%{
+               border-top:20px solid green;
+               border-right:20px solid green;
+               border-bottom:20px solid green;
+               border-left:20px solid green;
+               -webkit-transform: rotate(225deg);
+           }
+       } */
+        }
+
+        

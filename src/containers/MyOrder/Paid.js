@@ -3,11 +3,11 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, ListView, Icon,Toast,Modal} from 'antd-mobile';
+import { ListView,Toast,Modal} from 'antd-mobile';
 import {getToBePaid, cancalOrder, emptyOrder} from '../../actions/orderDetails'
 import ListViewProduct from '../../components/ListViewProduct'
 import OrderItem from './OrderItem'
-const Item = List.Item;
+import utils from '../../utils'
 const alert = Modal.alert;
 class Paid extends Component {
     static propTypes = {};
@@ -29,7 +29,6 @@ class Paid extends Component {
         }
 
     }
-
     componentDidMount() {
         if (this.props.orderDetails.paid.code == -1) {
             this.props.dispatch(getToBePaid({
@@ -51,11 +50,15 @@ class Paid extends Component {
             }));
 
         } else {
+           let {data} = this.props.orderDetails.paid
             this.setState({
                 isLoading: false,
-                hasMore: true
-            });
+                hasMore: data.pageOffset< data.totalPage
+            })
         }
+    }
+    componentWillUnmount(){
+         
     }
     getData(pageNow){
             this.props.dispatch(getToBePaid({
@@ -99,7 +102,7 @@ class Paid extends Component {
         ])
     }
     onEndReached = () => {
-        if (!this.state.hasMore ) {
+        if (!this.state.hasMore || this.state.isLoading) {
             return;
         }
         this.setState({isLoading: true});
@@ -108,11 +111,20 @@ class Paid extends Component {
         },100)
 
     }
+    onRefresh=()=>{
+        this.props.dispatch(emptyOrder())
+        setTimeout(()=>{
+            this.getData(1)
+        },50)
+
+    }
     payNow=(rowData)=>{
+        this.props.dispatch(emptyOrder())
         this.context.router.push(`/choosePayType?id=${rowData.orderId}`)
     }
     //兑换
     gotoExchange=(rowData)=>{
+        this.props.dispatch(emptyOrder())
         this.context.router.push(`/sendSms?id=${rowData.orderId}&money=${rowData.totalIntegral}`)
 
     }
@@ -123,7 +135,7 @@ class Paid extends Component {
                 <div key={rowID} className="item-order row">
                     <OrderItem
                         data={rowData}
-                        cancelOrder={this.cancelOrder.bind(rowData)}
+                        cancelOrder={this.cancelOrder}
                         payNow={this.payNow}
                         gotoExchange={this.gotoExchange}
                     />
@@ -137,15 +149,16 @@ class Paid extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.orderDetails.paid.code}
+                    data={this.props.orderDetails.paid.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}
+                    onRefresh={this.onRefresh}
                     type={2}
-                    height={document.documentElement.clientHeight - 100}
+                    height={document.documentElement.clientHeight - 100*utils.multiple}
                     empty_type={3}
                     empty_text={'小主，你还没有待支付/兑换的订单'}
                 />
-
             </div>
 
         )

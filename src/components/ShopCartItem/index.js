@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {  TabBar, Icon,Checkbox,Stepper } from 'antd-mobile';
+import {Checkbox,Stepper } from 'antd-mobile';
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import CommodityPrice from '../CommodityPrice';
@@ -12,8 +12,8 @@ class ShopCartItem extends Component {
 		shopNumberClick:PropTypes.func,
 		eidt:PropTypes.bool,
 		data:PropTypes.object,
-		
-		
+
+
 	};
 	static defaultProps = {
 		eidt:false
@@ -23,7 +23,7 @@ class ShopCartItem extends Component {
 		this.state = {
 			val:this.props.data.amount
 		}
-		
+
 	}
 	deleteShop = (id,skuId)=>{
 		if(this.props.deleteShop instanceof Function ){
@@ -31,7 +31,7 @@ class ShopCartItem extends Component {
 		}
 	}
 	collection(){
-		
+
 	}
 	checkChange=(id,skuId)=>{
 		if(this.props.checkChange instanceof Function ){
@@ -45,11 +45,11 @@ class ShopCartItem extends Component {
 		}
   }
 	render() {
-	
+
 		return(
 			<div className="shop-cart-item">
 				<div className="check-wrapper">
-					<Checkbox 
+					<Checkbox
 						checked={this.props.data.check}
 						onChange={this.checkChange.bind(this,this.props.data.data.imProductId,this.props.data.skuId)}
 					/>
@@ -62,8 +62,8 @@ class ShopCartItem extends Component {
 						<div className="cart-product-name">
 							<Link to={`/product?id=${this.props.data.data.imProductId}`}>
 								<span >
-									<Text 
-										text={this.props.data.data.name} 
+									<Text
+										text={this.props.data.data.name}
 										row={2}
 										textType="base"
 									/>
@@ -81,17 +81,17 @@ class ShopCartItem extends Component {
 											<i className="icon-size iconfont icon-collection"onClick={this.collection} ></i>
 											<i className="icon-size iconfont icon-delete" onClick={this.deleteShop.bind(this,this.props.data.data.imProductId,this.props.data.skuId)} ></i>
 										</div>):(
-											
+
 						        		this.props.data.data.productType==1?(
 						        			<div className="prod-price">
 						        				<CommodityPrice
-															price={new Number(this.props.data.data.retailPrice).toFixed(2)} 
+															price={new Number(this.props.data.data.retailPrice).toFixed(2)}
 															unit=""
 															iconStyle="base-icon"
 															priceStyle="base-price"/>
 						        			</div>):(
 						        			<div className="prod-price">
-						        				<CommodityPrice 
+						        				<CommodityPrice
 							        				price={this.props.data.data.exchangeIntegral}
 							        				unit="V币"
 															icon="icon-vbi"
@@ -99,13 +99,13 @@ class ShopCartItem extends Component {
 															priceStyle="base-price"
 						        				/>
 						        			</div>)
-						        	
+
 										)
 								}
-								
+
 							</span>
-							
-							<div className="quantity-wrapper"> 
+
+							<div className="quantity-wrapper">
 								<Stepper
 			            style={{ width: '100%', minWidth: '2rem' }}
 			            showNumber
@@ -115,12 +115,12 @@ class ShopCartItem extends Component {
 			            onChange={this.onChange.bind(this,this.props.data.data.imProductId,this.props.data.skuId)}
 			          />
 							</div>
-							
+
 						</div>
 					</div>
 				</div>
 			</div>
-		)	
+		)
 	}
 }
 export default ShopCartItem

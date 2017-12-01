@@ -3,12 +3,11 @@ import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {render} from 'react-dom';
-import {Flex, Icon, Carousel, List, Accordion, Toast,Calendar } from 'antd-mobile';
+import { Carousel, List, Accordion, Toast,Calendar } from 'antd-mobile';
 import {
     getHoteSelectDate,
     getRoomDetail,
     getHoteDetails,
-    gethotelOrder,
     emptyhostDetails,
     updataHoteDetails
 } from "../../actions/sblodge"
@@ -17,7 +16,7 @@ import Rate from '../../components/Rate'
 import CommodityPrice from '../../components/CommodityPrice';
 import {SingleImgView} from '../../components/ImageView'
 import {storage, convertTimeToStr, getdayByStartToEnd} from '../../utils/tools';
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -42,6 +41,7 @@ class LodgeDetails extends Component {
     }
 
     componentDidMount() {
+        this.props.dispatch(changeNavbarTitle("酒店详情"))
         if (this.props.hostdetails.code !== 0) {
             const {id} = this.props.location.query;
             this.props.dispatch(getHoteDetails(id))
@@ -59,7 +59,7 @@ class LodgeDetails extends Component {
     }
 
     onChange = (key) => {
-        console.log(key);
+     
     }
     /*酒店介绍*/
     introduce = () => {
@@ -157,10 +157,9 @@ class LodgeDetails extends Component {
         });
     }
     onConfirm=(startTime,endTime)=>{
-        console.dir(startTime)
-        console.dir(endTime)
+
         if(startTime.toString()===endTime.toString()){
-            console.dir("+++++++++++")
+
             endTime = new Date(endTime).getTime()+86400000
         }
         this.setState({
@@ -195,7 +194,7 @@ class LodgeDetails extends Component {
         const hProp = this.state.initialHeight ? {height: this.state.initialHeight} : {};
         return (
             <div className="Lodge-details">
-                <NavBar title="思埠详情" {...this.props} />
+
                 <div className="lodge-content nav-content" style={{
                     height: document.documentElement.clientHeight - 100,
                     overflow: 'auto',

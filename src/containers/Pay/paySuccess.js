@@ -2,13 +2,12 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, Icon, List, Checkbox, Toast, Radio, WhiteSpace, WingBlank} from 'antd-mobile';
-import NavBar from '../../components/NavBar'
+import {Flex, WhiteSpace, WingBlank} from 'antd-mobile';
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 
-const Item = List.Item;
-const Brief = Item.Brief;
-const RadioItem = Radio.RadioItem;
+
+
 
 class OnlinePayment extends Component {
     static propTypes = {};
@@ -25,7 +24,8 @@ class OnlinePayment extends Component {
     }
 
     componentWillMount() {
-
+        const {text} = this.props.location.query;
+        this.props.dispatch(changeNavbarTitle(text))
     }
 
     componentDidMount() {
@@ -36,7 +36,6 @@ class OnlinePayment extends Component {
         const {orderId,text} = this.props.location.query;
         return (
             <div className="order-details">
-                <NavBar title={text} {...this.props}/>
                 <div className="list-0">
                     <p className="line">
                         <span></span><span></span><span></span>
@@ -48,7 +47,7 @@ class OnlinePayment extends Component {
                     <WingBlank size="md">
                         <WhiteSpace size="sm"/>
                         <Flex>
-                            <Flex.Item><span className="btn btn1" onClick={()=>{this.context.router.push(`/orderdetails?id=${orderId}`)}}>查看订单</span></Flex.Item>
+                            {orderId?<Flex.Item><span className="btn btn1" onClick={()=>{this.context.router.push(`/orderdetails?id=${orderId}`)}}>查看订单</span></Flex.Item>:""}
                             <Flex.Item><span className="btn btn2" onClick={()=>{this.context.router.push('/home')}}>继续逛逛</span></Flex.Item>
                         </Flex>
                         <WhiteSpace size="sm"/>

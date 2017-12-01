@@ -1,6 +1,7 @@
 @import "../../assets/style/theme";
 .nav-content{
     overflow:auto;
+
 }
 .oreder-modal{
     margin-bottom: -29px;
@@ -32,7 +33,7 @@
               white-space:normal;
             }
         }
-        
+
     }
     .list-1 {
         .item-1 {
@@ -47,6 +48,11 @@
     .list-2 {
         .icon-title >i{
             margin-right:10*@hd;
+        }
+        .item-order-status{
+            .am-list-extra{
+                font-size: @font-size-base;
+            }
         }
     }
     .money{
@@ -89,6 +95,20 @@
             color: inherit;
             text-decoration: none;
             display: block;
+            .s-item-btn{
+                text-align:right;
+                margin-left: 70 *@hd;
+                /* border-top: 1px solid @border-color-base; */
+                margin-top: 5*@hd;
+                padding-top: 5*@hd;
+                .btn{
+                    padding:6*@hd 8 * @hd;
+                    /* border: 1px solid @border-color-base; */
+                    font-size: @font-size-caption-sm;
+                    display:inline-block;
+                    background:@fill-ancillary-yellow;
+                }
+            }
             .s-item {
                 position: relative;
                 // padding: 14px 0 14px 0;
@@ -101,32 +121,17 @@
                     height: auto;
                     .sitem-l {
                         text-align: center;
-                        width: 140px;
                         -webkit-box-sizing: border-box;
                         box-sizing: border-box;
                         .sl-img-box {
-                            width: 121px;
-                            height: 121px;
                             float: left;
                             margin-right: 20px;
                             border-radius: 6px;
                             overflow: hidden;
-                            .sl-img {
-                                width: 240px;
-                                height: 240px;
-                                border: 1px solid #e1e1e1;
-                                border-radius: 12px;
-                                overflow: hidden;
-                                transform: scale(.5, .5);
-                                -webkit-transform: scale(.5, .5);
-                                transform-origin: top left;
-                                -webkit-transform-origin: top left;
-                                img {
-                                    max-width: 100%;
-                                    width: 240px;
-                                    height: 240px;
+                            img {
+                                    width: 76*@hd;
+                                    height: 76*@hd;
                                 }
-                            }
                         }
                     }
                     .sitem-m {
@@ -154,6 +159,22 @@
                             display:flex;
                             justify-content: space-between;
 
+                        }
+                        .s3-btn{
+                            padding-top:8*@hd;
+                            text-align:right;
+                            margin-top:8*@hd;
+                            .btn{
+                                padding:6*@hd 8 * @hd;
+                                border: 1px solid @border-color-base;
+                                font-size: @font-size-caption-sm;
+                                margin-left: 10 * @hd;
+                                display:inline-block;
+                                &.ghost{
+                                    background:@fill-ancillary;
+                                }
+
+                            }
                         }
                     }
                     .sitem-r {
@@ -187,9 +208,10 @@
       }
     }
     .list-6{
-        margin-bottom:44*@hd;
+        //margin-bottom:44*@hd;
         background:@fill-base;
         padding:0 15*@hd;
+        margin-bottom: 50*@hd;
         .item{
             display:flex;
             justify-content: space-between;
@@ -207,7 +229,7 @@
     }
     .list-0{
         background:@fill-ancillary-red;
-        padding:10*@hd 0 20*@hd;
+        padding:15*@hd 0 20*@hd;
         color:@fill-base;
         text-align:center;
         p{

@@ -8,7 +8,6 @@ import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import Text from "../Text";
 import './index.less'
-const  Item = Flex.Item
 class CouponTem extends Component {
     static propTypes = {
         radioCheck: PropTypes.func
@@ -21,7 +20,7 @@ class CouponTem extends Component {
             cutMoney: 3,
             couponType: 1,
             fullMoney: 6,
-            instruction: "",
+            couponName: "",
             useStartDate: "",
             useEndDate: "",
             status: 0  //1 未使用 2 已使用 3 已过期 4已领取  5 立即领取 6不可使用 7可用优惠券
@@ -56,6 +55,7 @@ class CouponTem extends Component {
     }
 
     renderCoupon(data) {
+        let couponRange=data.couponRange==0?'全品类':data.couponRange==1?'专场券':'商品券'
         switch (data.status) {
             case 1:
                 return (
@@ -76,7 +76,7 @@ class CouponTem extends Component {
                             <span className="iconfont icon-renmingbi money"></span>
                             <span className="number">{data.cutMoney}</span>
                         </div>
-                        <div className="text">{data.couponType == 1 ? `满${data.fullMoney}使用` : "直减券"}</div>
+                        <div className="text">{data.couponType == 1 ? `满${data.fullMoney}元使用` : "直减券"}</div>
                     </div>
                     <div className="right-bg">
                         <div className="top">
@@ -90,7 +90,6 @@ class CouponTem extends Component {
 						</span>
                         </div>
                         <div className="center">
-
                             <span className="dianji" onClick={this.onClickEvent.bind(this, data)}>立即使用</span>
                         </div>
                         <div className="dashed"></div>
@@ -130,7 +129,7 @@ class CouponTem extends Component {
                                 <span className="iconfont icon-renmingbi money"></span>
                                 <span className="number">{data.cutMoney}</span>
                             </div>
-                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}使用` : "直减券"}</div>
+                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}元使用` : "直减券"}</div>
                         </div>
                         <div className="right-bg">
                             <div className="top">
@@ -183,7 +182,7 @@ class CouponTem extends Component {
                                 <span className="iconfont icon-renmingbi money"></span>
                                 <span className="number">{data.cutMoney}</span>
                             </div>
-                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}使用` : "直减券"}</div>
+                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}元使用` : "直减券"}</div>
                         </div>
                         <div className="right-bg hui1">
                             <div className="top">
@@ -235,7 +234,7 @@ class CouponTem extends Component {
                                 <span className="iconfont icon-renmingbi money"></span>
                                 <span className="number">{data.cutMoney}</span>
                             </div>
-                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}使用` : "直减券"}</div>
+                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}元使用` : "直减券"}</div>
                         </div>
                         <div className="right-bg ">
                             <div className="top">
@@ -287,7 +286,7 @@ class CouponTem extends Component {
                                 <span className="iconfont icon-renmingbi money"></span>
                                 <span className="number">{data.cutMoney}</span>
                             </div>
-                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}使用` : "直减券"}</div>
+                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}元使用` : "直减券"}</div>
                         </div>
                         <div className="right-bg ">
                             <div className="top">
@@ -339,7 +338,7 @@ class CouponTem extends Component {
                                 <span className="iconfont icon-renmingbi money"></span>
                                 <span className="number">{data.cutMoney}</span>
                             </div>
-                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}使用` : "直减券"}</div>
+                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}元使用` : "直减券"}</div>
                         </div>
                         <div className="right-bg ">
                             <div className="top">
@@ -390,7 +389,7 @@ class CouponTem extends Component {
                                 <span className="iconfont icon-renmingbi money"></span>
                                 <span className="number">{data.cutMoney}</span>
                             </div>
-                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}使用` : "直减券"}</div>
+                            <div className="text">{data.couponType == 1 ? `满${data.fullMoney}元使用` : "直减券"}</div>
                         </div>
                         <div className="right-bg ">
                                 <div className="top">
@@ -432,6 +431,7 @@ class CouponTem extends Component {
 
     render() {
         const {data} = this.props;
+        console.dir(data)
         return (
             <div className="stamp">
                 {this.renderCoupon(data)}

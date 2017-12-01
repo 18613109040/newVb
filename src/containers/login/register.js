@@ -3,7 +3,7 @@ import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import { List, Button, InputItem,WingBlank,Toast,WhiteSpace } from 'antd-mobile';
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import {getRegisterSms,userResister,resetPassword,resetPasswordSms} from '../../actions/user'
 import './index.less'
 import utils from '../../utils'
@@ -22,20 +22,19 @@ class Login extends Component {
             phone:'',
             password:''
         }
-        
-       
+        this.codeInterval = null;
+
     }
 
     componentWillMount() {
+
         let {pathname}=this.context.router.location
         this.pathname=pathname
-
-
-        console.log(this.context.router.location.pathname)
+        this.props.dispatch(changeNavbarTitle( this.pathname=='/forgetPassword'?'忘记密码':'注册'))
     }
 
     componentDidMount() {
-       
+
     }
     componentWillUnmount(){
         clearInterval(this.codeInterval)
@@ -90,11 +89,11 @@ class Login extends Component {
                 [type]:value,
             });
         }
-        
-       
+
+
     }
     //获取验证码
-    codeInterval
+
     getSms=()=>{
         let {phone,hasError}=this.state
         if(hasError){
@@ -124,7 +123,7 @@ class Login extends Component {
                 Toast.info(res.message, 1);
             }))
         }
-        
+
     }
     login =() =>{
         let {phone,password,code,hasError,hasError_password,hasError_password2}=this.state
@@ -141,13 +140,12 @@ class Login extends Component {
             Toast.info('请输入手机验证码',1)
             return
         }
-        
-        let action_url
-        if(this.state.pathname=='/forgetPassword'){
+
+        if(this.pathname=='/forgetPassword'){
            this.props.dispatch(resetPassword({phone,password:utils.md5(password),smsVerify:code},(res) => {
             if(res.code==0)
             {
-                this.context.router.push('/login')
+                this.context.router.replace('/login')
             }
             Toast.info(res.message, 1);
             }))
@@ -157,28 +155,26 @@ class Login extends Component {
             {
                 this.props.dispatch(userLogin({phone,password:utils.md5(password)},(res) => {
                 if(res.code==0)
-                    this.context.router.push('/home')
+                    this.context.router.replace('/home')
                 }))
             }
             Toast.info(res.message, 1);
             }))
         }
-        
+
 
 
     }
-   
+
     render(){
-        let {pathname} =this.state
+
         return (
-            <div className="login-content">
-                <NavBar  {...this.props} title={this.pathname=='/forgetPassword'?'忘记密码':'注册'}/>
+            <div className="login-content"  style={{height: document.documentElement.clientHeight - 90}}>
                 <div className="center">
                     <WhiteSpace  size='lg' />
                     <WingBlank size='md'>
                     <List >
-                       <InputItem 
-                        prefixListCls="login"
+                       <InputItem
                         type="text"
                         placeholder="输入手机号"
                         error={this.state.hasError}
@@ -186,8 +182,7 @@ class Login extends Component {
                         onChange={this.onChange.bind(this,'phone')}
                         value={this.state.phone}
                       ><i className="iconfont icon-phone"></i></InputItem>
-                        <InputItem 
-                        prefixListCls="login"
+                        <InputItem
                         type="text"
                         placeholder="请输入验证码"
                         onChange={this.onChange.bind(this,'code')}
@@ -195,15 +190,13 @@ class Login extends Component {
                       ><i className="iconfont icon-code"></i>
                        <span className="code-btn"  ref="codeBtn" onClick={this.getSms}>获取验证码</span>
                       </InputItem>
-                        <InputItem 
-                        prefixListCls="login"
+                        <InputItem
                         type="password"
                         placeholder={this.pathname=='/forgetPassword'?`请输入新密码`:'6位以上数字和字母组合'}
                         onChange={this.onChange.bind(this,'password')}
                         value={this.state.password}
                       ><i className="iconfont icon-password"></i></InputItem>
                       <InputItem
-                        prefixListCls="login"
                         type="password"
                         placeholder={this.pathname=='forgetPassword'?`请确认新密码`:'再次确认密码'}
                         onChange={this.onChange.bind(this,'password2')}
@@ -223,7 +216,7 @@ class Login extends Component {
 
 function mapStateToProps(state) {
     return {
-       
+
     }
 }
 

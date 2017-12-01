@@ -2,14 +2,14 @@ import React, {Component} from "react";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import {Flex ,NavBar,Icon,List,Checkbox,Toast,Radio,WhiteSpace} from 'antd-mobile';
+import {Flex ,List,Radio,WhiteSpace} from 'antd-mobile';
 import {orderCashSubmit} from "../../actions/sblodge"
 import Text from "../../components/Text";
 import CommodityPrice from '../../components/CommodityPrice';
 import './index.less'
 const Item = List.Item;
-const Brief = Item.Brief;
 const RadioItem = Radio.RadioItem;
+import {changeNavbarTitle} from '../../actions/home'
 class OnlinePayment extends Component {
 	static propTypes = {
 
@@ -21,26 +21,26 @@ class OnlinePayment extends Component {
 	static contextTypes={
   	router: React.PropTypes.object.isRequired
 	};
-	
+
 	constructor(props) {
 		super(props);
 		this.checkInUsers=[]
 		this.state = {
 			value:0
 		}
-		
+
 	}
-	componentWillMount(){
-		
-	}
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("在线支付"))
+    }
 	componentDidMount (){
 		const {id} = this.props.location.query;
 		this.props.dispatch(orderCashSubmit(id))
 	}
 
 	submitdindan=()=>{
-		
-		
+
+
 	}
 	onChange = (value) => {
     this.setState({
@@ -55,11 +55,7 @@ class OnlinePayment extends Component {
     ];
 		return(
 			<div className="online-payment">
-				<NavBar
-					iconName={false}
-					leftContent={<div className='iconfont icon-back back-size'  onClick={()=>{this.props.router.goBack()}}></div>}
-		      mode="light"
-		    >在线支付</NavBar>
+
 		    <div className="nav-content" style={{height:document.documentElement.clientHeight-190}}>
 		    	<List>
 		    		<Item
@@ -68,8 +64,8 @@ class OnlinePayment extends Component {
 		    			<div className="name">{data.hotelName}</div>
 		    			<div className="div-1">入住时间:{data.checkInDate}至{data.checkOutDate}</div>
 		    			<div className="div-2">
-			    			<Text 
-									text={`入住房型:${data.roomName}`} 
+			    			<Text
+									text={`入住房型:${data.roomName}`}
 									row={2}
 									textType="base"
 								/>
@@ -98,7 +94,7 @@ class OnlinePayment extends Component {
 												iconStyle="lg-icon"
 							        />
 					      </Flex.Item>
-					      
+
 					      <Flex.Item>
 					      	<span className="btn-right-submit-block" onClick={this.submitdindan} >
 								    <div>去支付</div>
@@ -107,10 +103,10 @@ class OnlinePayment extends Component {
 					    </Flex>
 					  </div>
 					</div>
-					
-					
+
+
 			</div>
-		)	
+		)
 	}
 }
 

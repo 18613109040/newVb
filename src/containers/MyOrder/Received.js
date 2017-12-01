@@ -7,6 +7,7 @@ import {Flex, List, ListView, Icon,Toast,Modal} from 'antd-mobile';
 import {getToBeReceived,received,emptyOrder} from '../../actions/orderDetails'
 import OrderItem from './OrderItem'
 import ListViewProduct from '../../components/ListViewProduct'
+import utils from '../../utils'
 const alert = Modal.alert;
 const Item = List.Item;
 
@@ -33,7 +34,7 @@ class Received extends Component {
         if (this.props.orderDetails.received.code == -1) {
             this.props.dispatch(getToBeReceived({
                 pageNow: 1,
-                pageSize: 15,
+                pageSize: 10,
                 status: 4
             }, (res) => {
                 if (res.data.pageOffset < res.data.totalPage) {
@@ -49,11 +50,15 @@ class Received extends Component {
                 }
             }));
         } else {
+            let {data} = this.props.orderDetails.received
             this.setState({
                 isLoading: false,
-                hasMore: true
-            });
+                hasMore: data.pageOffset< data.totalPage
+            })
         }
+    }
+    componentWillUnmount(){
+        
     }
     getData(pageNow) {
             this.props.dispatch(getToBeReceived({
@@ -75,13 +80,20 @@ class Received extends Component {
             }));
     }
     onEndReached = () => {
-        if (!this.state.hasMore) {
+        if (!this.state.hasMore || this.state.isLoading) {
             return;
         }
         this.setState({isLoading: true});
         setTimeout(() => {
             this.getData(this.props.orderDetails.received.data.pageOffset + 1)
         },100)
+
+    }
+    onRefresh=()=>{
+        this.props.dispatch(emptyOrder())
+        setTimeout(()=>{
+            this.getData(1)
+        },50)
 
     }
     gotoRefunds=(data)=>{
@@ -132,15 +144,16 @@ class Received extends Component {
                     row={row}
                     dataSource={dataSource}
                     status={this.props.orderDetails.received.code}
+                    data={this.props.orderDetails.received.data}
                     isLoading={this.state.isLoading}
                     reflistview="listrefs"
                     onEndReached={this.onEndReached}
+                    onRefresh={this.onRefresh}
                     type={2}
-                    height={document.documentElement.clientHeight - 100}
+                    height={document.documentElement.clientHeight - 60*utils.multiple}
                     empty_type={3}
                     empty_text={'小主，你还没有待收货的订单'}
                 />
-
             </div>
 
         )

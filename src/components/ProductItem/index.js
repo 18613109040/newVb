@@ -1,22 +1,23 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
-import {TabBar, Icon,Stepper,Button} from 'antd-mobile';
+import {Stepper, Button} from 'antd-mobile';
 import {Link} from "react-router";
 import Text from "../Text";
 import CommodityPrice from '../CommodityPrice';
-import Img from '../Img'
+// import Img from '../Img'
+import utils from '../../utils'
 
 import './index.less'
 
 class ProductItem extends Component {
     static propTypes = {
         thumbImg: PropTypes.string,
-        imProductId:PropTypes.string,
-        productType:PropTypes.number, //类型 0 v币 1 人民币
-        retailPrice:PropTypes.number, //人民币
-        exchangeIntegral:PropTypes.number, //v币
-        name:PropTypes.string,
-        textRow:PropTypes.number//文字显示行数
+        imProductId: PropTypes.string,
+        productType: PropTypes.number, //类型 0 v币 1 人民币
+        retailPrice: PropTypes.number, //人民币
+        exchangeIntegral: PropTypes.number, //v币
+        name: PropTypes.string,
+        textRow: PropTypes.number//文字显示行数
 
     };
     static contextTypes = {
@@ -25,7 +26,7 @@ class ProductItem extends Component {
     static defaultProps = {
         categoryType: 1,
         product: [],
-        textRow:1
+        textRow: 1
     };
 
     constructor(props) {
@@ -33,41 +34,52 @@ class ProductItem extends Component {
         this.state = {}
 
     }
-    clickTab=()=>{
+
+    clickTab = () => {
         const {imProductId} = this.props;
-        if(this.props.clickTab instanceof Function ){
+        if (this.props.clickTab instanceof Function) {
             this.props.clickTab(imProductId)
         }
     }
+
     render() {
-        const {thumbImg,imProductId,productType,retailPrice,exchangeIntegral,name,textRow,height} = this.props;
-        let _style={}
-        if(height>0)
-            _style={height:height+'px'}
+        const {thumbImg, imProductId, productType, retailPrice, exchangeIntegral, name, textRow, height,marketPrice,makerPrice_hide} = this.props;
+        let _style = {}
+        if (height > 0)
+            _style = {height: height + 'px'}
         return (
             <div className="product-item" onClick={this.clickTab}>
                 <div className="innerContent">
                     <div className="image">
-                        <Img src={thumbImg} style={_style}/>
+                        <img src={thumbImg} style={_style}/>
                     </div>
                     <div>
                         <Text text={name} row={textRow} size="md"/>
                     </div>
                     {
-                        productType==0?(
+                        productType == 0 ? (
                             <div className="money-footer">
                                 <label className="iconfont icon-vbi"></label>
                                 <span className="money">{exchangeIntegral}</span>
                             </div>
-                        ):(
+                        ) : (
+                         <div className="money-line">
                             <div className="money-footer">
                                 <label className="iconfont icon-qian"></label>
                                 <span className="money">{retailPrice}</span>
                             </div>
+                            {
+                                makerPrice_hide?'':
+                                <div className="marke-price">
+                                    ￥{marketPrice}
+                                </div>
+                            }
+
+                        </div>
                         )
 
                     }
-               </div>
+                </div>
             </div>
         )
     }
@@ -76,38 +88,41 @@ class ProductItem extends Component {
 export default ProductItem
 
 
-export class ProductCollectionItem extends Component{
+export class ProductCollectionItem extends Component {
     constructor(props) {
         super(props);
 
     }
+
     onChange = (val) => {
-        let {item} =this.props
-        this.props.onChange(item.data.id,val)
+        let {item} = this.props
+        this.props.onChange(item.data.id, val||1)
 
     }
-    clickProduct=()=>{
+    clickProduct = () => {
         this.props.clickProduct()
     }
-    clickOrder=()=>{
+    clickOrder = () => {
         this.props.clickOrder()
     }
-    deleteCollect(id){
-        if(this.props.deleteCollect  instanceof Function  ){
+
+    deleteCollect(id) {
+        if (this.props.deleteCollect instanceof Function) {
             this.props.deleteCollect(id)
         }
 
 
     }
-    render(){
-        let {item,type } =this.props
+
+    render() {
+        let {item, type} = this.props
         //showType =0:显示数量加减组件，1：显示当前数量，2：去评价
-        return(
+        return (
             <div className="shop-cart-item">
                 <div className="shp-cart-item-core no-check">
                     <Link to={`/product?id=${item.productId}`}
                           className="cart-product-cell-1">
-                        <Img src={item.thumbImg}/>
+                        <img src={item.thumbImg}/>
                     </Link>
                     <div className="cart-product-cell-2">
                         <div className="cart-product-name">
@@ -122,12 +137,12 @@ export class ProductCollectionItem extends Component{
                         <div className="cart-product-cell-3">
                             <span className="shp-cart-item-price ">
                                 {
-                                    type==0?(
+                                    type == 0 ? (
                                         <div className="money-footer">
                                             <label className="iconfont icon-vbi"></label>
                                             <span className="money">{item.exchangeIntegral}</span>
                                         </div>
-                                    ):(
+                                    ) : (
                                         <div className="money-footer">
                                             <label className="iconfont icon-qian"></label>
                                             <span className="money">{item.retailPrice}</span>
@@ -138,9 +153,9 @@ export class ProductCollectionItem extends Component{
                             </span>
 
                             <div className="quantity-wrapper">
-                                <Button  inline size="small"
-                                                 onClick={this.deleteCollect.bind(this,item.imProductId)}>
-                                            移除收藏
+                                <Button inline size="small"
+                                        onClick={this.deleteCollect.bind(this, item.imProductId)}>
+                                    移除收藏
                                 </Button>
                             </div>
 
@@ -153,38 +168,44 @@ export class ProductCollectionItem extends Component{
 }
 
 
-export class Product extends Component{
+export class Product extends Component {
     constructor(props) {
         super(props);
 
     }
-    onChange = (val) => {
-        let {item} =this.props
-        this.props.onChange(item.data.id,val)
+    componentDidMount() {
+
 
     }
-    clickProduct=()=>{
+    onChange = (val) => {
+        let {item} = this.props
+        this.props.onChange(item.data.id, val)
+
+    }
+    clickProduct = () => {
         this.props.clickProduct()
     }
-    clickOrder=()=>{
+    clickOrder = () => {
         this.props.clickOrder()
     }
-    deleteCollect(id){
-        if(this.props.deleteCollect  instanceof Function  ){
+
+    deleteCollect(id) {
+        if (this.props.deleteCollect instanceof Function) {
             this.props.deleteCollect(id)
         }
 
 
     }
-    render(){
-        let {item,val,showType } =this.props
+
+    render() {
+        let {item, val, showType} = this.props
         //showType =0:显示数量加减组件，1：显示当前数量，2：去评价
-        return(
+        return (
             <div className="shop-cart-item">
                 <div className="shp-cart-item-core no-check">
                     <Link to={`/product?id=${item.productId}`}
                           className="cart-product-cell-1">
-                        <Img src={item.thumbImg}/>
+                        <img src={item.thumbImg}/>
                     </Link>
                     <div className="cart-product-cell-2">
                         <div className="cart-product-name">
@@ -199,7 +220,7 @@ export class Product extends Component{
                         <div className="cart-product-cell-3">
                             <span className="shp-cart-item-price ">
                                 {
-                                    item.price>0 && item.integral==0 ? (
+                                    item.price > 0 && item.integral == 0 ? (
                                         <div className="prod-price">
                                             <CommodityPrice
                                                 price={new Number(item.price).toFixed(2)}
@@ -220,45 +241,45 @@ export class Product extends Component{
                             </span>
 
                             <div className="quantity-wrapper">
-                            {
-                                showType==0?
-                                <Stepper
-                                    style={{width: '100%', minWidth: '2rem'}}
-                                    showNumber
-                                    max={item.stockNum}
-                                    min={1}
-                                    value={val || item.amount}
-                                    onChange={this.onChange}
+                                {
+                                    showType == 0 ?
+                                        <Stepper
+                                            style={{width: '100%', minWidth: '2rem'}}
+                                            showNumber
+                                            max={item.stockNum}
+                                            min={1}
+                                            value={val || item.amount}
+                                            onChange={this.onChange}
 
-                                />:null
-                            }
-                            {
-                                showType==1?<span>x {item.amount||item.purchaseQuantity}</span>:null
-                            }
-                            {
-                                showType==2?
-                                (
-                                    item.isEvaluate == 1 ?
-                                        <Button  inline size="small"
-                                                onClick={this.clickProduct}>
-                                            查看
-                                        </Button>
-                                        :
-                                        <Button  inline size="small"
-                                                onClick={this.clickOrder}>
-                                            去评论
-                                        </Button>
-                                ):null
+                                        /> : null
+                                }
+                                {
+                                    showType == 1 ? <span>x {item.amount || item.purchaseQuantity}</span> : null
+                                }
+                                {
+                                    showType == 2 ?
+                                        (
+                                            item.isEvaluate == 1 ?
+                                                <Button inline size="small"
+                                                        onClick={this.clickProduct}>
+                                                    查看
+                                                </Button>
+                                                :
+                                                <Button inline size="small" className="yellow-btn"
+                                                        onClick={this.clickOrder}>
+                                                    去评论
+                                                </Button>
+                                        ) : null
 
-                            }
-                            {
-                                showType==3?
-                                <Button  inline size="small"
-                                        onClick={this.deleteCollect.bind(this,item.imProductId)}>
-                                    移除收藏
-                                </Button>:null
+                                }
+                                {
+                                    showType == 3 ?
+                                        <Button inline size="small"
+                                                onClick={this.deleteCollect.bind(this, item.imProductId)}>
+                                            移除收藏
+                                        </Button> : null
 
-                            }
+                                }
 
                             </div>
 

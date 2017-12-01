@@ -8,13 +8,12 @@ import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {storage} from "../../utils/tools"
-import {improductSearch, emptySearch} from '../../actions/search'
+import {improductSearch} from '../../actions/search'
 import CommodityPrice from "../../components/CommodityPrice";
 import FilterBar from '../../components/FilterBar'
 import Text from "../../components/Text";
-import NavBar from '../../components/NavBar'
 import EmptyData from '../../components/EmptyData'
-
+import {changeNavbarTitle} from '../../actions/home'
 const Item = List.Item;
 const Brief = Item.Brief;
 const alert = Modal.alert;
@@ -44,7 +43,10 @@ class Search extends React.Component {
         }
 
     }
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("搜索"))
 
+    }
     SearchChange = (value) => {
         this.setState({
             keyword: value
@@ -56,7 +58,7 @@ class Search extends React.Component {
                 tagdata: storage.get("searchhistroy")
             })
         }
-        console.dir(value)
+
     }
     SearchData = () => {
         if (this.state.keyword != "") {
@@ -232,7 +234,6 @@ class Search extends React.Component {
 
         return (
             <div className="vb-search">
-                <NavBar title="搜索" {...this.props}/>
                 <SearchBar
                     placeholder="输入商品名称搜索"
                     cancelText="搜索"

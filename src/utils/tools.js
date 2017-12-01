@@ -236,14 +236,14 @@ export let storage = {
         var curTime = new Date().getTime();
         let target = this.checkType(type);
         if (this.checkSupport(target)) {
-            if(typeof(value)=="string" || value.length>0)
+            if(typeof(value)=="string" || Array.isArray(value))
                return window[target].setItem(key, JSON.stringify(value))
             else {
                 let data=Object.assign({},value,{time:curTime})
                 return window[target].setItem(key,JSON.stringify(data))
             }
-             
-           
+
+
         }
     },
     get(key,exp,type) {
@@ -418,6 +418,7 @@ export function getdayByStartToEnd(start_time, end_time) {
     return d_arr
 }
 
+//图片转base64
 export function urlToBase64(url, callback) {
     if (b64datas[url]) {
         callback && callback(b64datas[url]);

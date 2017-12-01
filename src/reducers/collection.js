@@ -4,7 +4,7 @@ export function vbCollection(state = {code:-1,data:{datas:[]}}, action) {
     let json = action.json;
     switch (action.type) {
         case GET_VB_COLLECTION:
-        	console.dir(json.data.datas)
+
         	return Object.assign({},{
 	        		code:json.code,
 	        		data:{

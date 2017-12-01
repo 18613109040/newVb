@@ -1,5 +1,6 @@
 import React from "react";
 import {Route, IndexRoute, IndexRedirect, Redirect} from "react-router";
+
 if (typeof require.ensure !== 'function') {
     require.ensure = function (dependencies, callback) {
         callback(require)
@@ -131,7 +132,44 @@ const routes = {
                 require.ensure([], require => {
                     callback(null, require('./containers/MyOrder').default);
                 }, 'order')
+            }, childRoutes: [
+            {
+                path: 'delivered',
+                getComponent(nextState, callback) {
+                    require.ensure([], require => {
+                        callback(null, require('./containers/MyOrder/Delivered').default);
+                    }, 'order');
+                }
+            }, {
+                path: 'details',
+                getComponent(nextState, callback) {
+                    require.ensure([], require => {
+                        callback(null, require('./containers/MyOrder/Details').default);
+                    }, 'order');
+                }
+            }, {
+                path: 'evaluated',
+                getComponent(nextState, callback) {
+                    require.ensure([], require => {
+                        callback(null, require('./containers/MyOrder/Evaluated').default);
+                    }, 'order');
+                }
+            }, {
+                path: 'paid',
+                getComponent(nextState, callback) {
+                    require.ensure([], require => {
+                        callback(null, require('./containers/MyOrder/Paid').default);
+                    }, 'order');
+                }
+            }, {
+                path: 'received',
+                getComponent(nextState, callback) {
+                    require.ensure([], require => {
+                        callback(null, require('./containers/MyOrder/Received').default);
+                    }, 'order');
+                }
             }
+        ]
         }, {
             path: 'orderdetails',
             getComponent(nextState, callback) {
@@ -218,6 +256,70 @@ const routes = {
             }
         },
         {
+            path: 'afterSale/products',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale/chooseGoods').default);
+                }, 'order')
+            }
+        },
+        {
+            path: 'afterSale/type',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale/chooseType').default);
+                }, 'order')
+            }
+        },
+        {
+            path: 'afterSale/apply',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale/apply').default);
+                }, 'order')
+            }
+        },
+        {
+            path: 'afterSale/updateApply',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale/updateApply').default);
+                }, 'order')
+            }
+        },
+        {
+            path: 'afterSale/backFillInfo',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale/backFillInfo').default);
+                }, 'order')
+            }
+        },
+        {
+            path: 'afterSale/details',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale/refundDetail').default);
+                }, 'order')
+            }
+        },
+        {
+            path: 'afterSale/histroy',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale/histroy').default);
+                }, 'order')
+            }
+        },
+        {
+            path: 'afterSale/list',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/AfterSale').default);
+                }, 'order')
+            }
+        },
+        {
             path: 'newshelves',
             getComponent(nextState, callback) {
                 require.ensure([], require => {
@@ -267,6 +369,13 @@ const routes = {
             getComponent(nextState, callback) {
                 require.ensure([], require => {
                     callback(null, require('./containers/TicketCenter').default);
+                }, 'product')
+            }
+        }, {
+            path: 'couponCentre',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/TicketCenter/couponList').default);
                 }, 'product')
             }
         }, {
@@ -357,6 +466,13 @@ const routes = {
                 require.ensure([], require => {
                     callback(null, require('./containers/login/register').default);
                 }, 'login')
+            }
+        }, {
+            path: 'activity',
+            getComponent(nextState, callback) {
+                require.ensure([], require => {
+                    callback(null, require('./containers/Activity').default);
+                }, 'activity')
             }
         }
 

@@ -2,10 +2,10 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Button, Flex, WingBlank, Icon, ListView, NavBar} from 'antd-mobile';
+import { Icon, ListView} from 'antd-mobile';
 import {selectCouponProducts} from '../../actions/newShelves'
 import FilterBar from '../../components/FilterBar'
-
+import {changeNavbarTitle} from '../../actions/home'
 class ReductionArea extends Component {
     static propTypes = {};
     static defaultProps = {};
@@ -31,6 +31,7 @@ class ReductionArea extends Component {
     }
 
     componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("活动商品"))
 
     }
 
@@ -135,12 +136,7 @@ class ReductionArea extends Component {
         }
         return (
             <div className="activity-product">
-                <NavBar
-                    leftContent={<div className='iconfont icon-back back-size' onClick={() => {
-                        this.props.router.goBack()
-                    }}></div>}
-                    mode="light"
-                >活动商品</NavBar>
+
                 <div className='nav-content'>
                     <ListView
                         dataSource={this.state.dataSource}

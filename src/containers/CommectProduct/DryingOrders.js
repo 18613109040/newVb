@@ -2,16 +2,13 @@ import React, {Component} from "react";
 import {Link} from "react-router";
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Flex, List, TextareaItem, Button, WingBlank, ImagePicker, Toast, WhiteSpace} from 'antd-mobile';
+import { List, TextareaItem, WingBlank, ImagePicker, Toast, WhiteSpace} from 'antd-mobile';
 import Loading from '../../components/Loading'
 import {getOrderDetail, uploadImg, submitGoodEval} from '../../actions/evaluation'
 import Rate from '../../components/Rate'
 import {Product} from '../../components/ProductItem'
-import Text from '../../components/Text'
 import BottomBtn from '../../components/BottomBtn'
-
-const Item = List.Item;
-import NavBar from '../../components/NavBar'
+import {changeNavbarTitle} from '../../actions/home'
 import './index.less'
 
 class DryingOrders extends Component {
@@ -35,7 +32,9 @@ class DryingOrders extends Component {
         }
 
     }
-
+    componentWillMount() {
+        this.props.dispatch(changeNavbarTitle("评价晒单"))
+    }
     componentDidMount() {
         const {order1Id} = this.props.location.query;
         this.props.dispatch(getOrderDetail(order1Id, {}, (res) => {
@@ -63,7 +62,7 @@ class DryingOrders extends Component {
         this.setState({
             files,
         });
-        console.dir(index)
+
         if (index >= 0) {
             this.imgdata.splice(index, 1)
             return;
@@ -84,6 +83,15 @@ class DryingOrders extends Component {
     }
     //提交评价
     submitClick = () => {
+        let {grade,content}=this.state
+        if(grade<1){
+            Toast.fail("请给商品评分", 2);
+            return
+        }
+        if(content==''){
+            Toast.fail("评论的内容不能为空", 2);
+            return
+        }
         let tem = {}
         this.imgdata.map((item, id) => {
             if (id == 0) {
@@ -97,8 +105,8 @@ class DryingOrders extends Component {
                 imProductId: this.state.data.productId,
                 orderId: this.state.data.orderId,
                 order1Id: this.state.data.order1Id,
-                grade: this.state.grade,
-                content: this.state.content,
+                grade: grade,
+                content: content,
             }), (res) => {
                 if (res.code == 0) {
                     Toast.success(res.message, 2);
@@ -124,11 +132,10 @@ class DryingOrders extends Component {
         const {data} = this.state;
         return (
             <div className="drying-orders">
-                <NavBar title="评价晒单" {...this.props}/>
                 <div className="nav-content">
                     {
                         this.state.code == -1 ? (<Loading/>) :
-                            <div>
+                            <div style={{height: document.documentElement.clientHeight - 88}}>
                                 <div className="bg">{this.renderProducts()}</div>
                                 <div className="div-2">
                                     <span className="title">商品评分</span>
